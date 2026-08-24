@@ -1,0 +1,5 @@
+CI/CD: Fix godot-export parameters and set export paths
+
+- Configured valid `export_path` for all 4 profiles in `export_presets.cfg` to allow the export action to run.
+- Combined jobs into a single execution in `ci.yml` and stripped unused, invalid parameters (e.g., `export_preset`).
+- Fixed Bash syntax typos in `godot-ci.yml` for the `exit 1` commands.

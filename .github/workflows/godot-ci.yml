@@ -22,16 +22,24 @@ jobs:
           version: 4.1.3
           use-dotnet: false
 
+      - name: Cache Godot Templates
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot/export_templates/
+          key: ${{ runner.os }}-godot-templates-4.1.3
+          restore-keys: |
+            ${{ runner.os }}-godot-templates-
+
       - name: Import Assets
         run: |
           # First run to import all assets
-          godot --headless --editor --quit
+          godot --headless --editor --quit -v || { echo "Failed to import assets"; exit 1; }
 
       - name: Verify compilation and tests
         run: |
           # Check if there are GUT tests, if not fallback to basic compile check
           if [ -d "addons/gut" ]; then
-            godot --headless -d -s addons/gut/gut_cmdln.gd || { echo "Tests failed"; false; }
+            godot --headless -d -s addons/gut/gut_cmdln.gd -v || { echo "Tests failed"; exit 1; }
           else
             echo "No unit tests found, running dummy compile check."
           fi
@@ -91,16 +99,37 @@ jobs:
           version: 4.1.3
           use-dotnet: false
 
+      - name: Cache Godot Templates
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot/export_templates/
+          key: ${{ runner.os }}-godot-templates-4.1.3
+          restore-keys: |
+            ${{ runner.os }}-godot-templates-
+
+      - name: Install Export Templates
+        run: |
+          if [ ! -d "$HOME/.local/share/godot/export_templates/4.1.3.stable/" ]; then
+            echo "Templates not found in cache. Downloading..."
+            mkdir -p ~/.local/share/godot/export_templates/4.1.3.stable/
+            wget -q https://github.com/godotengine/godot/releases/download/4.1.3-stable/Godot_v4.1.3-stable_export_templates.tpz -O templates.tpz || { echo "Failed to download templates"; exit 1; }
+            unzip -q templates.tpz || { echo "Failed to unzip templates"; exit 1; }
+            mv templates/* ~/.local/share/godot/export_templates/4.1.3.stable/ || { echo "Failed to move templates"; exit 1; }
+            rm -rf templates templates.tpz
+          else
+            echo "Templates restored from cache."
+          fi
+
       - name: Import Assets
         run: |
-          godot --headless --editor --quit
+          godot --headless --editor --quit -v || { echo "Failed to import assets"; exit 1; }
 
       - name: Create export directory
         run: mkdir -p ${{ matrix.export_path }}
 
       - name: Export
         run: |
-          godot --headless --export-release "${{ matrix.preset_name }}" "${{ matrix.export_path }}/${{ matrix.output_file }}"
+          godot --headless --export-release "${{ matrix.preset_name }}" "${{ matrix.export_path }}/${{ matrix.output_file }}" -v || { echo "Export failed"; exit 1; }
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -111,7 +140,7 @@ jobs:
       - name: Build Summary Notification
         if: always()
         run: |
-          if [ "${{ job.status }}" = "success" ]; then
+          if [ "${{ job.status }}" == "success" ]; then
             echo "✅ Export for ${{ matrix.platform }} completed successfully." >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ Export for ${{ matrix.platform }} failed." >> $GITHUB_STEP_SUMMARY
