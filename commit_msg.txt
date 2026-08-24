@@ -1,0 +1,8 @@
+Fix GitHub Actions workflows and export issues
+
+- Added `export_presets.cfg` with required target platforms (Windows Desktop, Linux/X11, macOS, Web) and removed it from `.gitignore`.
+- Updated `godot-ci.yml` to properly download and cache Godot 4.1.3 export templates before exporting.
+- Added caching to `ci.yml` and `godot-ci.yml` for faster workflow runs.
+- Added explicit `-v` verbose flags to Godot commands and explicit exit codes on error in `godot-ci.yml`.
+- Fixed a scene parse error in `Main.tscn` where the root node was defined below an external resource.
+- Created `CI_CD_ISSUES.md` and `CI_CD_SETUP.md` with documentation on the fixes and proper setup parameters.

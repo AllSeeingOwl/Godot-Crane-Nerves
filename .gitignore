@@ -15,7 +15,7 @@ user://
 node_modules/
 
 # Build artifacts
-export_presets.cfg
+#export_presets.cfg
 *.apk
 *.aab
 *.jks
