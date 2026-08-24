@@ -2,90 +2,80 @@
 
 Thank you for your interest in contributing to the Godot-Crane-Nerves project! We welcome contributions to help migrate the game into a fully functional Godot game.
 
-## Coding Standards
+To maintain code quality and ensure a smooth development process, we follow a professional Git workflow and strict coding standards.
 
-To maintain consistency across the codebase, we enforce standard formatting rules.
+## Git Branching Strategy
 
-An `.editorconfig` file is provided in the root directory to help configure your editor automatically. If your editor does not support `.editorconfig` natively, please install the appropriate plugin.
+We use a Git flow model tailored for CI/CD integration and reliable releases.
 
-The key formatting rules are:
-- **Indentation**: Use **tabs** for indentation, especially in GDScript (this is Godot's default).
-- **Line Endings**: Always use **LF** (Unix-style) line endings for all files.
-- **File Endings**: Ensure all files end with a single empty newline.
-- **Trailing Whitespace**: Remove trailing whitespace at the end of lines.
+### Core Branches
+* **`main` (Production):** This is the default branch and represents the stable, production-ready state of the game. You should **never** commit directly to `main`.
+* **`develop` (Active Development):** This is the main development branch. All feature branches, bug fixes, and other work should be branched off from `develop` and merged back into it.
 
-## Naming Conventions (GDScript)
+### Feature and Bugfix Branches
+When starting work on an issue, feature, or bug fix:
+1. Always create a new branch from `develop`.
+2. Follow naming conventions for your branch:
+   * **Feature:** `feature/your-feature-name` (e.g., `feature/player-dash-attack`)
+   * **Bugfix:** `bugfix/issue-description` (e.g., `bugfix/fix-player-movement`)
+   * **Refactor:** `refactor/what-is-refactored`
 
-For GDScript, please adhere to the following naming conventions:
-- **snake_case** for variables, functions, and file names (e.g., `my_variable`, `do_something()`, `my_script.gd`).
-- **PascalCase** for class names and node names in the scene tree (e.g., `PlayerCharacter`, `MainLevel`).
-- **UPPER_SNAKE_CASE** for constants (e.g., `MAX_HEALTH`).
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b feature/your-feature-name
+```
 
 ## Pull Request Process
 
 When you're ready to submit your changes, follow this process:
 
-1. **Fork the Repository**: Start by forking the repository and cloning it to your local machine.
-2. **Create a Branch**: Create a new branch for your feature or bug fix. Use a descriptive name (e.g., `feature/add-level-5` or `fix/player-movement`).
-3. **Make Your Changes**: Write your code, ensuring it follows the coding standards and naming conventions outlined above. Reference the Markdown documentation files for game logic.
-4. **Commit Your Changes**: Write clear, descriptive commit messages.
-5. **Push to Your Fork**: Push your branch to your forked repository on GitHub.
-6. **Open a Pull Request (PR)**:
-   - Navigate to the original repository and open a Pull Request.
-   - Provide a clear title and description of your changes.
-   - Link any relevant issues your PR addresses.
-7. **Review Process**:
-   - The project uses GitHub Actions for CI/CD. Ensure all automated status checks pass.
-   - A maintainer will review your code. You may be asked to make changes before it can be merged.
-8. **Merge**: Once approved and all checks pass, your PR will be merged into the `main` or `develop` branch! Head branches will be automatically deleted upon merging.
+1. **Commit Your Changes:** Write clear, descriptive commit messages (see Commit Message Conventions).
+2. **Push Your Branch:** Push your branch to the remote repository.
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+3. **Open a Pull Request (PR):**
+   * Base branch: `develop` (for most work) or `main` (if preparing a release).
+   * Compare branch: Your working branch.
+   * Fill out the PR template completely.
+4. **Review Process:**
+   * At least one approved code review from a repository maintainer is required.
+   * All automated GitHub Actions status checks (CI/CD) must pass before merging.
+   * Address any requested changes from the reviewers.
+5. **Merge:** Once approved and checks pass, your PR will be merged. Head branches are automatically deleted after the PR is merged.
 
-Thank you for contributing!
-# Contributing to Cranial Nerve Crisis
+## Commit Message Conventions
 
-Thank you for your interest in contributing to the Godot-Crane-Nerves repository! To maintain code quality and ensure a smooth development process, we follow a professional Git workflow.
+Commit messages must be clear and descriptive.
 
-## Git Workflow
+* Use the **imperative mood** in the subject line (e.g., "Add player jump ability" instead of "Added player jump ability" or "Adds player jump ability").
+* Keep the subject line short (under 50 characters).
+* Use the body to explain **what** and **why** (rather than how).
+* Reference related issue numbers if applicable.
 
-We use a Git flow model tailored for CI/CD integration and reliable releases.
+## Coding Standards
 
-### Branches
+To maintain consistency across the codebase, we enforce standard formatting rules. An `.editorconfig` file is provided in the root directory.
 
-*   **`main` (Production):** This is the default branch and represents the stable, production-ready state of the game. You should **never** commit directly to `main`.
-*   **`develop` (Active Development):** This is the main development branch. All feature branches, bug fixes, and other work should be branched off from `develop` and merged back into it.
+### General Formatting
+* **Indentation**: Use **tabs** for indentation (especially in GDScript).
+* **Line Endings**: Always use **LF** (Unix-style) line endings for all files.
+* **File Endings**: Ensure all files end with a single empty newline.
+* **Trailing Whitespace**: Remove trailing whitespace at the end of lines.
 
-### Feature Branches
+### GDScript Code Style
+* **snake_case** for variables, functions, and file names (e.g., `my_variable`, `do_something()`, `my_script.gd`).
+* **PascalCase** for class names and node names in the scene tree (e.g., `PlayerCharacter`, `MainLevel`).
+* **UPPER_SNAKE_CASE** for constants (e.g., `MAX_HEALTH`).
+* **Spacing:** Use spaces around operators and after commas.
+* **Comments:** Write clear, concise comments explaining complex logic. Document public functions and classes.
 
-When you start working on an issue, feature, or bug fix:
-
-1.  Always create a new branch from `develop`:
-    ```bash
-    git checkout develop
-    git pull origin develop
-    git checkout -b feature/your-feature-name
-    ```
-2.  Make your changes, following the project guidelines and reading the relevant Markdown design files.
-3.  Commit your changes with clear, descriptive commit messages.
-
-### Submitting Changes (Pull Requests)
-
-1.  Push your branch to the remote repository:
-    ```bash
-    git push origin feature/your-feature-name
-    ```
-2.  Open a Pull Request (PR) on GitHub.
-    *   **Base branch:** `develop` (for most work) or `main` (if preparing a release from `develop`).
-    *   **Compare branch:** `feature/your-feature-name`
-3.  **Requirements for Merging:**
-    *   **Code Review:** At least one approved code review from a repository maintainer is required before a PR can be merged into `main`.
-    *   **Status Checks (CI/CD):** Our automated GitHub Actions workflows (compilation, testing, and exports for Windows, macOS, Linux, and Web) must pass successfully before the PR can be merged.
-4.  **After Merging:**
-    *   Head branches (e.g., `feature/your-feature-name`) are configured to be automatically deleted after the PR is successfully merged.
+## Working with Godot
+* **Version:** Godot 4.1.3 (expected by CI/CD pipelines).
+* Keep scenes modular and avoid hardcoding values.
+* Refer to the markdown files (e.g., `00_Game_Design_Document.md`) as the ultimate source of truth for mechanics and math logic.
 
 ## Reporting Issues
 
-If you find a bug or have a feature request, please open an issue on GitHub. Make sure to describe the problem or idea clearly, including steps to reproduce bugs and expected behavior.
-
-## Working with Godot
-
-*   **Version:** We are currently using Godot 4.x (specifically, Godot 4.1.3 is expected by our CI/CD pipelines).
-*   **Best Practices:** Follow GDScript conventions, keep your scenes modular, and avoid hardcoding values. Refer to the markdown files (e.g., `00_Game_Design_Document.md`) as the ultimate source of truth for mechanics and math logic.
+If you find a bug or have a feature request, open an issue on GitHub. Describe the problem clearly, including steps to reproduce bugs and expected behavior.
