@@ -9,10 +9,24 @@
 
 This repository represents the **Godot Engine migration** of the original game, which was initially prototyped in React. The current markdown files in this repository serve as the source of truth for game mechanics, variable names, math logic, and design parameters. The goal is to rebuild the game natively in Godot to leverage its physics and rendering engines while preserving the exact "ambient dread" and comedic frustration of the original prototype.
 
+## Quick Start & Documentation
+
+**New to the project? Start here:**
+- 🚀 **[QUICK_START.md](QUICK_START.md)**: System requirements, cloning, and running the game.
+
+**Comprehensive Documentation:**
+- 🏗️ **[Architecture](docs/ARCHITECTURE.md)**: High-level system design and data flow.
+- 🎮 **[Gameplay Mechanics](docs/GAMEPLAY.md)**: Rules, win/lose conditions, and level overviews.
+- 🔌 **[API Reference](docs/API.md)**: Documentation of major scripts and singletons.
+- 🐛 **[Debugging](docs/DEBUGGING.md)**: Common Godot 4 issues and how to use the profiler.
+- ⚡ **[Performance](docs/PERFORMANCE.md)**: Optimization tips and known bottlenecks.
+- 📦 **[Deployment](docs/DEPLOYMENT.md)**: Building and releasing the game.
+- 📝 **[ADRs (Architecture Decision Records)](adr/)**: Technical decisions (e.g., why Godot over React).
+
 ## Prerequisites
 
 To run, test, and contribute to this project, you will need:
-- **Godot Engine**: Version **4.x** or higher (Recommended: Latest Stable Godot 4 release). You can download it from [godotengine.org](https://godotengine.org/).
+- **Godot Engine**: Version **4.1.3** is required. You can download it from [godotengine.org](https://godotengine.org/).
 - **Git**: For version control and cloning the repository.
 
 ## Installation Instructions
