@@ -1,6 +1,5 @@
-extends Node
-
 class_name GameLogic
+extends Node
 
 var current_score: int = 0
 

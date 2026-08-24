@@ -1,6 +1,5 @@
-extends CharacterBody3D
-
 class_name BaseEnemy
+extends CharacterBody3D
 
 @export var max_health: float = 100.0
 @export var movement_speed: float = 3.0
