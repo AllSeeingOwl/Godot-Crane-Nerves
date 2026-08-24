@@ -1,0 +1,31 @@
+# Godot-specific ignores
+.godot/
+*.import
+*.translation
+user://
+
+# OS generated files
+.DS_Store
+
+# Editor / vim swap files
+*.swp
+*.swo
+
+# Node.js
+node_modules/
+
+# Build artifacts
+export_presets.cfg
+*.apk
+*.aab
+*.jks
+*.keystore
+*.exe
+*.pck
+*.app
+*.dmg
+*.zip
+*.tar.gz
+*.tar.xz
+build/
+bin/
