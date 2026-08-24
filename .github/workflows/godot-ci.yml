@@ -30,6 +30,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-godot-templates-
 
+
+      - name: Install GUT
+        run: |
+          mkdir -p addons
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.3.0.zip -O gut.zip
+          unzip -q gut.zip
+          mv Gut-9.3.0/addons/gut ./addons/gut
+          rm -rf Gut-9.3.0 gut.zip
+
       - name: Import Assets
         run: |
           # First run to import all assets
@@ -39,7 +48,7 @@ jobs:
         run: |
           # Check if there are GUT tests, if not fallback to basic compile check
           if [ -d "addons/gut" ]; then
-            godot --headless -d -s addons/gut/gut_cmdln.gd -v || { echo "Tests failed"; exit 1; }
+            sudo apt-get update && sudo apt-get install -y xvfb && xvfb-run --auto-servernum godot -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit -v || { echo "Tests failed"; exit 1; }
           else
             echo "No unit tests found, running dummy compile check."
           fi
@@ -119,6 +128,15 @@ jobs:
           else
             echo "Templates restored from cache."
           fi
+
+
+      - name: Install GUT
+        run: |
+          mkdir -p addons
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.3.0.zip -O gut.zip
+          unzip -q gut.zip
+          mv Gut-9.3.0/addons/gut ./addons/gut
+          rm -rf Gut-9.3.0 gut.zip
 
       - name: Import Assets
         run: |
