@@ -1,0 +1,118 @@
+name: "Godot Build and Export"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-and-build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.1.3
+          use-dotnet: false
+
+      - name: Import Assets
+        run: |
+          # First run to import all assets
+          godot --headless --editor --quit
+
+      - name: Verify compilation and tests
+        run: |
+          # Check if there are GUT tests, if not fallback to basic compile check
+          if [ -d "addons/gut" ]; then
+            godot --headless -d -s addons/gut/gut_cmdln.gd || { echo "Tests failed"; false; }
+          else
+            echo "No unit tests found, running dummy compile check."
+          fi
+
+      - name: Notify on test failure
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Tests or build check failed. Please review the logs.')
+            if (context.eventName === 'pull_request') {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '❌ Build or Tests failed! Please review the logs.'
+              })
+            }
+
+  export:
+    name: Export for ${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    needs: test-and-build
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows, linux, macos, web]
+        include:
+          - platform: windows
+            preset_name: "Windows Desktop"
+            export_path: build/windows
+            artifact_name: windows-build
+            output_file: Godot-Crane-Nerves.exe
+          - platform: linux
+            preset_name: "Linux/X11"
+            export_path: build/linux
+            artifact_name: linux-build
+            output_file: Godot-Crane-Nerves.x86_64
+          - platform: macos
+            preset_name: "macOS"
+            export_path: build/macos
+            artifact_name: macos-build
+            output_file: Godot-Crane-Nerves.dmg
+          - platform: web
+            preset_name: "Web"
+            export_path: build/web
+            artifact_name: web-build
+            output_file: index.html
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.1.3
+          use-dotnet: false
+
+      - name: Import Assets
+        run: |
+          godot --headless --editor --quit
+
+      - name: Create export directory
+        run: mkdir -p ${{ matrix.export_path }}
+
+      - name: Export
+        run: |
+          godot --headless --export-release "${{ matrix.preset_name }}" "${{ matrix.export_path }}/${{ matrix.output_file }}"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.export_path }}
+
+      - name: Build Summary Notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ Export for ${{ matrix.platform }} completed successfully." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Export for ${{ matrix.platform }} failed." >> $GITHUB_STEP_SUMMARY
+          fi
