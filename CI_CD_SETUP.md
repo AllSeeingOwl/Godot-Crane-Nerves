@@ -37,3 +37,6 @@ For `godot-ci.yml`, we manually fetch and place the `.tpz` templates into `~/.lo
 - **Action Fails Immediately on Export**: Verify that `export_presets.cfg` is checked into git and contains profiles matching the exact names requested by the Matrix or `ci.yml`.
 - **Missing Template Path Errors**: Verify the exact version of the Godot Editor matches the downloaded Export Templates in the CI steps. A mismatch in subversions (e.g., `stable` vs `rc1`) will cause Godot to ignore the templates.
 - **Parse Errors**: Verify scene files are well-formed (usually caused by manual edits outside the Godot Editor).
+
+### Troubleshooting Ongoing
+If using `firebelley/godot-export@v5.2.0`, it natively builds *all* presets found in `export_presets.cfg` at once, meaning you should run it as a singular build step instead of a job matrix to prevent unexpected input warnings. Be sure your `export_presets.cfg` file contains valid output paths defined at `export_path="..."` or the plugin will skip building them.
