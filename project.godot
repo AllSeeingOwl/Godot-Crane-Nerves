@@ -1,0 +1,14 @@
+config_version=5
+[application]
+config/name="Godot-Crane-Nerves"
+run/main_scene="res://scenes/Main.tscn"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
+[rendering]
+renderer/rendering_method="forward_plus"
+
+[physics]
+common/physics_ticks_per_second=60
