@@ -23,6 +23,12 @@ This repository represents the **Godot Engine migration** of the original game, 
 - 📦 **[Deployment](docs/DEPLOYMENT.md)**: Building and releasing the game.
 - 📝 **[ADRs (Architecture Decision Records)](adr/)**: Technical decisions (e.g., why Godot over React).
 
+## Design & Migration Reference
+
+To understand the core design, constraints, and source-of-truth logic extracted from the original React prototype, please refer to the following:
+- 📖 **[Game Design Document](docs/GAME_DESIGN.md)**: The master plan and core feel of the game.
+- 📂 **[Migration Documentation](docs/migration/)**: A directory containing all extracted mechanics, state transitions, math utils, and level logic used to guide the Godot implementation. These docs serve as the primary reference when implementing new features.
+
 ## Prerequisites
 
 To run, test, and contribute to this project, you will need:
