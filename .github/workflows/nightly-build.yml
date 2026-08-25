@@ -70,7 +70,7 @@ jobs:
         run: |
           echo "Importing assets via Godot headless..."
           godot --headless --editor --quit -v || { echo "Failed to import assets"; exit 1; }
-          godot --headless --build-solutions --quit -v || true
+          godot --headless --editor --quit -v || { echo "Failed to build class cache"; exit 1; }
 
       - name: Verify compilation and tests
         run: |
@@ -176,7 +176,7 @@ jobs:
         run: |
           echo "Importing assets for export..."
           godot --headless --editor --quit -v || { echo "Failed to import assets"; exit 1; }
-          godot --headless --build-solutions --quit -v || true
+          godot --headless --editor --quit -v || { echo "Failed to build class cache"; exit 1; }
 
       - name: Create export directory
         run: |
