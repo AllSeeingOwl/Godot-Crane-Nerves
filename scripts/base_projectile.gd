@@ -1,6 +1,5 @@
-extends Area3D
-
 class_name BaseProjectile
+extends Area3D
 
 @export var speed: float = 10.0
 @export var damage: float = 10.0
