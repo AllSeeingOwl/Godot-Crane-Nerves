@@ -66,10 +66,10 @@ jobs:
         run: |
           echo "Installing GUT framework..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip -O gut.zip
           unzip -q gut.zip
-          mv Gut-9.2.1/addons/gut ./addons/gut
-          rm -rf Gut-9.2.1 gut.zip
+          mv Gut-9.1.1/addons/gut ./addons/gut
+          rm -rf Gut-9.1.1 gut.zip
 
       - name: Import Assets
         run: |
@@ -77,7 +77,7 @@ jobs:
           # First run to import all assets
           godot --headless --editor --quit -v || true
           # Second run to build the class cache
-          godot --headless --editor --quit -v || true
+          godot --headless --editor --quit -v || { echo "Failed to build class cache"; exit 1; }
 
       - name: Verify compilation and tests
         run: |
@@ -181,16 +181,16 @@ jobs:
         run: |
           echo "Installing GUT framework for export..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip -O gut.zip
           unzip -q gut.zip
-          mv Gut-9.2.1/addons/gut ./addons/gut
-          rm -rf Gut-9.2.1 gut.zip
+          mv Gut-9.1.1/addons/gut ./addons/gut
+          rm -rf Gut-9.1.1 gut.zip
 
       - name: Import Assets
         run: |
           echo "Importing assets for export..."
           godot --headless --editor --quit -v || true
-          godot --headless --editor --quit -v || true
+          godot --headless --editor --quit -v || { echo "Failed to build class cache"; exit 1; }
 
       - name: Create export directory
         run: |
