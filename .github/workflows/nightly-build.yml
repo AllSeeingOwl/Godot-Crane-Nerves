@@ -63,6 +63,7 @@ jobs:
           mkdir -p addons
           wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip -O gut.zip
           unzip -q gut.zip
+          rm -rf ./addons/gut
           mv Gut-9.1.1/addons/gut ./addons/gut
           rm -rf Gut-9.1.1 gut.zip
 
@@ -169,6 +170,7 @@ jobs:
           mkdir -p addons
           wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip -O gut.zip
           unzip -q gut.zip
+          rm -rf ./addons/gut
           mv Gut-9.1.1/addons/gut ./addons/gut
           rm -rf Gut-9.1.1 gut.zip
 
