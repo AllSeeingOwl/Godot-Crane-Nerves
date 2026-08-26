@@ -16,4 +16,3 @@ config/features=PackedStringArray("4.1")
 
 [autoload]
 
-GutUtils="*res://addons/gut/utils.gd"
