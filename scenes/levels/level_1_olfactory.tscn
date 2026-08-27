@@ -1,0 +1,132 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3v3s1k1abc12"]
+
+[ext_resource type="Script" path="res://scripts/levels/level_1_olfactory.gd" id="1_abc123"]
+
+[node name="Level1Olfactory" type="Node2D"]
+script = ExtResource("1_abc123")
+
+[node name="Nose" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 96.0
+offset_bottom = 96.0
+
+[node name="ColorRect" type="ColorRect" parent="Nose"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.1)
+
+[node name="Label" type="Label" parent="Nose"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Nose Area"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="Nose"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+show_percentage = false
+
+[node name="VialCursor" type="Control" parent="."]
+visible = false
+z_index = 50
+layout_mode = 3
+anchors_preset = 0
+offset_left = -16.0
+offset_top = -24.0
+offset_right = 16.0
+offset_bottom = 24.0
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="VialCursor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.6, 0.3, 0, 1)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="InfoLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 30.0
+offset_right = 150.0
+offset_bottom = 80.0
+grow_horizontal = 2
+text = "Level 1: Olfactory Nerve
+Identified: 0 / 2"
+horizontal_alignment = 1
+
+[node name="StressBar" type="ProgressBar" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 47.0
+grow_horizontal = 0
+step = 0.1
+
+[node name="StressLabel" type="Label" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 50.0
+offset_right = -60.0
+offset_bottom = 76.0
+grow_horizontal = 0
+text = "STRESS"
+horizontal_alignment = 1
+
+[node name="VialsBox" type="HBoxContainer" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CoffeeBtn" type="Button" parent="UI/VialsBox"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Coffee"
+
+[node name="MintBtn" type="Button" parent="UI/VialsBox"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Mint"
+
+[node name="SurstrommingBtn" type="Button" parent="UI/VialsBox"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Surströmming"
