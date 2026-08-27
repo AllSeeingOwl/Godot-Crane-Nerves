@@ -3,9 +3,13 @@ extends GutTest
 func before_each():
 	GameState.reset_stress()
 	GameState.current_level_id = 1
+	if GameState.game_over.is_connected(LevelManager._on_game_over):
+		GameState.game_over.disconnect(LevelManager._on_game_over)
 
 func after_each():
 	GameState.reset_stress()
+	if not GameState.game_over.is_connected(LevelManager._on_game_over):
+		GameState.game_over.connect(LevelManager._on_game_over)
 
 func test_initialization():
 	assert_eq(GameState.stress, 0.0, "Initial stress should be 0.0")

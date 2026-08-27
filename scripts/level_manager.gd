@@ -17,7 +17,7 @@ func load_level(level_id: int):
 	GameState.current_level_id = level_id
 
 	if LEVEL_SCENES.has(level_id):
-		get_tree().change_scene_to_file(LEVEL_SCENES[level_id])
+		get_tree().call_deferred("change_scene_to_file", LEVEL_SCENES[level_id])
 	else:
 		print("No scene configured for level ", level_id)
 
