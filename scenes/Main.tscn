@@ -21,7 +21,10 @@ albedo_color = Color(0.768627, 0.803922, 0.831373, 1)
 roughness = 0.55
 metallic = 0.06
 
+[ext_resource type="Script" path="res://scenes/main.gd" id="2_main_script"]
+
 [node name="Main" type="Node3D"]
+script = ExtResource("2_main_script")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_main")
