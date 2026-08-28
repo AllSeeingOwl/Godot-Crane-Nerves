@@ -1,0 +1,935 @@
+[gd_scene load_steps=95 format=3]
+
+[sub_resource type="Environment" id="Environment_3ad57"]
+background_mode = 1
+background_color = Color(0.866667, 0.933333, 1, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.866667, 0.933333, 1, 1)
+ambient_light_energy = 0.5
+fog_enabled = true
+fog_light_color = Color(0.784314, 0.823529, 0.862745, 1)
+fog_density = 0.02
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_haqcc"]
+albedo_color = Color(0.768627, 0.803922, 0.831373, 1)
+metallic = 0.06
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d1vwd"]
+albedo_color = Color(0.901961, 0.913725, 0.92549, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2llxb"]
+albedo_color = Color(0.866667, 0.886275, 0.901961, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cvjut"]
+albedo_color = Color(0.866667, 0.886275, 0.901961, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d2k3y"]
+albedo_color = Color(0.941176, 0.94902, 0.956863, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e0k1d"]
+albedo_color = Color(0.784314, 0.803922, 0.823529, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3o43g"]
+albedo_color = Color(0.541176, 0.603922, 0.690196, 1)
+metallic = 0.35
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ec7tq"]
+transparency = 1
+albedo_color = Color(0.541176, 0.721569, 0.847059, 0.3)
+metallic = 0.1
+roughness = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yo4nd"]
+albedo_color = Color(0.815686, 0.835294, 0.847059, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uhisu"]
+albedo_color = Color(0.541176, 0.603922, 0.690196, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8kgel"]
+albedo_color = Color(0.541176, 0.603922, 0.690196, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tqg42"]
+albedo_color = Color(0.972549, 0.972549, 1, 1)
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.909804, 0.941176, 1, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3nkif"]
+albedo_color = Color(0.972549, 0.972549, 1, 1)
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.909804, 0.941176, 1, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dakdi"]
+albedo_color = Color(0.972549, 0.972549, 1, 1)
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.909804, 0.941176, 1, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qtyh4"]
+albedo_color = Color(0.972549, 0.964706, 0.941176, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(0.960784, 0.941176, 0.909804, 1)
+emission_energy_multiplier = 0.08
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yjb0c"]
+albedo_color = Color(0.909804, 0.878431, 0.815686, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rwdk4"]
+albedo_color = Color(0.784314, 0.658824, 0.439216, 1)
+metallic = 0.2
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgrn2"]
+albedo_color = Color(0.960784, 0.941176, 0.894118, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_111x4"]
+albedo_color = Color(0.560784, 0.627451, 0.682353, 1)
+metallic = 0.18
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_prmuy"]
+albedo_color = Color(0.941176, 0.929412, 0.901961, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gs3sw"]
+albedo_color = Color(0.313726, 0.376471, 0.439216, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kbc38"]
+albedo_color = Color(0.376471, 0.439216, 0.501961, 1)
+metallic = 0.65
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2rprc"]
+albedo_color = Color(0.376471, 0.439216, 0.501961, 1)
+metallic = 0.65
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vjcrx"]
+albedo_color = Color(0.376471, 0.439216, 0.501961, 1)
+metallic = 0.65
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uh1n1"]
+albedo_color = Color(0.376471, 0.439216, 0.501961, 1)
+metallic = 0.65
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cv8st"]
+albedo_color = Color(0.376471, 0.439216, 0.501961, 1)
+metallic = 0.65
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tf72s"]
+albedo_color = Color(0.803922, 0.835294, 0.854902, 1)
+metallic = 0.18
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gvur2"]
+albedo_color = Color(0.721569, 0.752941, 0.784314, 1)
+metallic = 0.2
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_huxwn"]
+albedo_color = Color(0.745098, 0.784314, 0.815686, 1)
+metallic = 0.12
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tkjo3"]
+albedo_color = Color(0.541176, 0.603922, 0.690196, 1)
+metallic = 0.9
+roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mjii"]
+albedo_color = Color(0.227451, 0.290196, 0.345098, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6su0y"]
+albedo_color = Color(0.376471, 0.439216, 0.501961, 1)
+metallic = 0.65
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o44au"]
+albedo_color = Color(0.290196, 0.333333, 0.376471, 1)
+metallic = 0.75
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f27hr"]
+albedo_color = Color(0.145098, 0.180392, 0.211765, 1)
+metallic = 0.35
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gwa6r"]
+albedo_color = Color(0.0235294, 0.0784314, 0.0627451, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n73hu"]
+albedo_color = Color(0.541176, 0.603922, 0.690196, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2lij2"]
+albedo_color = Color(0.752941, 0.894118, 0.972549, 1)
+metallic = 0.05
+roughness = 0.08
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wied4"]
+albedo_color = Color(0.352941, 0.560784, 0.682353, 1)
+roughness = 0.85
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_t6huq"]
+material = SubResource("StandardMaterial3D_wied4")
+radius = 0.22
+height = 0.99
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t46jt"]
+albedo_color = Color(0.788235, 0.517647, 0.352941, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pwa1v"]
+albedo_color = Color(0.788235, 0.517647, 0.352941, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_njgsh"]
+albedo_color = Color(0.164706, 0.101961, 0.0392157, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ed2f"]
+albedo_color = Color(0.101961, 0.101961, 0.101961, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ot8mt"]
+albedo_color = Color(0.101961, 0.101961, 0.101961, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hwcq1"]
+albedo_color = Color(0.227451, 0.12549, 0.0627451, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k2vcv"]
+albedo_color = Color(0.227451, 0.12549, 0.0627451, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3q0xp"]
+albedo_color = Color(0.541176, 0.25098, 0.188235, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_olmmh"]
+albedo_color = Color(0.227451, 0.282353, 0.345098, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_y43l5"]
+material = SubResource("StandardMaterial3D_olmmh")
+radius = 0.09
+height = 0.56
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tc7qh"]
+albedo_color = Color(0.227451, 0.282353, 0.345098, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nggl3"]
+material = SubResource("StandardMaterial3D_tc7qh")
+radius = 0.09
+height = 0.56
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hh2bi"]
+albedo_color = Color(0.227451, 0.282353, 0.345098, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_qnrfu"]
+material = SubResource("StandardMaterial3D_hh2bi")
+radius = 0.075
+height = 0.57
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l6jcw"]
+albedo_color = Color(0.227451, 0.282353, 0.345098, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_x40jo"]
+material = SubResource("StandardMaterial3D_l6jcw")
+radius = 0.075
+height = 0.57
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vjccv"]
+albedo_color = Color(0.101961, 0.109804, 0.133333, 1)
+metallic = 0.1
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vofap"]
+albedo_color = Color(0.101961, 0.109804, 0.133333, 1)
+metallic = 0.1
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_36kge"]
+albedo_color = Color(0.352941, 0.560784, 0.682353, 1)
+roughness = 0.85
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_crl47"]
+material = SubResource("StandardMaterial3D_36kge")
+radius = 0.065
+height = 0.53
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i6ect"]
+albedo_color = Color(0.352941, 0.560784, 0.682353, 1)
+roughness = 0.85
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_afxmf"]
+material = SubResource("StandardMaterial3D_i6ect")
+radius = 0.065
+height = 0.53
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e0utk"]
+albedo_color = Color(0.788235, 0.517647, 0.352941, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ll3jk"]
+albedo_color = Color(0.788235, 0.517647, 0.352941, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_huis7"]
+albedo_color = Color(0.909804, 0.941176, 0.972549, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g2wfn"]
+albedo_color = Color(0.0941176, 0.0941176, 0.117647, 1)
+metallic = 0.12
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ce4dx"]
+albedo_color = Color(0.0941176, 0.0941176, 0.117647, 1)
+metallic = 0.12
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wtbbf"]
+albedo_color = Color(0.172549, 0.207843, 0.25098, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_27mhr"]
+material = SubResource("StandardMaterial3D_wtbbf")
+radius = 0.1
+height = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8irdt"]
+albedo_color = Color(0.172549, 0.207843, 0.25098, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_gaypu"]
+material = SubResource("StandardMaterial3D_8irdt")
+radius = 0.1
+height = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1xehn"]
+albedo_color = Color(0.933333, 0.94902, 0.964706, 1)
+roughness = 0.88
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_x0m78"]
+material = SubResource("StandardMaterial3D_1xehn")
+radius = 0.25
+height = 1.12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ibxko"]
+albedo_color = Color(0.690196, 0.784314, 0.878431, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2p62k"]
+albedo_color = Color(0.862745, 0.909804, 0.941176, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rswrh"]
+albedo_color = Color(0.133333, 0.266667, 0.666667, 1)
+metallic = 0.3
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mai32"]
+albedo_color = Color(0.933333, 0.94902, 0.964706, 1)
+roughness = 0.88
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4yh7d"]
+material = SubResource("StandardMaterial3D_mai32")
+radius = 0.085
+height = 0.61
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xbkeh"]
+albedo_color = Color(0.831373, 0.584314, 0.415686, 1)
+roughness = 0.78
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vutq3"]
+albedo_color = Color(0.933333, 0.94902, 0.964706, 1)
+roughness = 0.88
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ttbtv"]
+material = SubResource("StandardMaterial3D_vutq3")
+radius = 0.085
+height = 0.61
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ducv7"]
+albedo_color = Color(0.784314, 0.658824, 0.376471, 1)
+metallic = 0.25
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_isf7p"]
+albedo_color = Color(0.960784, 0.941176, 0.909804, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ofie3"]
+albedo_color = Color(0.831373, 0.584314, 0.415686, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kj7br"]
+albedo_color = Color(0.831373, 0.584314, 0.415686, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7idm"]
+albedo_color = Color(0.164706, 0.101961, 0.0392157, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fx0rs"]
+albedo_color = Color(0.101961, 0.101961, 0.101961, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oaovq"]
+albedo_color = Color(0.101961, 0.101961, 0.101961, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lwo7f"]
+albedo_color = Color(0.164706, 0.156863, 0.188235, 1)
+metallic = 0.85
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_02gjs"]
+albedo_color = Color(0.164706, 0.156863, 0.188235, 1)
+metallic = 0.85
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jthvi"]
+albedo_color = Color(0.164706, 0.156863, 0.188235, 1)
+metallic = 0.85
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p2k7w"]
+albedo_color = Color(0.117647, 0.164706, 0.227451, 1)
+metallic = 0.8
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0dw1a"]
+albedo_color = Color(0.117647, 0.164706, 0.227451, 1)
+metallic = 0.8
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ow7yl"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.1)
+emission_enabled = true
+emission = Color(0.8, 0.9, 1, 1)
+emission_energy_multiplier = 0.5
+
+[node name="DoctorsOffice" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3ad57")
+
+[node name="MainLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 9, 5)
+light_color = Color(0.94902, 0.960784, 1, 1)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="FillLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 5, 3)
+light_color = Color(0.878431, 0.909804, 1, 1)
+light_energy = 0.4
+
+[node name="WarmKeyLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3.5, 3.5)
+light_color = Color(1, 0.933333, 0.866667, 1)
+light_energy = 4.5
+omni_range = 7.0
+
+[node name="WindowLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 3.1, -4.8)
+light_color = Color(0.627451, 0.784314, 0.909804, 1)
+light_energy = 2.5
+omni_range = 10.0
+
+[node name="EKGLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 1.82, 0.5)
+light_color = Color(0, 0.8, 0.4, 1)
+light_energy = 0.6
+omni_range = 3.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 1.9, 3.5)
+
+[node name="Room" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+size = Vector3(16, 0.1, 14)
+material = SubResource("StandardMaterial3D_haqcc")
+
+[node name="BackWall" type="CSGBox3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -6.5)
+size = Vector3(16, 5.8, 0.1)
+material = SubResource("StandardMaterial3D_d1vwd")
+
+[node name="LeftWall" type="CSGBox3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 2.9, 0)
+size = Vector3(0.1, 5.8, 14)
+material = SubResource("StandardMaterial3D_2llxb")
+
+[node name="RightWall" type="CSGBox3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 2.9, 0)
+size = Vector3(0.1, 5.8, 14)
+material = SubResource("StandardMaterial3D_cvjut")
+
+[node name="Ceiling" type="CSGBox3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.8, 0)
+size = Vector3(16, 0.1, 14)
+material = SubResource("StandardMaterial3D_d2k3y")
+
+[node name="Baseboard" type="CSGBox3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, -6.44)
+size = Vector3(16, 0.14, 0.08)
+material = SubResource("StandardMaterial3D_e0k1d")
+
+[node name="Window" type="Node3D" parent="Room"]
+
+[node name="Frame" type="CSGBox3D" parent="Room/Window"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 3.1, -6.44)
+size = Vector3(2.8, 2.1, 0.16)
+material = SubResource("StandardMaterial3D_3o43g")
+
+[node name="Glass" type="CSGBox3D" parent="Room/Window"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 3.1, -6.41)
+size = Vector3(2.55, 1.85, 0.04)
+material = SubResource("StandardMaterial3D_ec7tq")
+
+[node name="Sill" type="CSGBox3D" parent="Room/Window"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 2.12, -6.25)
+size = Vector3(2.9, 0.1, 0.32)
+material = SubResource("StandardMaterial3D_yo4nd")
+
+[node name="MullionH" type="CSGBox3D" parent="Room/Window"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 3.1, -6.39)
+size = Vector3(2.6, 0.06, 0.06)
+material = SubResource("StandardMaterial3D_uhisu")
+
+[node name="MullionV" type="CSGBox3D" parent="Room/Window"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 3.1, -6.39)
+size = Vector3(0.06, 1.8, 0.06)
+material = SubResource("StandardMaterial3D_8kgel")
+
+[node name="CeilingLightPanel0" type="Node3D" parent="Room"]
+
+[node name="Panel" type="CSGBox3D" parent="Room/CeilingLightPanel0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 5.72, -1)
+size = Vector3(1.8, 0.04, 0.75)
+material = SubResource("StandardMaterial3D_tqg42")
+
+[node name="Light" type="OmniLight3D" parent="Room/CeilingLightPanel0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 5.3, -1)
+light_color = Color(0.941176, 0.956863, 1, 1)
+light_energy = 7.0
+omni_range = 9.0
+
+[node name="CeilingLightPanel1" type="Node3D" parent="Room"]
+
+[node name="Panel" type="CSGBox3D" parent="Room/CeilingLightPanel1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 5.72, -1)
+size = Vector3(1.8, 0.04, 0.75)
+material = SubResource("StandardMaterial3D_3nkif")
+
+[node name="Light" type="OmniLight3D" parent="Room/CeilingLightPanel1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 5.3, -1)
+light_color = Color(0.941176, 0.956863, 1, 1)
+light_energy = 7.0
+omni_range = 9.0
+
+[node name="CeilingLightPanel2" type="Node3D" parent="Room"]
+
+[node name="Panel" type="CSGBox3D" parent="Room/CeilingLightPanel2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.72, 2)
+size = Vector3(1.8, 0.04, 0.75)
+material = SubResource("StandardMaterial3D_dakdi")
+
+[node name="Light" type="OmniLight3D" parent="Room/CeilingLightPanel2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3, 2)
+light_color = Color(0.941176, 0.956863, 1, 1)
+light_energy = 7.0
+omni_range = 9.0
+
+[node name="SnellenChart" type="Node3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 3.4, -6.42)
+
+[node name="Bg" type="CSGBox3D" parent="Room/SnellenChart"]
+size = Vector3(0.8, 1.1, 0.04)
+material = SubResource("StandardMaterial3D_qtyh4")
+
+[node name="CNDiagram" type="Node3D" parent="Room"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -7.42, 2.8, 0.5)
+
+[node name="Poster" type="CSGBox3D" parent="Room/CNDiagram"]
+size = Vector3(1.4, 1, 0.04)
+material = SubResource("StandardMaterial3D_yjb0c")
+
+[node name="Diploma" type="Node3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 3.8, -6.42)
+
+[node name="Frame" type="CSGBox3D" parent="Room/Diploma"]
+size = Vector3(0.7, 0.52, 0.04)
+material = SubResource("StandardMaterial3D_rwdk4")
+
+[node name="Paper" type="CSGBox3D" parent="Room/Diploma"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.02)
+size = Vector3(0.62, 0.44, 0.02)
+material = SubResource("StandardMaterial3D_xgrn2")
+
+[node name="ExamTable" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0, 0.3)
+
+[node name="Surface" type="CSGBox3D" parent="ExamTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.88, 0)
+size = Vector3(2.6, 0.12, 1)
+material = SubResource("StandardMaterial3D_111x4")
+
+[node name="PaperRoll" type="CSGBox3D" parent="ExamTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.96, 0)
+size = Vector3(2.58, 0.02, 0.97)
+material = SubResource("StandardMaterial3D_prmuy")
+
+[node name="Edge" type="CSGBox3D" parent="ExamTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82, 0)
+size = Vector3(2.65, 0.05, 1.05)
+material = SubResource("StandardMaterial3D_gs3sw")
+
+[node name="Leg1" type="CSGCylinder3D" parent="ExamTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.4, 0.44)
+radius = 0.04
+height = 0.82
+material = SubResource("StandardMaterial3D_kbc38")
+
+[node name="Leg2" type="CSGCylinder3D" parent="ExamTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.4, 0.44)
+radius = 0.04
+height = 0.82
+material = SubResource("StandardMaterial3D_2rprc")
+
+[node name="Leg3" type="CSGCylinder3D" parent="ExamTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.4, -0.44)
+radius = 0.04
+height = 0.82
+material = SubResource("StandardMaterial3D_vjcrx")
+
+[node name="Leg4" type="CSGCylinder3D" parent="ExamTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.4, -0.44)
+radius = 0.04
+height = 0.82
+material = SubResource("StandardMaterial3D_uh1n1")
+
+[node name="SupportBar" type="CSGBox3D" parent="ExamTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+size = Vector3(2.2, 0.04, 0.04)
+material = SubResource("StandardMaterial3D_cv8st")
+
+[node name="MedicalCabinet" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -3.5)
+
+[node name="Body" type="CSGBox3D" parent="MedicalCabinet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+size = Vector3(1.15, 2.3, 0.55)
+material = SubResource("StandardMaterial3D_tf72s")
+
+[node name="Top" type="CSGBox3D" parent="MedicalCabinet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 0)
+size = Vector3(1.2, 0.09, 0.6)
+material = SubResource("StandardMaterial3D_gvur2")
+
+[node name="Door" type="CSGBox3D" parent="MedicalCabinet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0.285)
+size = Vector3(1.12, 2.28, 0.015)
+material = SubResource("StandardMaterial3D_huxwn")
+
+[node name="Handle" type="CSGCylinder3D" parent="MedicalCabinet"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.32, 1.15, 0.3)
+radius = 0.015
+height = 0.22
+material = SubResource("StandardMaterial3D_tkjo3")
+
+[node name="DoctorStool" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2, 0, 1.8)
+
+[node name="Seat" type="CSGCylinder3D" parent="DoctorStool"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 0)
+radius = 0.28
+height = 0.09
+material = SubResource("StandardMaterial3D_7mjii")
+
+[node name="Post" type="CSGCylinder3D" parent="DoctorStool"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34, 0)
+radius = 0.035
+height = 0.68
+material = SubResource("StandardMaterial3D_6su0y")
+
+[node name="EKGMonitor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0, -1.8)
+
+[node name="Post" type="CSGCylinder3D" parent="EKGMonitor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+radius = 0.038
+height = 1.7
+material = SubResource("StandardMaterial3D_o44au")
+
+[node name="Box" type="CSGBox3D" parent="EKGMonitor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.82, 0)
+size = Vector3(0.58, 0.44, 0.2)
+material = SubResource("StandardMaterial3D_f27hr")
+
+[node name="Screen" type="CSGBox3D" parent="EKGMonitor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.82, 0.11)
+size = Vector3(0.5, 0.37, 0.008)
+material = SubResource("StandardMaterial3D_gwa6r")
+
+[node name="IVStand" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, 0.8)
+
+[node name="Pole" type="CSGCylinder3D" parent="IVStand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+radius = 0.02
+height = 2.8
+material = SubResource("StandardMaterial3D_n73hu")
+
+[node name="Bag" type="CSGBox3D" parent="IVStand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0.04)
+size = Vector3(0.18, 0.28, 0.06)
+material = SubResource("StandardMaterial3D_2lij2")
+
+[node name="PatientCharacter" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0, 0.75)
+
+[node name="Torso" type="MeshInstance3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.52, 0)
+mesh = SubResource("CapsuleMesh_t6huq")
+
+[node name="Neck" type="CSGCylinder3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, 0)
+radius = 0.095
+height = 0.22
+material = SubResource("StandardMaterial3D_t46jt")
+
+[node name="Head" type="CSGSphere3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+radius = 0.21
+material = SubResource("StandardMaterial3D_pwa1v")
+
+[node name="Hair" type="CSGSphere3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -0.02)
+radius = 0.2
+material = SubResource("StandardMaterial3D_njgsh")
+
+[node name="EyeL" type="CSGSphere3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 2.22, 0.19)
+radius = 0.028
+material = SubResource("StandardMaterial3D_3ed2f")
+
+[node name="EyeR" type="CSGSphere3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 2.22, 0.19)
+radius = 0.028
+material = SubResource("StandardMaterial3D_ot8mt")
+
+[node name="EyebrowL" type="CSGBox3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 2.3, 0.185)
+size = Vector3(0.07, 0.015, 0.012)
+material = SubResource("StandardMaterial3D_hwcq1")
+
+[node name="EyebrowR" type="CSGBox3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 2.3, 0.185)
+size = Vector3(0.07, 0.015, 0.012)
+material = SubResource("StandardMaterial3D_k2vcv")
+
+[node name="Mouth" type="CSGBox3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.07, 0.195)
+size = Vector3(0.1, 0.014, 0.01)
+material = SubResource("StandardMaterial3D_3q0xp")
+
+[node name="ThighL" type="MeshInstance3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 0.156434, -0.987688, 0, 0.987688, 0.156434, -0.12, 1.04, 0.26)
+mesh = SubResource("CapsuleMesh_y43l5")
+
+[node name="ThighR" type="MeshInstance3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 0.156434, -0.987688, 0, 0.987688, 0.156434, 0.12, 1.04, 0.26)
+mesh = SubResource("CapsuleMesh_nggl3")
+
+[node name="CalfL" type="MeshInstance3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 0.968583, -0.24869, 0, 0.24869, 0.968583, -0.12, 0.52, 0.56)
+mesh = SubResource("CapsuleMesh_qnrfu")
+
+[node name="CalfR" type="MeshInstance3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 0.968583, -0.24869, 0, 0.24869, 0.968583, 0.12, 0.52, 0.56)
+mesh = SubResource("CapsuleMesh_x40jo")
+
+[node name="ShoeL" type="CSGBox3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.22, 0.68)
+size = Vector3(0.13, 0.1, 0.28)
+material = SubResource("StandardMaterial3D_vjccv")
+
+[node name="ShoeR" type="CSGBox3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.22, 0.68)
+size = Vector3(0.13, 0.1, 0.28)
+material = SubResource("StandardMaterial3D_vofap")
+
+[node name="ArmL" type="MeshInstance3D" parent="PatientCharacter"]
+transform = Transform3D(0.968912, -0.247404, 0, 0.232405, 0.91017, -0.342898, 0.0848343, 0.332238, 0.939373, -0.28, 1.45, 0.12)
+mesh = SubResource("CapsuleMesh_crl47")
+
+[node name="ArmR" type="MeshInstance3D" parent="PatientCharacter"]
+transform = Transform3D(0.968912, 0.247404, 0, -0.232405, 0.91017, -0.342898, -0.0848343, 0.332238, 0.939373, 0.28, 1.45, 0.12)
+mesh = SubResource("CapsuleMesh_afxmf")
+
+[node name="HandL" type="CSGSphere3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.22, 0.3)
+radius = 0.07
+material = SubResource("StandardMaterial3D_e0utk")
+
+[node name="HandR" type="CSGSphere3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.22, 0.3)
+radius = 0.07
+material = SubResource("StandardMaterial3D_ll3jk")
+
+[node name="Label" type="CSGBox3D" parent="PatientCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1.62, 0.23)
+size = Vector3(0.16, 0.1, 0.01)
+material = SubResource("StandardMaterial3D_huis7")
+
+[node name="DoctorCharacter" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0, 0.6)
+
+[node name="ShoeL" type="CSGBox3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.075, 0.06)
+size = Vector3(0.18, 0.1, 0.3)
+material = SubResource("StandardMaterial3D_g2wfn")
+
+[node name="ShoeR" type="CSGBox3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.075, 0.06)
+size = Vector3(0.18, 0.1, 0.3)
+material = SubResource("StandardMaterial3D_ce4dx")
+
+[node name="LegL" type="MeshInstance3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.5, 0)
+mesh = SubResource("CapsuleMesh_27mhr")
+
+[node name="LegR" type="MeshInstance3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.5, 0)
+mesh = SubResource("CapsuleMesh_gaypu")
+
+[node name="CoatBody" type="MeshInstance3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 0)
+mesh = SubResource("CapsuleMesh_x0m78")
+
+[node name="Shirt" type="CSGBox3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26, 0.24)
+size = Vector3(0.12, 0.52, 0.02)
+material = SubResource("StandardMaterial3D_ibxko")
+
+[node name="Pocket" type="CSGBox3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 1.42, 0.25)
+size = Vector3(0.11, 0.09, 0.018)
+material = SubResource("StandardMaterial3D_2p62k")
+
+[node name="Pen" type="CSGCylinder3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.47, 0.255)
+radius = 0.008
+height = 0.1
+material = SubResource("StandardMaterial3D_rswrh")
+
+[node name="ArmL" type="MeshInstance3D" parent="DoctorCharacter"]
+transform = Transform3D(0.955337, 0.29552, 0, -0.259343, 0.838387, -0.479426, -0.14168, 0.458013, 0.877583, 0.48, 1.14, 0.26)
+mesh = SubResource("CapsuleMesh_4yh7d")
+
+[node name="HandL" type="CSGSphere3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.72, 0.85, 0.44)
+radius = 0.075
+material = SubResource("StandardMaterial3D_xbkeh")
+
+[node name="ArmR" type="MeshInstance3D" parent="DoctorCharacter"]
+transform = Transform3D(0.980067, -0.198669, 0, 0.194709, 0.960531, -0.198669, 0.0394695, 0.194709, 0.980067, -0.42, 1.14, 0.05)
+mesh = SubResource("CapsuleMesh_ttbtv")
+
+[node name="Clipboard" type="CSGBox3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 0.988771, -0.149438, 0, 0.149438, 0.988771, -0.55, 0.82, 0.08)
+size = Vector3(0.22, 0.3, 0.025)
+material = SubResource("StandardMaterial3D_ducv7")
+
+[node name="Paper" type="CSGBox3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.81, 0.095)
+size = Vector3(0.19, 0.27, 0.01)
+material = SubResource("StandardMaterial3D_isf7p")
+
+[node name="Neck" type="CSGCylinder3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+radius = 0.095
+height = 0.22
+material = SubResource("StandardMaterial3D_ofie3")
+
+[node name="Head" type="CSGSphere3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.99, 0)
+radius = 0.21
+material = SubResource("StandardMaterial3D_kj7br")
+
+[node name="Hair" type="CSGSphere3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.09, -0.02)
+radius = 0.2
+material = SubResource("StandardMaterial3D_o7idm")
+
+[node name="EyeL" type="CSGSphere3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 2.01, 0.19)
+radius = 0.025
+material = SubResource("StandardMaterial3D_fx0rs")
+
+[node name="EyeR" type="CSGSphere3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 2.01, 0.19)
+radius = 0.025
+material = SubResource("StandardMaterial3D_oaovq")
+
+[node name="GlassesL" type="CSGTorus3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.09, 2.01, 0.205)
+inner_radius = 0.048
+outer_radius = 0.007
+material = SubResource("StandardMaterial3D_lwo7f")
+
+[node name="GlassesR" type="CSGTorus3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.09, 2.01, 0.205)
+inner_radius = 0.048
+outer_radius = 0.007
+material = SubResource("StandardMaterial3D_02gjs")
+
+[node name="GlassesBridge" type="CSGBox3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.01, 0.21)
+size = Vector3(0.04, 0.008, 0.008)
+material = SubResource("StandardMaterial3D_jthvi")
+
+[node name="StethoscopeBase" type="CSGTorus3D" parent="DoctorCharacter"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.55, 0.25)
+inner_radius = 0.09
+outer_radius = 0.012
+material = SubResource("StandardMaterial3D_p2k7w")
+
+[node name="StethoscopeEnd" type="CSGCylinder3D" parent="DoctorCharacter"]
+transform = Transform3D(0.955337, -0.29552, 0, 0.29552, 0.955337, 0, 0, 0, 1, -0.09, 1.46, 0.24)
+radius = 0.01
+height = 0.14
+material = SubResource("StandardMaterial3D_0dw1a")
+
+[node name="WindowVignette" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 3.1, -6.38)
+size = Vector3(2.52, 1.78, 0.01)
+material = SubResource("StandardMaterial3D_ow7yl")
