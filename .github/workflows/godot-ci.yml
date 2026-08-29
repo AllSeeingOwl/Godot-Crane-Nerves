@@ -34,7 +34,7 @@ jobs:
       - name: Run gdlint
         run: |
           echo "Running gdlint on project..."
-          gdlint . || { echo "Linting failed. Please fix GDScript formatting issues and try again."; exit 1; }
+          gdlint $(find . -name "*.gd" ! -path "*/addons/*") || { echo "Linting failed. Please fix GDScript formatting issues and try again."; exit 1; }
 
   test-and-build:
     name: Build & Test
