@@ -25,6 +25,7 @@
   - Implement Global Game State (Stress Meter, Level Transitions).
   - Develop Level 1: Olfactory (Smell) with QWER/AD controls.
   - Basic CI/CD pipeline setup for automated builds.
+  - [x] Migration docs copied
 - **Dependencies:** None.
 
 ### Milestone 2: Alpha

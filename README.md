@@ -22,6 +22,7 @@ This repository represents the **Godot Engine migration** of the original game, 
 - ⚡ **[Performance](docs/PERFORMANCE.md)**: Optimization tips and known bottlenecks.
 - 📦 **[Deployment](docs/DEPLOYMENT.md)**: Building and releasing the game.
 - 📝 **[ADRs (Architecture Decision Records)](adr/)**: Technical decisions (e.g., why Godot over React).
+- 📊 **[Project Progress](PROGRESS.md)**: Completed features, in-progress features, and blockers.
 
 ## Design & Migration Reference
 
