@@ -1,12 +1,5 @@
 extends CanvasLayer
 
-@onready var stress_bar = $MarginContainer/VBoxContainer/TopRow/HBoxContainer/StressProgressBar
-@onready var level_label = $MarginContainer/VBoxContainer/TopRow/LevelLabel
-@onready var timer_label = $MarginContainer/VBoxContainer/TopRow/TimerLabel
-@onready var pause_button = $MarginContainer/VBoxContainer/TopRow/PauseButton
-
-var time_elapsed: float = 0.0
-
 const LEVEL_NAMES = {
 	1: "Level 1: Olfactory",
 	2: "Level 2: Optic",
@@ -21,6 +14,13 @@ const LEVEL_NAMES = {
 	11: "Level 11: Accessory",
 	12: "Level 12: Hypoglossal"
 }
+
+var time_elapsed: float = 0.0
+
+@onready var stress_bar = $MarginContainer/VBoxContainer/TopRow/HBoxContainer/StressProgressBar
+@onready var level_label = $MarginContainer/VBoxContainer/TopRow/LevelLabel
+@onready var timer_label = $MarginContainer/VBoxContainer/TopRow/TimerLabel
+@onready var pause_button = $MarginContainer/VBoxContainer/TopRow/PauseButton
 
 func _ready():
 	GameState.stress_changed.connect(_on_stress_changed)
