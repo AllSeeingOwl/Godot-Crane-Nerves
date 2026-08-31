@@ -66,25 +66,25 @@ jobs:
         run: |
           echo "Installing GUT framework..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip || { echo "Failed to download GUT"; exit 1; }
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v10.8.0.zip -O gut.zip || { echo "Failed to download GUT"; exit 1; }
           unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
 
           # Find the folder that actually contains the GUT addon (look for known files)
           GUT_SRC_DIR=""
           GUT_SRC_DIR=$(find . -type f \( -name "GutUtils.gd" -o -name "utils.gd" \) -printf '%h\n' | head -n1 | sed 's|/utils$||' || true)
-          if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-9.2.1/addons/gut" ]; then
-            GUT_SRC_DIR="Gut-9.2.1/addons/gut"
+          if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-10.8.0/addons/gut" ]; then
+            GUT_SRC_DIR="Gut-10.8.0/addons/gut"
           fi
 
           if [ -z "$GUT_SRC_DIR" ]; then
             echo "ERROR: could not locate GUT addon directory after extraction"
-            ls -la Gut-9.2.1/ || echo "Gut-9.2.1 directory doesn't exist"
+            ls -la Gut-10.8.0/ || echo "Gut-10.8.0 directory doesn't exist"
             exit 1
           fi
 
           rm -rf ./addons/gut
           mv "$GUT_SRC_DIR" ./addons/gut || { echo "Failed to move GUT to addons/gut"; exit 1; }
-          rm -rf Gut-9.2.1 gut.zip
+          rm -rf Gut-10.8.0 gut.zip
 
           # Accept either GutUtils.gd or utils.gd in the addon root or utils/ subfolder
           if [ -f "./addons/gut/utils/GutUtils.gd" ] || [ -f "./addons/gut/utils.gd" ] || [ -f "./addons/gut/GutUtils.gd" ]; then
@@ -214,25 +214,25 @@ jobs:
         run: |
           echo "Installing GUT framework for export..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip || { echo "Failed to download GUT"; exit 1; }
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v10.8.0.zip -O gut.zip || { echo "Failed to download GUT"; exit 1; }
           unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
 
           # Find the folder that actually contains the GUT addon (look for known files)
           GUT_SRC_DIR=""
           GUT_SRC_DIR=$(find . -type f \( -name "GutUtils.gd" -o -name "utils.gd" \) -printf '%h\n' | head -n1 | sed 's|/utils$||' || true)
-          if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-9.2.1/addons/gut" ]; then
-            GUT_SRC_DIR="Gut-9.2.1/addons/gut"
+          if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-10.8.0/addons/gut" ]; then
+            GUT_SRC_DIR="Gut-10.8.0/addons/gut"
           fi
 
           if [ -z "$GUT_SRC_DIR" ]; then
             echo "ERROR: could not locate GUT addon directory after extraction"
-            ls -la Gut-9.2.1/ || echo "Gut-9.2.1 directory doesn't exist"
+            ls -la Gut-10.8.0/ || echo "Gut-10.8.0 directory doesn't exist"
             exit 1
           fi
 
           rm -rf ./addons/gut
           mv "$GUT_SRC_DIR" ./addons/gut || { echo "Failed to move GUT to addons/gut"; exit 1; }
-          rm -rf Gut-9.2.1 gut.zip
+          rm -rf Gut-10.8.0 gut.zip
 
           # Accept either GutUtils.gd or utils.gd in the addon root or utils/ subfolder
           if [ -f "./addons/gut/utils/GutUtils.gd" ] || [ -f "./addons/gut/utils.gd" ] || [ -f "./addons/gut/GutUtils.gd" ]; then
