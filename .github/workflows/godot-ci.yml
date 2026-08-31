@@ -66,7 +66,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./addons/gut
-          key: gut-v10.8.0
+          key: gut-v9.1.1
           restore-keys: gut-
 
       - name: Install GUT
@@ -81,7 +81,7 @@ jobs:
           # Primary: download zip robustly
           for attempt in {1..5}; do
             echo "Download attempt $attempt..."
-            if curl -fL --retry 3 --retry-delay 5 --retry-connrefused --max-time 60 -o gut.zip "https://github.com/bitwes/Gut/archive/refs/tags/v10.8.0.zip"; then
+            if curl -fL --retry 3 --retry-delay 5 --retry-connrefused --max-time 60 -o gut.zip "https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip"; then
               # Validate ZIP
               if file gut.zip | grep -q "Zip archive data"; then
                 echo "Successfully downloaded GUT zip"
@@ -108,31 +108,31 @@ jobs:
           # Fallback: clone the repository if zip not available
           if [ ! -f gut.zip ]; then
             echo "Falling back to git clone..."
-            if git --version >/dev/null 2>&1 && git ls-remote --tags https://github.com/bitwes/Gut.git | grep -q "refs/tags/v10.8.0"; then
-              git clone --depth 1 --branch v10.8.0 https://github.com/bitwes/Gut.git Gut-10.8.0 || { echo "git clone failed"; exit 1; }
-              GUT_SRC_DIR="Gut-10.8.0/addons/gut"
+            if git --version >/dev/null 2>&1 && git ls-remote --tags https://github.com/bitwes/Gut.git | grep -q "refs/tags/v9.1.1"; then
+              git clone --depth 1 --branch v9.1.1 https://github.com/bitwes/Gut.git Gut-9.1.1 || { echo "git clone failed"; exit 1; }
+              GUT_SRC_DIR="Gut-9.1.1/addons/gut"
             else
-              echo "Tag v10.8.0 not found or git unavailable; aborting."
+              echo "Tag v9.1.1 not found or git unavailable; aborting."
               exit 1
             fi
           else
             # unzip and locate source dir as before
             unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
             GUT_SRC_DIR=$(find . -type f \( -name "GutUtils.gd" -o -name "utils.gd" \) -printf '%h\n' | head -n1 | sed 's|/utils$||' || true)
-            if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-10.8.0/addons/gut" ]; then
-              GUT_SRC_DIR="Gut-10.8.0/addons/gut"
+            if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-9.1.1/addons/gut" ]; then
+              GUT_SRC_DIR="Gut-9.1.1/addons/gut"
             fi
           fi
 
           if [ -z "$GUT_SRC_DIR" ]; then
             echo "ERROR: could not locate GUT addon directory after extraction"
-            ls -la Gut-10.8.0/ || echo "Gut-10.8.0 directory doesn't exist"
+            ls -la Gut-9.1.1/ || echo "Gut-9.1.1 directory doesn't exist"
             exit 1
           fi
 
           rm -rf ./addons/gut
           mv "$GUT_SRC_DIR" ./addons/gut || { echo "Failed to move GUT to addons/gut"; exit 1; }
-          rm -rf Gut-10.8.0 gut.zip
+          rm -rf Gut-9.1.1 gut.zip
 
           if [ -f "./addons/gut/utils/GutUtils.gd" ] || [ -f "./addons/gut/utils.gd" ] || [ -f "./addons/gut/GutUtils.gd" ]; then
             echo "GUT framework installed successfully"
@@ -261,7 +261,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./addons/gut
-          key: gut-v10.8.0
+          key: gut-v9.1.1
           restore-keys: gut-
 
       - name: Install GUT
@@ -276,7 +276,7 @@ jobs:
           # Primary: download zip robustly
           for attempt in {1..5}; do
             echo "Download attempt $attempt..."
-            if curl -fL --retry 3 --retry-delay 5 --retry-connrefused --max-time 60 -o gut.zip "https://github.com/bitwes/Gut/archive/refs/tags/v10.8.0.zip"; then
+            if curl -fL --retry 3 --retry-delay 5 --retry-connrefused --max-time 60 -o gut.zip "https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip"; then
               # Validate ZIP
               if file gut.zip | grep -q "Zip archive data"; then
                 echo "Successfully downloaded GUT zip"
@@ -303,31 +303,31 @@ jobs:
           # Fallback: clone the repository if zip not available
           if [ ! -f gut.zip ]; then
             echo "Falling back to git clone..."
-            if git --version >/dev/null 2>&1 && git ls-remote --tags https://github.com/bitwes/Gut.git | grep -q "refs/tags/v10.8.0"; then
-              git clone --depth 1 --branch v10.8.0 https://github.com/bitwes/Gut.git Gut-10.8.0 || { echo "git clone failed"; exit 1; }
-              GUT_SRC_DIR="Gut-10.8.0/addons/gut"
+            if git --version >/dev/null 2>&1 && git ls-remote --tags https://github.com/bitwes/Gut.git | grep -q "refs/tags/v9.1.1"; then
+              git clone --depth 1 --branch v9.1.1 https://github.com/bitwes/Gut.git Gut-9.1.1 || { echo "git clone failed"; exit 1; }
+              GUT_SRC_DIR="Gut-9.1.1/addons/gut"
             else
-              echo "Tag v10.8.0 not found or git unavailable; aborting."
+              echo "Tag v9.1.1 not found or git unavailable; aborting."
               exit 1
             fi
           else
             # unzip and locate source dir as before
             unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
             GUT_SRC_DIR=$(find . -type f \( -name "GutUtils.gd" -o -name "utils.gd" \) -printf '%h\n' | head -n1 | sed 's|/utils$||' || true)
-            if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-10.8.0/addons/gut" ]; then
-              GUT_SRC_DIR="Gut-10.8.0/addons/gut"
+            if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-9.1.1/addons/gut" ]; then
+              GUT_SRC_DIR="Gut-9.1.1/addons/gut"
             fi
           fi
 
           if [ -z "$GUT_SRC_DIR" ]; then
             echo "ERROR: could not locate GUT addon directory after extraction"
-            ls -la Gut-10.8.0/ || echo "Gut-10.8.0 directory doesn't exist"
+            ls -la Gut-9.1.1/ || echo "Gut-9.1.1 directory doesn't exist"
             exit 1
           fi
 
           rm -rf ./addons/gut
           mv "$GUT_SRC_DIR" ./addons/gut || { echo "Failed to move GUT to addons/gut"; exit 1; }
-          rm -rf Gut-10.8.0 gut.zip
+          rm -rf Gut-9.1.1 gut.zip
 
           if [ -f "./addons/gut/utils/GutUtils.gd" ] || [ -f "./addons/gut/utils.gd" ] || [ -f "./addons/gut/GutUtils.gd" ]; then
             echo "GUT framework installed successfully"
