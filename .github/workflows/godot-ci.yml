@@ -90,6 +90,7 @@ jobs:
             echo "No unit tests found, running dummy compile check."
           fi
 
+
       - name: Record End Time & Benchmark
         if: always()
         run: |
@@ -204,6 +205,14 @@ jobs:
           echo "Exporting for ${{ matrix.preset_name }}..."
           godot --headless --export-release "${{ matrix.preset_name }}" "${{ matrix.export_path }}/${{ matrix.output_file }}" -v || { echo "Export failed"; exit 1; }
 
+
+      - name: Add COI Service Worker for Web (GitHub Pages)
+        if: matrix.platform == 'web'
+        run: |
+          echo "Adding coi-serviceworker..."
+          wget -q https://raw.githubusercontent.com/gzuidhof/coi-serviceworker/master/coi-serviceworker.min.js -O ${{ matrix.export_path }}/coi-serviceworker.min.js
+          sed -i 's|</head>|<script src="coi-serviceworker.min.js"></script></head>|' ${{ matrix.export_path }}/index.html
+
       - name: Record End Time & Benchmark
         if: always()
         run: |
@@ -235,6 +244,29 @@ jobs:
           SLACK_TITLE: "Export Failed: ${{ matrix.platform }}"
           SLACK_MESSAGE: "The Godot CI/CD pipeline failed during export for ${{ matrix.platform }}. Please check the workflow logs for details."
           SLACK_COLOR: "#ff0000"
+
+
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: export
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Web Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: web-build
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./web-build
+          force_orphan: true
 
   release:
     name: Create Release
