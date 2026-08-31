@@ -66,16 +66,28 @@ jobs:
         run: |
           echo "Installing GUT framework..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip
-          unzip -q gut.zip
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip || { echo "Failed to download GUT"; exit 1; }
+          unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
+
+          # Verify the expected directory exists
+          if [ ! -d "Gut-9.2.1/addons/gut" ]; then
+            echo "ERROR: Gut-9.2.1/addons/gut directory not found after extraction"
+            ls -la Gut-9.2.1/ || echo "Gut-9.2.1 directory doesn't exist"
+            exit 1
+          fi
+
           rm -rf ./addons/gut
-          mv Gut-9.2.1/addons/gut ./addons/gut
+          mv Gut-9.2.1/addons/gut ./addons/gut || { echo "Failed to move GUT to addons"; exit 1; }
           rm -rf Gut-9.2.1 gut.zip
+
           # Verify GutUtils exists
           if [ ! -f "./addons/gut/utils/GutUtils.gd" ]; then
             echo "ERROR: GutUtils.gd not found - GUT installation failed"
+            echo "Contents of addons/gut:"
+            ls -la ./addons/gut/
             exit 1
           fi
+          echo "GUT framework installed successfully"
 
       - name: Import Assets
         run: |
@@ -188,16 +200,28 @@ jobs:
         run: |
           echo "Installing GUT framework for export..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip
-          unzip -q gut.zip
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip || { echo "Failed to download GUT"; exit 1; }
+          unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
+
+          # Verify the expected directory exists
+          if [ ! -d "Gut-9.2.1/addons/gut" ]; then
+            echo "ERROR: Gut-9.2.1/addons/gut directory not found after extraction"
+            ls -la Gut-9.2.1/ || echo "Gut-9.2.1 directory doesn't exist"
+            exit 1
+          fi
+
           rm -rf ./addons/gut
-          mv Gut-9.2.1/addons/gut ./addons/gut
+          mv Gut-9.2.1/addons/gut ./addons/gut || { echo "Failed to move GUT to addons"; exit 1; }
           rm -rf Gut-9.2.1 gut.zip
+
           # Verify GutUtils exists
           if [ ! -f "./addons/gut/utils/GutUtils.gd" ]; then
             echo "ERROR: GutUtils.gd not found - GUT installation failed"
+            echo "Contents of addons/gut:"
+            ls -la ./addons/gut/
             exit 1
           fi
+          echo "GUT framework installed successfully"
 
       - name: Import Assets
         run: |
