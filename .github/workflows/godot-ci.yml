@@ -66,11 +66,16 @@ jobs:
         run: |
           echo "Installing GUT framework..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip -O gut.zip
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip
           unzip -q gut.zip
           rm -rf ./addons/gut
-          mv Gut-9.1.1/addons/gut ./addons/gut
-          rm -rf Gut-9.1.1 gut.zip
+          mv Gut-9.2.1/addons/gut ./addons/gut
+          rm -rf Gut-9.2.1 gut.zip
+          # Verify GutUtils exists
+          if [ ! -f "./addons/gut/utils/GutUtils.gd" ]; then
+            echo "ERROR: GutUtils.gd not found - GUT installation failed"
+            exit 1
+          fi
 
       - name: Import Assets
         run: |
@@ -183,11 +188,16 @@ jobs:
         run: |
           echo "Installing GUT framework for export..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip -O gut.zip
+          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip
           unzip -q gut.zip
           rm -rf ./addons/gut
-          mv Gut-9.1.1/addons/gut ./addons/gut
-          rm -rf Gut-9.1.1 gut.zip
+          mv Gut-9.2.1/addons/gut ./addons/gut
+          rm -rf Gut-9.2.1 gut.zip
+          # Verify GutUtils exists
+          if [ ! -f "./addons/gut/utils/GutUtils.gd" ]; then
+            echo "ERROR: GutUtils.gd not found - GUT installation failed"
+            exit 1
+          fi
 
       - name: Import Assets
         run: |
@@ -261,13 +271,15 @@ jobs:
           name: web-build
           path: web-build
 
+      - name: Create .nojekyll file
+        run: touch ./web-build/.nojekyll
+
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./web-build
           force_orphan: true
-          enable_jekyll: false
 
   release:
     name: Create Release
