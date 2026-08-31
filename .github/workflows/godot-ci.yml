@@ -69,25 +69,32 @@ jobs:
           wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip || { echo "Failed to download GUT"; exit 1; }
           unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
 
-          # Verify the expected directory exists
-          if [ ! -d "Gut-9.2.1/addons/gut" ]; then
-            echo "ERROR: Gut-9.2.1/addons/gut directory not found after extraction"
+          # Find the folder that actually contains the GUT addon (look for known files)
+          GUT_SRC_DIR=""
+          GUT_SRC_DIR=$(find . -type f \( -name "GutUtils.gd" -o -name "utils.gd" \) -printf '%h\n' | head -n1 | sed 's|/utils$||' || true)
+          if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-9.2.1/addons/gut" ]; then
+            GUT_SRC_DIR="Gut-9.2.1/addons/gut"
+          fi
+
+          if [ -z "$GUT_SRC_DIR" ]; then
+            echo "ERROR: could not locate GUT addon directory after extraction"
             ls -la Gut-9.2.1/ || echo "Gut-9.2.1 directory doesn't exist"
             exit 1
           fi
 
           rm -rf ./addons/gut
-          mv Gut-9.2.1/addons/gut ./addons/gut || { echo "Failed to move GUT to addons"; exit 1; }
+          mv "$GUT_SRC_DIR" ./addons/gut || { echo "Failed to move GUT to addons/gut"; exit 1; }
           rm -rf Gut-9.2.1 gut.zip
 
-          # Verify GutUtils exists
-          if [ ! -f "./addons/gut/utils/GutUtils.gd" ]; then
-            echo "ERROR: GutUtils.gd not found - GUT installation failed"
+          # Accept either GutUtils.gd or utils.gd in the addon root or utils/ subfolder
+          if [ -f "./addons/gut/utils/GutUtils.gd" ] || [ -f "./addons/gut/utils.gd" ] || [ -f "./addons/gut/GutUtils.gd" ]; then
+            echo "GUT framework installed successfully"
+          else
+            echo "ERROR: GUT utils file not found - GUT installation failed"
             echo "Contents of addons/gut:"
             ls -la ./addons/gut/
             exit 1
           fi
-          echo "GUT framework installed successfully"
 
       - name: Import Assets
         run: |
@@ -203,25 +210,32 @@ jobs:
           wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.2.1.zip -O gut.zip || { echo "Failed to download GUT"; exit 1; }
           unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
 
-          # Verify the expected directory exists
-          if [ ! -d "Gut-9.2.1/addons/gut" ]; then
-            echo "ERROR: Gut-9.2.1/addons/gut directory not found after extraction"
+          # Find the folder that actually contains the GUT addon (look for known files)
+          GUT_SRC_DIR=""
+          GUT_SRC_DIR=$(find . -type f \( -name "GutUtils.gd" -o -name "utils.gd" \) -printf '%h\n' | head -n1 | sed 's|/utils$||' || true)
+          if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-9.2.1/addons/gut" ]; then
+            GUT_SRC_DIR="Gut-9.2.1/addons/gut"
+          fi
+
+          if [ -z "$GUT_SRC_DIR" ]; then
+            echo "ERROR: could not locate GUT addon directory after extraction"
             ls -la Gut-9.2.1/ || echo "Gut-9.2.1 directory doesn't exist"
             exit 1
           fi
 
           rm -rf ./addons/gut
-          mv Gut-9.2.1/addons/gut ./addons/gut || { echo "Failed to move GUT to addons"; exit 1; }
+          mv "$GUT_SRC_DIR" ./addons/gut || { echo "Failed to move GUT to addons/gut"; exit 1; }
           rm -rf Gut-9.2.1 gut.zip
 
-          # Verify GutUtils exists
-          if [ ! -f "./addons/gut/utils/GutUtils.gd" ]; then
-            echo "ERROR: GutUtils.gd not found - GUT installation failed"
+          # Accept either GutUtils.gd or utils.gd in the addon root or utils/ subfolder
+          if [ -f "./addons/gut/utils/GutUtils.gd" ] || [ -f "./addons/gut/utils.gd" ] || [ -f "./addons/gut/GutUtils.gd" ]; then
+            echo "GUT framework installed successfully"
+          else
+            echo "ERROR: GUT utils file not found - GUT installation failed"
             echo "Contents of addons/gut:"
             ls -la ./addons/gut/
             exit 1
           fi
-          echo "GUT framework installed successfully"
 
       - name: Import Assets
         run: |
