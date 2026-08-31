@@ -66,7 +66,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./addons/gut
-          key: gut-v9.1.1
+          key: gut-v9.1.1-patched
           restore-keys: gut-
 
       - name: Install GUT
@@ -141,6 +141,14 @@ jobs:
             echo "Contents of addons/gut:"
             ls -la ./addons/gut/
             exit 1
+          fi
+
+          # Patch missing GutUtils declarations for v9.1.1
+          if [ -f "./addons/gut/gui/OutputText.gd" ]; then
+            sed -i '/extends/a const GutUtils = preload("res:\/\/addons\/gut\/utils.gd")' ./addons/gut/gui/OutputText.gd
+          fi
+          if [ -f "./addons/gut/gut_cmdln.gd" ]; then
+            sed -i '/extends/a const GutUtils = preload("res:\/\/addons\/gut\/utils.gd")' ./addons/gut/gut_cmdln.gd
           fi
 
       - name: Import Assets
@@ -261,7 +269,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./addons/gut
-          key: gut-v9.1.1
+          key: gut-v9.1.1-patched
           restore-keys: gut-
 
       - name: Install GUT
@@ -336,6 +344,14 @@ jobs:
             echo "Contents of addons/gut:"
             ls -la ./addons/gut/
             exit 1
+          fi
+
+          # Patch missing GutUtils declarations for v9.1.1
+          if [ -f "./addons/gut/gui/OutputText.gd" ]; then
+            sed -i '/extends/a const GutUtils = preload("res:\/\/addons\/gut\/utils.gd")' ./addons/gut/gui/OutputText.gd
+          fi
+          if [ -f "./addons/gut/gut_cmdln.gd" ]; then
+            sed -i '/extends/a const GutUtils = preload("res:\/\/addons\/gut\/utils.gd")' ./addons/gut/gut_cmdln.gd
           fi
 
       - name: Import Assets
