@@ -267,6 +267,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./web-build
           force_orphan: true
+          enable_jekyll: false
 
   release:
     name: Create Release
