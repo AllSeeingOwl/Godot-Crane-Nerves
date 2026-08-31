@@ -82,8 +82,14 @@ jobs:
           for attempt in {1..5}; do
             echo "Download attempt $attempt..."
             if curl -L --max-time 30 -s -o gut.zip https://github.com/bitwes/Gut/archive/refs/tags/v10.8.0.zip; then
-              echo "Successfully downloaded GUT"
-              break
+              # Validate the ZIP file was downloaded correctly
+              if file gut.zip | grep -q "Zip archive data"; then
+                echo "Successfully downloaded GUT"
+                break
+              else
+                echo "Downloaded file is not a valid ZIP (got: $(file gut.zip))"
+                rm -f gut.zip
+              fi
             fi
             if [ $attempt -lt 5 ]; then
               wait_time=$((10 * attempt))
@@ -258,8 +264,14 @@ jobs:
           for attempt in {1..5}; do
             echo "Download attempt $attempt..."
             if curl -L --max-time 30 -s -o gut.zip https://github.com/bitwes/Gut/archive/refs/tags/v10.8.0.zip; then
-              echo "Successfully downloaded GUT"
-              break
+              # Validate the ZIP file was downloaded correctly
+              if file gut.zip | grep -q "Zip archive data"; then
+                echo "Successfully downloaded GUT"
+                break
+              else
+                echo "Downloaded file is not a valid ZIP (got: $(file gut.zip))"
+                rm -f gut.zip
+              fi
             fi
             if [ $attempt -lt 5 ]; then
               wait_time=$((10 * attempt))
