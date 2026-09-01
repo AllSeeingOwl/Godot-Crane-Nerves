@@ -62,23 +62,109 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-godot-templates-
 
+      - name: Cache GUT Framework
+        uses: actions/cache@v4
+        with:
+          path: ./addons/gut
+          key: gut-v9.1.1-patched
+          restore-keys: gut-
+
       - name: Install GUT
         run: |
+          if [ -d "./addons/gut" ]; then
+            echo "GUT already installed from cache."
+            exit 0
+          fi
           echo "Installing GUT framework..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip -O gut.zip
-          unzip -q gut.zip
+
+          # Primary: download zip robustly
+          for attempt in {1..5}; do
+            echo "Download attempt $attempt..."
+            if curl -fL --retry 3 --retry-delay 5 --retry-connrefused --max-time 60 -o gut.zip "https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip"; then
+              # Validate ZIP
+              if file gut.zip | grep -q "Zip archive data"; then
+                echo "Successfully downloaded GUT zip"
+                break
+              else
+                echo "Downloaded file is not a zip (file output: $(file gut.zip))"
+                echo "Showing first 200 bytes to help diagnose:"
+                head -c 200 gut.zip | sed -n '1,200p' || true
+                rm -f gut.zip
+              fi
+            else
+              echo "curl failed (exit code $?)."
+            fi
+
+            if [ $attempt -lt 5 ]; then
+              wait_time=$((10 * attempt))
+              echo "Download failed, retrying in ${wait_time} seconds..."
+              sleep $wait_time
+            else
+              echo "Download attempts exhausted."
+            fi
+          done
+
+          # Fallback: clone the repository if zip not available
+          if [ ! -f gut.zip ]; then
+            echo "Falling back to git clone..."
+            if git --version >/dev/null 2>&1 && git ls-remote --tags https://github.com/bitwes/Gut.git | grep -q "refs/tags/v9.1.1"; then
+              git clone --depth 1 --branch v9.1.1 https://github.com/bitwes/Gut.git Gut-9.1.1 || { echo "git clone failed"; exit 1; }
+              GUT_SRC_DIR="Gut-9.1.1/addons/gut"
+            else
+              echo "Tag v9.1.1 not found or git unavailable; aborting."
+              exit 1
+            fi
+          else
+            # unzip and locate source dir as before
+            unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
+            GUT_SRC_DIR=$(find . -type f \( -name "GutUtils.gd" -o -name "utils.gd" \) -printf '%h\n' | head -n1 | sed 's|/utils$||' || true)
+            if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-9.1.1/addons/gut" ]; then
+              GUT_SRC_DIR="Gut-9.1.1/addons/gut"
+            fi
+          fi
+
+          if [ -z "$GUT_SRC_DIR" ]; then
+            echo "ERROR: could not locate GUT addon directory after extraction"
+            ls -la Gut-9.1.1/ || echo "Gut-9.1.1 directory doesn't exist"
+            exit 1
+          fi
+
           rm -rf ./addons/gut
-          mv Gut-9.1.1/addons/gut ./addons/gut
+          mv "$GUT_SRC_DIR" ./addons/gut || { echo "Failed to move GUT to addons/gut"; exit 1; }
           rm -rf Gut-9.1.1 gut.zip
+
+          if [ -f "./addons/gut/utils/GutUtils.gd" ] || [ -f "./addons/gut/utils.gd" ] || [ -f "./addons/gut/GutUtils.gd" ]; then
+            echo "GUT framework installed successfully"
+          else
+            echo "ERROR: GUT utils file not found - GUT installation failed"
+            echo "Contents of addons/gut:"
+            ls -la ./addons/gut/
+            exit 1
+          fi
+
+          # Patch missing GutUtils declarations for v9.1.1
+          if [ -f "./addons/gut/gui/OutputText.gd" ]; then
+            sed -i '/extends/a const GutUtils = preload("res:\/\/addons\/gut\/utils.gd")' ./addons/gut/gui/OutputText.gd
+          fi
+          if [ -f "./addons/gut/gut_cmdln.gd" ]; then
+            sed -i '/extends/a const GutUtils = preload("res:\/\/addons\/gut\/utils.gd")' ./addons/gut/gut_cmdln.gd
+          fi
 
       - name: Import Assets
         run: |
           echo "Importing assets via Godot headless..."
-          # First run to import all assets
-          godot --headless --editor --quit -v || true
-          # Second run to build the class cache
-          godot --headless --editor --quit -v || { echo "Failed to build class cache"; exit 1; }
+          # Run multiple times to ensure full import completion
+          for i in {1..3}; do
+            echo "Import pass $i..."
+            godot --headless --editor --quit -v || true
+            sleep 2
+          done
+          # Verify .godot directory was created
+          if [ ! -d ".godot" ]; then
+            echo "ERROR: .godot import cache not created"
+            exit 1
+          fi
 
       - name: Verify compilation and tests
         run: |
@@ -179,21 +265,109 @@ jobs:
             echo "Templates restored from cache."
           fi
 
+      - name: Cache GUT Framework
+        uses: actions/cache@v4
+        with:
+          path: ./addons/gut
+          key: gut-v9.1.1-patched
+          restore-keys: gut-
+
       - name: Install GUT
         run: |
-          echo "Installing GUT framework for export..."
+          if [ -d "./addons/gut" ]; then
+            echo "GUT already installed from cache."
+            exit 0
+          fi
+          echo "Installing GUT framework..."
           mkdir -p addons
-          wget -q https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip -O gut.zip
-          unzip -q gut.zip
+
+          # Primary: download zip robustly
+          for attempt in {1..5}; do
+            echo "Download attempt $attempt..."
+            if curl -fL --retry 3 --retry-delay 5 --retry-connrefused --max-time 60 -o gut.zip "https://github.com/bitwes/Gut/archive/refs/tags/v9.1.1.zip"; then
+              # Validate ZIP
+              if file gut.zip | grep -q "Zip archive data"; then
+                echo "Successfully downloaded GUT zip"
+                break
+              else
+                echo "Downloaded file is not a zip (file output: $(file gut.zip))"
+                echo "Showing first 200 bytes to help diagnose:"
+                head -c 200 gut.zip | sed -n '1,200p' || true
+                rm -f gut.zip
+              fi
+            else
+              echo "curl failed (exit code $?)."
+            fi
+
+            if [ $attempt -lt 5 ]; then
+              wait_time=$((10 * attempt))
+              echo "Download failed, retrying in ${wait_time} seconds..."
+              sleep $wait_time
+            else
+              echo "Download attempts exhausted."
+            fi
+          done
+
+          # Fallback: clone the repository if zip not available
+          if [ ! -f gut.zip ]; then
+            echo "Falling back to git clone..."
+            if git --version >/dev/null 2>&1 && git ls-remote --tags https://github.com/bitwes/Gut.git | grep -q "refs/tags/v9.1.1"; then
+              git clone --depth 1 --branch v9.1.1 https://github.com/bitwes/Gut.git Gut-9.1.1 || { echo "git clone failed"; exit 1; }
+              GUT_SRC_DIR="Gut-9.1.1/addons/gut"
+            else
+              echo "Tag v9.1.1 not found or git unavailable; aborting."
+              exit 1
+            fi
+          else
+            # unzip and locate source dir as before
+            unzip -q gut.zip || { echo "Failed to unzip GUT"; exit 1; }
+            GUT_SRC_DIR=$(find . -type f \( -name "GutUtils.gd" -o -name "utils.gd" \) -printf '%h\n' | head -n1 | sed 's|/utils$||' || true)
+            if [ -z "$GUT_SRC_DIR" ] && [ -d "Gut-9.1.1/addons/gut" ]; then
+              GUT_SRC_DIR="Gut-9.1.1/addons/gut"
+            fi
+          fi
+
+          if [ -z "$GUT_SRC_DIR" ]; then
+            echo "ERROR: could not locate GUT addon directory after extraction"
+            ls -la Gut-9.1.1/ || echo "Gut-9.1.1 directory doesn't exist"
+            exit 1
+          fi
+
           rm -rf ./addons/gut
-          mv Gut-9.1.1/addons/gut ./addons/gut
+          mv "$GUT_SRC_DIR" ./addons/gut || { echo "Failed to move GUT to addons/gut"; exit 1; }
           rm -rf Gut-9.1.1 gut.zip
+
+          if [ -f "./addons/gut/utils/GutUtils.gd" ] || [ -f "./addons/gut/utils.gd" ] || [ -f "./addons/gut/GutUtils.gd" ]; then
+            echo "GUT framework installed successfully"
+          else
+            echo "ERROR: GUT utils file not found - GUT installation failed"
+            echo "Contents of addons/gut:"
+            ls -la ./addons/gut/
+            exit 1
+          fi
+
+          # Patch missing GutUtils declarations for v9.1.1
+          if [ -f "./addons/gut/gui/OutputText.gd" ]; then
+            sed -i '/extends/a const GutUtils = preload("res:\/\/addons\/gut\/utils.gd")' ./addons/gut/gui/OutputText.gd
+          fi
+          if [ -f "./addons/gut/gut_cmdln.gd" ]; then
+            sed -i '/extends/a const GutUtils = preload("res:\/\/addons\/gut\/utils.gd")' ./addons/gut/gut_cmdln.gd
+          fi
 
       - name: Import Assets
         run: |
           echo "Importing assets for export..."
-          godot --headless --editor --quit -v || true
-          godot --headless --editor --quit -v || { echo "Failed to build class cache"; exit 1; }
+          # Run multiple times to ensure full import completion
+          for i in {1..3}; do
+            echo "Import pass $i..."
+            godot --headless --editor --quit -v || true
+            sleep 2
+          done
+          # Verify .godot directory was created
+          if [ ! -d ".godot" ]; then
+            echo "ERROR: .godot import cache not created"
+            exit 1
+          fi
 
       - name: Create export directory
         run: |
@@ -260,6 +434,9 @@ jobs:
         with:
           name: web-build
           path: web-build
+
+      - name: Create .nojekyll file
+        run: touch ./web-build/.nojekyll
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3

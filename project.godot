@@ -18,3 +18,7 @@ config/features=PackedStringArray("4.1")
 
 GameState="*res://scripts/game_state.gd"
 LevelManager="*res://scripts/level_manager.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
