@@ -1,5 +1,5 @@
 class_name Level1Olfactory
-extends Node2D
+extends BaseLevel
 
 ## Level 1: Olfactory Nerve Exam
 ## Mechanics:
@@ -39,45 +39,32 @@ var current_hand_speed: float = 0.0
 @onready var nose_progress: ProgressBar = $Nose/ProgressBar
 @onready var vial_cursor: Control = $VialCursor
 @onready var vial_cursor_color: ColorRect = $VialCursor/ColorRect
-@onready var info_label: Label = $UI/InfoLabel
-@onready var controls_label: Label = $UI/ControlsLabel
-@onready var stress_bar: ProgressBar = $UI/StressBar
 
 
 func _ready() -> void:
+	level_id = 1
+	level_title = "Level 1: Olfactory Nerve"
+	super._ready()
+
 	var screen_size = get_viewport_rect().size
 	if screen_size == Vector2.ZERO:
 		screen_size = Vector2(1152, 648)
 
 	# Position nose near upper middle of screen
-	nose.position = Vector2(screen_size.x / 2.0, screen_size.y / 2.0 - 100.0)
+	if nose:
+		nose.position = Vector2(screen_size.x / 2.0, screen_size.y / 2.0 - 100.0)
 	hand_position = get_global_mouse_position()
 
 	# Initial random velocity for nose
 	nose_velocity = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)).normalized() * 100.0
 
 	# Connect UI buttons
-	if $UI/VialsBox.has_node("CoffeeBtn"):
+	if has_node("UI/VialsBox/CoffeeBtn"):
 		$UI/VialsBox/CoffeeBtn.pressed.connect(_on_vial_pressed.bind("coffee"))
-	if $UI/VialsBox.has_node("MintBtn"):
+	if has_node("UI/VialsBox/MintBtn"):
 		$UI/VialsBox/MintBtn.pressed.connect(_on_vial_pressed.bind("mint"))
-	if $UI/VialsBox.has_node("SurstrommingBtn"):
+	if has_node("UI/VialsBox/SurstrommingBtn"):
 		$UI/VialsBox/SurstrommingBtn.pressed.connect(_on_vial_pressed.bind("surstromming"))
-
-	if not GameState.stress_changed.is_connected(_on_stress_changed):
-		GameState.stress_changed.connect(_on_stress_changed)
-
-	_update_ui()
-
-
-func _exit_tree() -> void:
-	if GameState.stress_changed.is_connected(_on_stress_changed):
-		GameState.stress_changed.disconnect(_on_stress_changed)
-
-
-func _on_stress_changed(new_stress: float, _delta: float) -> void:
-	if stress_bar:
-		stress_bar.value = new_stress
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -117,19 +104,21 @@ func _update_ui() -> void:
 		)
 
 	# Update button visual state
-	if $UI/VialsBox.has_node("CoffeeBtn"):
+	if has_node("UI/VialsBox/CoffeeBtn"):
 		_update_btn_state($UI/VialsBox/CoffeeBtn, "coffee")
-	if $UI/VialsBox.has_node("MintBtn"):
+	if has_node("UI/VialsBox/MintBtn"):
 		_update_btn_state($UI/VialsBox/MintBtn, "mint")
-	if $UI/VialsBox.has_node("SurstrommingBtn"):
+	if has_node("UI/VialsBox/SurstrommingBtn"):
 		_update_btn_state($UI/VialsBox/SurstrommingBtn, "surstromming")
 
 	if selected_vial != "":
-		vial_cursor.visible = true
+		if vial_cursor:
+			vial_cursor.visible = true
 		if vial_cursor_color and VIALS.has(selected_vial):
 			vial_cursor_color.color = VIALS[selected_vial].color
 	else:
-		vial_cursor.visible = false
+		if vial_cursor:
+			vial_cursor.visible = false
 
 
 func _update_btn_state(btn: Button, vial_id: String) -> void:
@@ -170,80 +159,82 @@ func _process(delta: float) -> void:
 		GameState.add_stress(speed_excess * SPEED_STRESS_FACTOR * delta)
 
 	# 4. Wandering Nose Position
-	var nose_center = nose.position + (nose.size / 2.0 if nose is Control else Vector2.ZERO)
-	nose.position += nose_velocity * delta
+	if nose:
+		var nose_center = nose.position + (nose.size / 2.0 if nose is Control else Vector2.ZERO)
+		nose.position += nose_velocity * delta
 
-	# Bounce nose off screen edges
-	var screen_size = get_viewport_rect().size
-	if screen_size == Vector2.ZERO:
-		screen_size = Vector2(1152, 648)
-	var margin = 100.0
+		# Bounce nose off screen edges
+		var screen_size = get_viewport_rect().size
+		if screen_size == Vector2.ZERO:
+			screen_size = Vector2(1152, 648)
+		var margin = 100.0
 
-	if nose.position.x < margin:
-		nose.position.x = margin
-		nose_velocity.x *= -1.0
-	elif nose.position.x > screen_size.x - margin:
-		nose.position.x = screen_size.x - margin
-		nose_velocity.x *= -1.0
+		if nose.position.x < margin:
+			nose.position.x = margin
+			nose_velocity.x *= -1.0
+		elif nose.position.x > screen_size.x - margin:
+			nose.position.x = screen_size.x - margin
+			nose_velocity.x *= -1.0
 
-	if nose.position.y < margin:
-		nose.position.y = margin
-		nose_velocity.y *= -1.0
-	elif nose.position.y > screen_size.y - margin:
-		nose.position.y = screen_size.y - margin
-		nose_velocity.y *= -1.0
+		if nose.position.y < margin:
+			nose.position.y = margin
+			nose_velocity.y *= -1.0
+		elif nose.position.y > screen_size.y - margin:
+			nose.position.y = screen_size.y - margin
+			nose_velocity.y *= -1.0
 
-	# Random direction changes for nose
-	if randf() < 0.02:
-		nose_velocity += Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * 50.0
-		if nose_velocity.length() > 200.0:
-			nose_velocity = nose_velocity.normalized() * 200.0
+		# Random direction changes for nose
+		if randf() < 0.02:
+			nose_velocity += Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * 50.0
+			if nose_velocity.length() > 200.0:
+				nose_velocity = nose_velocity.normalized() * 200.0
 
-	# 5. Hand / Vial Logic & Proximity Calculation
-	vial_cursor.position = hand_position
+		# 5. Hand / Vial Logic & Proximity Calculation
+		if vial_cursor:
+			vial_cursor.position = hand_position
 
-	if selected_vial != "":
-		var vial_def = VIALS[selected_vial]
-		var dist = hand_position.distance_to(nose_center)
+		if selected_vial != "":
+			var vial_def = VIALS[selected_vial]
+			var dist = hand_position.distance_to(nose_center)
 
-		if not identified_vials.has(selected_vial):
-			if vial_def["type"] == "bad":
-				# Bad smell (Surströmming) causes patient evasion
-				if dist < BAD_SMELL_EVADE_RANGE and dist > 0.1:
-					var evade_dir = (nose_center - hand_position).normalized()
-					nose_velocity += evade_dir * 300.0 * delta
+			if not identified_vials.has(selected_vial):
+				if vial_def["type"] == "bad":
+					# Bad smell (Surströmming) causes patient evasion
+					if dist < BAD_SMELL_EVADE_RANGE and dist > 0.1:
+						var evade_dir = (nose_center - hand_position).normalized()
+						nose_velocity += evade_dir * 300.0 * delta
 
-				# Rapid stress increase if bad smell is too close
-				if dist < BAD_SMELL_STRESS_RANGE:
-					GameState.add_stress(BAD_SMELL_STRESS_RATE * delta)
+					# Rapid stress increase if bad smell is too close
+					if dist < BAD_SMELL_STRESS_RANGE:
+						GameState.add_stress(BAD_SMELL_STRESS_RATE * delta)
 
-			if dist < SMELL_RANGE:
-				# Inside smelling range
-				progress += 50.0 * delta
+				if dist < SMELL_RANGE:
+					# Inside smelling range
+					progress += 50.0 * delta
 
-				# Slowly increase stress taking time near patient
-				GameState.add_stress(TIME_STRESS_RATE * delta)
+					# Slowly increase stress taking time near patient
+					GameState.add_stress(TIME_STRESS_RATE * delta)
 
-				if progress >= 100.0:
-					identified_vials.append(selected_vial)
-					selected_vial = ""
-					progress = 0.0
-					_update_ui()
-					_check_win_condition()
-			else:
-				if progress > 0.0:
-					progress = max(0.0, progress - 100.0 * delta)
-	else:
-		if progress > 0.0:
-			progress = max(0.0, progress - 100.0 * delta)
-
-	# Update Nose progress bar
-	if nose_progress:
-		if progress > 0.0:
-			nose_progress.visible = true
-			nose_progress.value = progress
+					if progress >= 100.0:
+						identified_vials.append(selected_vial)
+						selected_vial = ""
+						progress = 0.0
+						_update_ui()
+						_check_win_condition()
+				else:
+					if progress > 0.0:
+						progress = max(0.0, progress - 100.0 * delta)
 		else:
-			nose_progress.visible = false
+			if progress > 0.0:
+				progress = max(0.0, progress - 100.0 * delta)
+
+		# Update Nose progress bar
+		if nose_progress:
+			if progress > 0.0:
+				nose_progress.visible = true
+				nose_progress.value = progress
+			else:
+				nose_progress.visible = false
 
 
 func _check_win_condition() -> void:
@@ -253,4 +244,4 @@ func _check_win_condition() -> void:
 			good_identified += 1
 
 	if good_identified >= 2:
-		GameState.win_level()
+		win_level()
