@@ -43,10 +43,36 @@ If you need to build the game locally for testing:
 4. Click **Export Project**.
 5. Do *not* check "Export with Debug" if you are building a release version for players.
 
-### 3. Web Exports
-When exporting for Web (HTML5):
-- Ensure you have configured a web server to serve the exported files with the correct headers (Cross-Origin-Opener-Policy and Cross-Origin-Embedder-Policy) required by Godot 4's SharedArrayBuffer.
-- The entry point will be `index.html`.
+### 3. Web Exports & GitHub Pages Deployment
+
+Godot 4 Web exports rely on `SharedArrayBuffer`, which requires Cross-Origin Isolation HTTP headers:
+- `Cross-Origin-Opener-Policy: same-origin`
+- `Cross-Origin-Embedder-Policy: require-corp`
+
+Because GitHub Pages does not support custom HTTP response headers, our automated workflow automatically integrates [coi-serviceworker](https://github.com/gzuidhof/coi-serviceworker). This service worker intercepts network requests and sets the necessary Cross-Origin Isolation headers client-side.
+
+#### Automated GitHub Pages Deployment Workflow
+
+1. Whenever code is pushed to the `main` branch, the `.github/workflows/godot-ci.yml` workflow:
+   - Builds the project for Web (`preset_name: "Web"`).
+   - Downloads `coi-serviceworker.min.js` into the export output directory.
+   - Injects `<script src="coi-serviceworker.min.js"></script>` into the HTML `<head>` tag of `index.html`.
+   - Creates a `.nojekyll` file in the build output to ensure GitHub Pages does not filter out Godot export files starting with underscores.
+   - Deploys the web build artifacts directly to the `gh-pages` branch via `peaceiris/actions-gh-pages`.
+
+#### Configuring GitHub Pages in Repository Settings
+
+To enable live web testing on GitHub Pages for your repository:
+
+1. Go to your GitHub repository in a browser.
+2. Click **Settings** in the top navigation bar.
+3. In the left sidebar under **Code and automation**, click **Pages**.
+4. Under **Build and deployment**:
+   - Set **Source** to **Deploy from a branch**.
+   - Under **Branch**, select `gh-pages` and `/ (root)`.
+   - Click **Save**.
+5. After the workflow completes, your game will be accessible at:
+   `https://<your-username>.github.io/<repository-name>/`
 
 ## Release Process
 
