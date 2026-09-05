@@ -1,0 +1,302 @@
+[gd_scene load_steps=19 format=3 uid="uid://c3x7k8m9p0q1r"]
+
+[ext_resource type="Script" path="res://scripts/Character/RagdollCharacter.gd" id="1_ragdoll"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_scrub"]
+albedo_color = Color(0.352941, 0.560784, 0.682353, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_skin"]
+albedo_color = Color(0.788235, 0.517647, 0.352941, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pants"]
+albedo_color = Color(0.227451, 0.282353, 0.345098, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shoes"]
+albedo_color = Color(0.101961, 0.109804, 0.133333, 1)
+roughness = 0.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_torso"]
+radius = 0.18
+height = 0.5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_torso"]
+material = SubResource("StandardMaterial3D_scrub")
+radius = 0.18
+height = 0.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_head"]
+radius = 0.18
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+material = SubResource("StandardMaterial3D_skin")
+radius = 0.18
+height = 0.36
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_arm"]
+radius = 0.05
+height = 0.35
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_arm_scrub"]
+material = SubResource("StandardMaterial3D_scrub")
+radius = 0.05
+height = 0.35
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_arm_skin"]
+material = SubResource("StandardMaterial3D_skin")
+radius = 0.04
+height = 0.35
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hand"]
+radius = 0.05
+
+[sub_resource type="SphereMesh" id="SphereMesh_hand"]
+material = SubResource("StandardMaterial3D_skin")
+radius = 0.05
+height = 0.1
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_leg"]
+radius = 0.07
+height = 0.4
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_leg"]
+material = SubResource("StandardMaterial3D_pants")
+radius = 0.07
+height = 0.4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_foot"]
+size = Vector3(0.1, 0.08, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_foot"]
+material = SubResource("StandardMaterial3D_shoes")
+size = Vector3(0.1, 0.08, 0.2)
+
+[node name="RagdollCharacter" type="Node3D"]
+script = ExtResource("1_ragdoll")
+
+[node name="Torso" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+mass = 12.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Torso"]
+shape = SubResource("CapsuleShape3D_torso")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Torso"]
+mesh = SubResource("CapsuleMesh_torso")
+
+[node name="Head" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+mass = 4.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Head"]
+shape = SubResource("SphereShape3D_head")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Head"]
+mesh = SubResource("SphereMesh_head")
+
+[node name="UpperArmL" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 1.45, 0)
+mass = 2.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UpperArmL"]
+shape = SubResource("CapsuleShape3D_arm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UpperArmL"]
+mesh = SubResource("CapsuleMesh_arm_scrub")
+
+[node name="LowerArmL" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 1.1, 0)
+mass = 1.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LowerArmL"]
+shape = SubResource("CapsuleShape3D_arm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LowerArmL"]
+mesh = SubResource("CapsuleMesh_arm_skin")
+
+[node name="HandL" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 0.85, 0)
+mass = 0.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HandL"]
+shape = SubResource("SphereShape3D_hand")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HandL"]
+mesh = SubResource("SphereMesh_hand")
+
+[node name="UpperArmR" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28, 1.45, 0)
+mass = 2.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UpperArmR"]
+shape = SubResource("CapsuleShape3D_arm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UpperArmR"]
+mesh = SubResource("CapsuleMesh_arm_scrub")
+
+[node name="LowerArmR" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28, 1.1, 0)
+mass = 1.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LowerArmR"]
+shape = SubResource("CapsuleShape3D_arm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LowerArmR"]
+mesh = SubResource("CapsuleMesh_arm_skin")
+
+[node name="HandR" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28, 0.85, 0)
+mass = 0.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HandR"]
+shape = SubResource("SphereShape3D_hand")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HandR"]
+mesh = SubResource("SphereMesh_hand")
+
+[node name="UpperLegL" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.95, 0)
+mass = 4.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UpperLegL"]
+shape = SubResource("CapsuleShape3D_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UpperLegL"]
+mesh = SubResource("CapsuleMesh_leg")
+
+[node name="LowerLegL" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.5, 0)
+mass = 3.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LowerLegL"]
+shape = SubResource("CapsuleShape3D_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LowerLegL"]
+mesh = SubResource("CapsuleMesh_leg")
+
+[node name="FootL" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.1, 0.05)
+mass = 1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FootL"]
+shape = SubResource("BoxShape3D_foot")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FootL"]
+mesh = SubResource("BoxMesh_foot")
+
+[node name="UpperLegR" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.95, 0)
+mass = 4.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UpperLegR"]
+shape = SubResource("CapsuleShape3D_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UpperLegR"]
+mesh = SubResource("CapsuleMesh_leg")
+
+[node name="LowerLegR" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.5, 0)
+mass = 3.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LowerLegR"]
+shape = SubResource("CapsuleShape3D_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LowerLegR"]
+mesh = SubResource("CapsuleMesh_leg")
+
+[node name="FootR" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.1, 0.05)
+mass = 1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FootR"]
+shape = SubResource("BoxShape3D_foot")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FootR"]
+mesh = SubResource("BoxMesh_foot")
+
+[node name="Joints" type="Node3D" parent="."]
+
+[node name="Neck" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0)
+node_a = NodePath("../../Torso")
+node_b = NodePath("../../Head")
+swing_span = 0.523599
+twist_span = 0.523599
+
+[node name="ShoulderL" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 1.6, 0)
+node_a = NodePath("../../Torso")
+node_b = NodePath("../../UpperArmL")
+swing_span = 1.22173
+twist_span = 0.785398
+
+[node name="ElbowL" type="HingeJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 1.28, 0)
+node_a = NodePath("../../UpperArmL")
+node_b = NodePath("../../LowerArmL")
+
+[node name="WristL" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 0.95, 0)
+node_a = NodePath("../../LowerArmL")
+node_b = NodePath("../../HandL")
+swing_span = 0.698132
+twist_span = 0.523599
+
+[node name="ShoulderR" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28, 1.6, 0)
+node_a = NodePath("../../Torso")
+node_b = NodePath("../../UpperArmR")
+swing_span = 1.22173
+twist_span = 0.785398
+
+[node name="ElbowR" type="HingeJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28, 1.28, 0)
+node_a = NodePath("../../UpperArmR")
+node_b = NodePath("../../LowerArmR")
+
+[node name="WristR" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28, 0.95, 0)
+node_a = NodePath("../../LowerArmR")
+node_b = NodePath("../../HandR")
+swing_span = 0.698132
+twist_span = 0.523599
+
+[node name="HipL" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 1.15, 0)
+node_a = NodePath("../../Torso")
+node_b = NodePath("../../UpperLegL")
+swing_span = 0.872665
+twist_span = 0.349066
+
+[node name="KneeL" type="HingeJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.72, 0)
+node_a = NodePath("../../UpperLegL")
+node_b = NodePath("../../LowerLegL")
+
+[node name="AnkleL" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.28, 0)
+node_a = NodePath("../../LowerLegL")
+node_b = NodePath("../../FootL")
+swing_span = 0.523599
+twist_span = 0.261799
+
+[node name="HipR" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 1.15, 0)
+node_a = NodePath("../../Torso")
+node_b = NodePath("../../UpperLegR")
+swing_span = 0.872665
+twist_span = 0.349066
+
+[node name="KneeR" type="HingeJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.72, 0)
+node_a = NodePath("../../UpperLegR")
+node_b = NodePath("../../LowerLegR")
+
+[node name="AnkleR" type="ConeTwistJoint3D" parent="Joints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.28, 0)
+node_a = NodePath("../../LowerLegR")
+node_b = NodePath("../../FootR")
+swing_span = 0.523599
+twist_span = 0.261799
