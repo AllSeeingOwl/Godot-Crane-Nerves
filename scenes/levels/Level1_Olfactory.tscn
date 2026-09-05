@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://d3v3s1k1abc12"]
+[gd_scene load_steps=2 format=3 uid="uid://c1 olfactory_level1_scene"]
 
 [ext_resource type="Script" path="res://scripts/levels/Level1_Olfactory.gd" id="1_olfactory_script"]
 
