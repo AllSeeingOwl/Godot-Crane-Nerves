@@ -1,0 +1,229 @@
+[gd_scene load_steps=9 format=3 uid="uid://c3ui_scene_id_01"]
+
+[ext_resource type="Script" path="res://scripts/ui/UIManager.gd" id="1_uimanager"]
+[ext_resource type="FontFile" path="res://assets/fonts/VT323-Regular.ttf" id="2_font"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0, 0, 0, 0.6)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress"]
+bg_color = Color(0.85, 0.2, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_overlay_panel"]
+bg_color = Color(0.08, 0.08, 0.12, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.8, 0.2, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="Theme" id="Theme_crt"]
+default_font = ExtResource("2_font")
+default_font_size = 22
+Label/colors/font_color = Color(0.2, 0.9, 0.2, 1)
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_progress")
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_uimanager")
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = SubResource("Theme_crt")
+
+[node name="Margin" type="MarginContainer" parent="HUD"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+
+[node name="VBox" type="VBoxContainer" parent="HUD/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="TopRow" type="HBoxContainer" parent="HUD/Margin/VBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+
+[node name="LevelIndicatorLabel" type="Label" parent="HUD/Margin/VBox/TopRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Level 1: Olfactory Nerve Exam"
+
+[node name="StressBox" type="HBoxContainer" parent="HUD/Margin/VBox/TopRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="StressTitleLabel" type="Label" parent="HUD/Margin/VBox/TopRow/StressBox"]
+layout_mode = 2
+text = "STRESS:"
+
+[node name="StressProgressBar" type="ProgressBar" parent="HUD/Margin/VBox/TopRow/StressBox"]
+custom_minimum_size = Vector2(150, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.1
+show_percentage = false
+
+[node name="StressValueLabel" type="Label" parent="HUD/Margin/VBox/TopRow/StressBox"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "0.0 / 100.0"
+
+[node name="TimerLabel" type="Label" parent="HUD/Margin/VBox/TopRow"]
+layout_mode = 2
+text = "T: 00:00"
+
+[node name="ObjectiveBox" type="HBoxContainer" parent="HUD/Margin/VBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="ObjectiveHeaderLabel" type="Label" parent="HUD/Margin/VBox/ObjectiveBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.2, 1)
+text = "OBJECTIVE:"
+
+[node name="ObjectiveTextLabel" type="Label" parent="HUD/Margin/VBox/ObjectiveBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+text = "Identify all scent vials accurately without overwhelming the patient."
+
+[node name="WinScreen" type="CenterContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_crt")
+
+[node name="PanelContainer" type="PanelContainer" parent="WinScreen"]
+custom_minimum_size = Vector2(400, 220)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_overlay_panel")
+
+[node name="VBox" type="VBoxContainer" parent="WinScreen/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="WinScreen/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 1, 0.2, 1)
+theme_override_font_sizes/font_size = 32
+text = "LEVEL COMPLETED!"
+horizontal_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="WinScreen/PanelContainer/VBox"]
+layout_mode = 2
+text = "Examination performed successfully."
+horizontal_alignment = 1
+
+[node name="BtnBox" type="HBoxContainer" parent="WinScreen/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="NextButton" type="Button" parent="WinScreen/PanelContainer/VBox/BtnBox"]
+custom_minimum_size = Vector2(100, 35)
+layout_mode = 2
+text = "Next Level"
+
+[node name="RestartButton" type="Button" parent="WinScreen/PanelContainer/VBox/BtnBox"]
+custom_minimum_size = Vector2(100, 35)
+layout_mode = 2
+text = "Restart"
+
+[node name="MainMenuButton" type="Button" parent="WinScreen/PanelContainer/VBox/BtnBox"]
+custom_minimum_size = Vector2(100, 35)
+layout_mode = 2
+text = "Main Menu"
+
+[node name="LoseScreen" type="CenterContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_crt")
+
+[node name="PanelContainer" type="PanelContainer" parent="LoseScreen"]
+custom_minimum_size = Vector2(420, 220)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_overlay_panel")
+
+[node name="VBox" type="VBoxContainer" parent="LoseScreen/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="LoseScreen/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
+theme_override_font_sizes/font_size = 32
+text = "EXAM FAILED!"
+horizontal_alignment = 1
+
+[node name="ReasonLabel" type="Label" parent="LoseScreen/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.4, 1)
+text = "Patient stress limit exceeded!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BtnBox" type="HBoxContainer" parent="LoseScreen/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RestartButton" type="Button" parent="LoseScreen/PanelContainer/VBox/BtnBox"]
+custom_minimum_size = Vector2(110, 35)
+layout_mode = 2
+text = "Try Again"
+
+[node name="MainMenuButton" type="Button" parent="LoseScreen/PanelContainer/VBox/BtnBox"]
+custom_minimum_size = Vector2(110, 35)
+layout_mode = 2
+text = "Main Menu"
+
+[node name="TransitionOverlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
