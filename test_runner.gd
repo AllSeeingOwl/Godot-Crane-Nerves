@@ -35,4 +35,24 @@ func _init():
 
 	ragdoll.queue_free()
 	print("All ragdoll tests completed successfully!")
+
+	print("Testing Level 1 Olfactory...")
+	var lvl1_scene = load("res://scenes/levels/Level1_Olfactory.tscn")
+	var level1 = lvl1_scene.instantiate()
+	root.add_child(level1)
+
+	assert(level1.selected_vial == "")
+	assert(level1.identified_vials.size() == 0)
+
+	# Test vial selection
+	level1._on_vial_pressed("coffee")
+	assert(level1.selected_vial == "coffee")
+
+	# Test mouse following and process
+	level1.hand_position = Vector2(0, 0)
+	level1._process(0.1)
+
+	level1.queue_free()
+	print("All Level 1 Olfactory tests completed successfully!")
+
 	quit(0)
