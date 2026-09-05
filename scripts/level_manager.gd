@@ -9,8 +9,10 @@ const LEVEL_SCENES = {
 
 
 func _ready() -> void:
-	GameState.level_won.connect(_on_level_won)
-	GameState.game_over.connect(_on_game_over)
+	if not GameState.level_won.is_connected(_on_level_won):
+		GameState.level_won.connect(_on_level_won)
+	if not GameState.game_over.is_connected(_on_game_over):
+		GameState.game_over.connect(_on_game_over)
 
 
 func load_level(level_id: int) -> void:

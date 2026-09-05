@@ -35,6 +35,8 @@ var nose_velocity: Vector2 = Vector2.ZERO
 var progress: float = 0.0
 var current_hand_speed: float = 0.0
 
+var _target_mouse_pos: Vector2 = Vector2.ZERO
+
 @onready var nose: Control = $Nose
 @onready var nose_progress: ProgressBar = $Nose/ProgressBar
 @onready var vial_cursor: Control = $VialCursor
@@ -53,6 +55,7 @@ func _ready() -> void:
 	# Position nose near upper middle of screen
 	if nose:
 		nose.position = Vector2(screen_size.x / 2.0, screen_size.y / 2.0 - 100.0)
+	_target_mouse_pos = get_global_mouse_position()
 	hand_position = get_global_mouse_position()
 
 	# Initial random velocity for nose
@@ -68,6 +71,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		_target_mouse_pos = event.position
+
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_Q:
@@ -143,11 +149,11 @@ func _process(delta: float) -> void:
 	if Input.is_key_pressed(KEY_D):
 		hand_keyboard_offset.x += KEYBOARD_MOVE_SPEED * delta
 
-	# 2. Mouse Following with Lag/Delay Effect
-	var mouse_pos = get_global_mouse_position()
-	var target_hand_pos = mouse_pos + hand_keyboard_offset
+	# 2. Mouse Following with Lag/Delay Effect (frame-rate independent lerp & instant event position)
+	var target_hand_pos = _target_mouse_pos + hand_keyboard_offset
 	var prev_hand_pos = hand_position
-	hand_position = hand_position.lerp(target_hand_pos, clamp(LAG_SPEED * delta, 0.0, 1.0))
+	var lerp_factor = clamp(1.0 - exp(-LAG_SPEED * delta), 0.0, 1.0)
+	hand_position = hand_position.lerp(target_hand_pos, lerp_factor)
 
 	if delta > 0.0:
 		hand_velocity = (hand_position - prev_hand_pos) / delta
