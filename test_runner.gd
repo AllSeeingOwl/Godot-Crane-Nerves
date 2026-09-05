@@ -4,7 +4,7 @@ func _init():
 	print("TEST_START")
 	var game_state = root.get_node_or_null("GameState")
 	if not game_state:
-		var gs_script = load("res://scripts/game_state.gd")
+		var gs_script = load("res://scripts/Singletons/GameState.gd")
 		game_state = gs_script.new()
 		game_state.name = "GameState"
 		root.add_child(game_state)

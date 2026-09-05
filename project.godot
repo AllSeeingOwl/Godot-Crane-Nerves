@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.1")
 
 [autoload]
 
-GameState="*res://scripts/game_state.gd"
+GameState="*res://scripts/Singletons/GameState.gd"
 LevelManager="*res://scripts/level_manager.gd"
 
 [editor_plugins]
