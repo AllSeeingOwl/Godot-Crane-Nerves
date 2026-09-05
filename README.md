@@ -54,9 +54,17 @@ To run, test, and contribute to this project, you will need:
 ## How to Run and Test Locally
 
 1. Once the project is open in the Godot Editor, navigate to the `FileSystem` dock.
-2. Open any available scene from the `scenes/` folder by double-clicking it (e.g., `scenes/Main.tscn` if it exists).
+2. Open any available scene from the `scenes/` folder by double-clicking it (e.g., `scenes/ui/main_menu.tscn`).
 3. Click the **Play Project** button (`F5`) in the top right corner of the editor to run the main scene, or click **Play Current Scene** (`F6`) to test the specific scene you have open.
 4. Use the editor's debugging tools to inspect physics, stress parameters, and variables as you interact with the game.
+
+## GitHub Pages Deployment (Play in Browser)
+
+The project is configured to automatically export and deploy Web builds to **GitHub Pages**:
+
+- **Automated Workflow**: On pushes to `main`, the `.github/workflows/godot-ci.yml` CI/CD pipeline exports the HTML5/Web build, injects `coi-serviceworker` to enable `SharedArrayBuffer` Cross-Origin Isolation, creates a `.nojekyll` file, and deploys to the `gh-pages` branch.
+- **Enabling GitHub Pages**: In your repository's **Settings** -> **Pages**, set **Source** to **Deploy from a branch**, choose the `gh-pages` branch and `/ (root)` directory, and click **Save**.
+- **Play Online**: Once enabled, the game can be played directly in any modern browser at `https://<your-username>.github.io/<repository-name>/`.
 
 ## Project Folder Structure
 

@@ -190,6 +190,13 @@ jobs:
           echo "Exporting for ${{ matrix.preset_name }}..."
           godot --headless --export-release "${{ matrix.preset_name }}" "${{ matrix.export_path }}/${{ matrix.output_file }}" -v || { echo "Export failed"; exit 1; }
 
+      - name: Add COI Service Worker for Web (GitHub Pages)
+        if: matrix.platform == 'web'
+        run: |
+          echo "Adding coi-serviceworker..."
+          wget -q https://raw.githubusercontent.com/gzuidhof/coi-serviceworker/master/coi-serviceworker.min.js -O ${{ matrix.export_path }}/coi-serviceworker.min.js
+          sed -i 's|</head>|<script src="coi-serviceworker.min.js"></script></head>|' ${{ matrix.export_path }}/index.html
+
       - name: Record End Time & Benchmark
         if: always()
         run: |

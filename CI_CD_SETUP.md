@@ -9,6 +9,15 @@ The repository contains two overlapping CI/CD workflows under `.github/workflows
 
 Both workflows export to **Windows, macOS, Linux, and Web**.
 
+In addition, `godot-ci.yml` contains a dedicated `deploy-pages` job that automatically deploys Web builds to GitHub Pages on pushes to `main`.
+
+## GitHub Pages Integration
+Godot 4 Web builds require `SharedArrayBuffer`, which relies on Cross-Origin Isolation HTTP headers (`Cross-Origin-Opener-Policy` and `Cross-Origin-Embedder-Policy`). Because GitHub Pages cannot send custom HTTP headers natively:
+1. The CI pipeline downloads `coi-serviceworker.min.js` and injects `<script src="coi-serviceworker.min.js"></script>` into the exported `index.html`.
+2. The service worker handles setting Cross-Origin Isolation headers client-side when the web build loads in a browser.
+3. A `.nojekyll` file is added to the published root to prevent GitHub Pages from ignoring Godot resource folders starting with underscores.
+4. The build artifacts are deployed to the `gh-pages` branch. Configure GitHub Repository Settings -> Pages -> Source to `gh-pages` branch (`/` root) to host the live web version.
+
 ## Requirements
 
 To ensure these pipelines run successfully:
