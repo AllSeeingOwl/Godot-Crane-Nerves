@@ -1,19 +1,19 @@
 extends Node
 
 const LEVEL_SCENES = {
-	1: "res://scenes/levels/level_1_olfactory.tscn",
-	# Assuming other levels will be added here
+	1: "res://scenes/levels/Level1_Olfactory.tscn",
+	2: "res://scenes/levels/Level2_Optic.tscn",
+	3: "res://scenes/levels/Level3_EyeMovement.tscn",
+	4: "res://scenes/levels/Level4_Trigeminal.tscn",
 }
 
-func _ready():
+
+func _ready() -> void:
 	GameState.level_won.connect(_on_level_won)
 	GameState.game_over.connect(_on_game_over)
 
-	# Typically, loading initial level could be done here,
-	# but typically main menu is used instead. Let's keep it manual
-	# for now or let the main menu call load_level(1).
 
-func load_level(level_id: int):
+func load_level(level_id: int) -> void:
 	GameState.current_level_id = level_id
 
 	if LEVEL_SCENES.has(level_id):
@@ -21,18 +21,17 @@ func load_level(level_id: int):
 	else:
 		print("No scene configured for level ", level_id)
 
-func _on_level_won():
+
+func _on_level_won() -> void:
 	print("Level won!")
 	var next_level_id = GameState.current_level_id + 1
 	if LEVEL_SCENES.has(next_level_id):
 		load_level(next_level_id)
 	else:
 		print("You won the game!")
-		# Game won logic
 
-func _on_game_over(reason: String):
+
+func _on_game_over(reason: String) -> void:
 	print("Game Over: ", reason)
-	# Here we would typically show a game over screen and then retry
-	# For now, we will reset the level and stress
 	GameState.reset_stress()
 	load_level(GameState.current_level_id)
