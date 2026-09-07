@@ -42,9 +42,21 @@ jobs:
             echo "Templates restored from cache."
           fi
 
-      - name: Quick smoke import
+      - name: Import Assets (robust)
         run: |
-          godot --headless --editor --quit -v || true
+          echo "Importing assets via Godot headless..."
+          # Run multiple headless import passes to ensure import cache (.godot or .import) is populated
+          for i in 1 2 3; do
+            echo "Import pass $i..."
+            godot --headless --editor --quit -v || true
+            sleep 3
+          done
+          # Verify import cache exists
+          if [ ! -d ".godot" ] && [ ! -d ".import" ]; then
+            echo "ERROR: Import cache (.godot or .import) not created; aborting."
+            ls -la || true
+            exit 1
+          fi
 
       - name: Create export dir
         run: mkdir -p build/web
@@ -61,6 +73,21 @@ jobs:
             sed -i 's|</head>|<script src="coi-serviceworker.min.js"></script></head>|' build/web/index.html || true
           fi
           touch build/web/.nojekyll
+
+      - name: Verify export output
+        run: |
+          echo "Contents of build/web:"
+          ls -la build/web || ( echo "No build/web directory found"; exit 1 )
+          if [ ! -f build/web/index.html ]; then
+            echo "ERROR: index.html missing in build/web; aborting"
+            exit 1
+          fi
+
+      - name: Upload web artifact (debug / fallback)
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web
 
       - name: Deploy to gh-pages
         if: ${{ github.event.inputs.publish == 'true' || github.ref == 'refs/heads/main' }}
