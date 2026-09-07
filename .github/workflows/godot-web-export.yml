@@ -30,28 +30,54 @@ jobs:
           version: 4.1.3
           use-dotnet: false
 
-      - name: Ensure export templates present
+      - name: Cache Godot Export Templates
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot/export_templates/4.1.3.stable
+          key: ${{ runner.os }}-godot-templates-4.1.3
+          restore-keys: |
+            ${{ runner.os }}-godot-templates-
+
+      - name: Install Export Templates (robust)
         run: |
-          mkdir -p ~/.local/share/godot/export_templates/4.1.3.stable
-          if [ -z "$(ls -A ~/.local/share/godot/export_templates/4.1.3.stable 2>/dev/null)" ]; then
-            wget -q https://github.com/godotengine/godot/releases/download/4.1.3-stable/Godot_v4.1.3-stable_export_templates.tpz -O templates.tpz
-            unzip -q templates.tpz -d templates || true
-            mv templates/* ~/.local/share/godot/export_templates/4.1.3.stable/ || true
-            rm -rf templates templates.tpz || true
+          set -euo pipefail
+          TEMPLATE_DIR="$HOME/.local/share/godot/export_templates/4.1.3.stable"
+          echo "Checking for existing templates in $TEMPLATE_DIR..."
+          if [ -d "$TEMPLATE_DIR" ] && [ -n "$(ls -A "$TEMPLATE_DIR" 2>/dev/null)" ]; then
+            echo "Templates present in $TEMPLATE_DIR"
+            ls -la "$TEMPLATE_DIR"
           else
-            echo "Templates restored from cache."
+            echo "Templates not found, downloading..."
+            mkdir -p "$TEMPLATE_DIR"
+            wget -q https://github.com/godotengine/godot/releases/download/4.1.3-stable/Godot_v4.1.3-stable_export_templates.tpz -O templates.tpz || { echo "Failed to download templates"; exit 1; }
+            unzip -q templates.tpz -d templates || { echo "Failed to unzip templates"; ls -la || true; exit 1; }
+            if [ -d templates ] && [ "$(ls -A templates 2>/dev/null)" ]; then
+              echo "Moving extracted templates to $TEMPLATE_DIR..."
+              mv templates/* "$TEMPLATE_DIR"/ || { echo "Failed to move templates (mv exit $?)"; ls -la templates || true; exit 1; }
+            else
+              echo "No 'templates' directory after unzip; listing archive contents for diagnosis:"
+              unzip -l templates.tpz || true
+              exit 1
+            fi
+            rm -rf templates templates.tpz || true
+            echo "Installed templates to $TEMPLATE_DIR"
+            ls -la "$TEMPLATE_DIR"
+          fi
+          # Verify expected web export template exists (Godot looks for web_release.zip)
+          if [ ! -f "$TEMPLATE_DIR/web_release.zip" ]; then
+            echo "ERROR: Expected web_release.zip not found in $TEMPLATE_DIR. Listing files for debugging:"
+            ls -la "$TEMPLATE_DIR"
+            exit 1
           fi
 
       - name: Import Assets (robust)
         run: |
           echo "Importing assets via Godot headless..."
-          # Run multiple headless import passes to ensure import cache (.godot or .import) is populated
           for i in 1 2 3; do
             echo "Import pass $i..."
             godot --headless --editor --quit -v || true
             sleep 3
           done
-          # Verify import cache exists
           if [ ! -d ".godot" ] && [ ! -d ".import" ]; then
             echo "ERROR: Import cache (.godot or .import) not created; aborting."
             ls -la || true
