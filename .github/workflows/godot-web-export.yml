@@ -38,7 +38,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-godot-templates-
 
-      - name: Install Export Templates (robust)
+      - name: Install Export Templates (robust, find & move)
         run: |
           set -euo pipefail
           TEMPLATE_DIR="$HOME/.local/share/godot/export_templates/4.1.3.stable"
@@ -50,23 +50,30 @@ jobs:
             echo "Templates not found, downloading..."
             mkdir -p "$TEMPLATE_DIR"
             wget -q https://github.com/godotengine/godot/releases/download/4.1.3-stable/Godot_v4.1.3-stable_export_templates.tpz -O templates.tpz || { echo "Failed to download templates"; exit 1; }
-            unzip -q templates.tpz -d templates || { echo "Failed to unzip templates"; ls -la || true; exit 1; }
-            if [ -d templates ] && [ "$(ls -A templates 2>/dev/null)" ]; then
-              echo "Moving extracted templates to $TEMPLATE_DIR..."
-              mv templates/* "$TEMPLATE_DIR"/ || { echo "Failed to move templates (mv exit $?)"; ls -la templates || true; exit 1; }
+            echo "Listing TPZ contents for debugging:"
+            unzip -l templates.tpz || true
+            rm -rf templates_extract || true
+            mkdir -p templates_extract
+            unzip -q templates.tpz -d templates_extract || { echo "Failed to unzip templates into templates_extract"; ls -la || true; exit 1; }
+            echo "Searching extracted files for web_release.zip..."
+            FOUND=$(find templates_extract -type f -iname 'web_release.zip' || true)
+            if [ -n "$FOUND" ]; then
+              echo "Found web_release.zip at: $FOUND"
+              echo "Moving web_release.zip to $TEMPLATE_DIR"
+              mv "$FOUND" "$TEMPLATE_DIR/" || { echo "Failed to move web_release.zip"; ls -la templates_extract || true; exit 1; }
             else
-              echo "No 'templates' directory after unzip; listing archive contents for diagnosis:"
-              unzip -l templates.tpz || true
-              exit 1
+              echo "No web_release.zip found directly; attempt to move entire templates content into $TEMPLATE_DIR for coverage."
+              mv templates_extract/* "$TEMPLATE_DIR"/ || { echo "Failed to move extracted templates"; ls -la templates_extract || true; exit 1; }
             fi
-            rm -rf templates templates.tpz || true
+            rm -rf templates_extract templates.tpz || true
             echo "Installed templates to $TEMPLATE_DIR"
             ls -la "$TEMPLATE_DIR"
           fi
-          # Verify expected web export template exists (Godot looks for web_release.zip)
+
+          # Final verification
           if [ ! -f "$TEMPLATE_DIR/web_release.zip" ]; then
             echo "ERROR: Expected web_release.zip not found in $TEMPLATE_DIR. Listing files for debugging:"
-            ls -la "$TEMPLATE_DIR"
+            ls -Rla "$TEMPLATE_DIR" || true
             exit 1
           fi
 
