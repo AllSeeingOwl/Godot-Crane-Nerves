@@ -4,6 +4,7 @@ This file contains the original React/TypeScript logic that needs to be ported t
 
 ## Original Code
 
+{% raw %}
 ```typescript
 import { Suspense, useEffect, useMemo, useRef, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
@@ -187,3 +188,4 @@ export default function GameEngine({
 }
 
 ```
+{% endraw %}
