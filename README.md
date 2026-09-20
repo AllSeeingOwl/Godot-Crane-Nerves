@@ -60,9 +60,23 @@ To run, test, and contribute to this project, you will need:
 
 ## GitHub Pages Deployment (Play in Browser)
 
+### Frequently Asked Questions (FAQ)
+
+**Q: Why does my GitHub Pages link display the README file instead of the game?**
+**A:** By default, GitHub Pages is set to serve the `main` branch, which renders `README.md`. To play the exported Godot game:
+1. Go to your repository on GitHub: **Settings -> Pages**.
+2. Under **Build and deployment -> Source**, select **Deploy from a branch**.
+3. Under **Branch**, select `gh-pages` and `/ (root)`, then click **Save**.
+4. Once saved, refresh your site URL (`https://<username>.github.io/<repository-name>/`) to play the game!
+
+**Q: Do I need to download Godot into this repo?**
+**A:** No, you do **not** need to download or commit Godot into the repository.
+- **GitHub Pages:** GitHub Actions automatically downloads Godot and exports the game assets (`index.html`, `index.wasm`, etc.) to the `gh-pages` branch.
+- **Local Development:** Download Godot Engine (v4.1.3) onto your local computer as a desktop application to open and test the project locally.
+
 The project is configured to automatically export and deploy Web builds to **GitHub Pages**:
 
-- **Automated Workflow**: On pushes to `main`, the `.github/workflows/godot-ci.yml` CI/CD pipeline exports the HTML5/Web build, injects `coi-serviceworker` to enable `SharedArrayBuffer` Cross-Origin Isolation, creates a `.nojekyll` file, and deploys to the `gh-pages` branch.
+- **Automated Workflow**: On pushes to `main`, the `.github/workflows/godot-web-export.yml` CI/CD pipeline exports the HTML5/Web build, injects `coi-serviceworker` to enable `SharedArrayBuffer` Cross-Origin Isolation, creates a `.nojekyll` file, and deploys to the `gh-pages` branch.
 - **Enabling GitHub Pages**: In your repository's **Settings** -> **Pages**, set **Source** to **Deploy from a branch**, choose the `gh-pages` branch and `/ (root)` directory, and click **Save**.
 - **Play Online**: Once enabled, the game can be played directly in any modern browser at `https://<your-username>.github.io/<repository-name>/`.
 

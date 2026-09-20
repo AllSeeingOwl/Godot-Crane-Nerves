@@ -53,7 +53,7 @@ Because GitHub Pages does not support custom HTTP response headers, our automate
 
 #### Automated GitHub Pages Deployment Workflow
 
-1. Whenever code is pushed to the `main` branch, the `.github/workflows/godot-ci.yml` workflow:
+1. Whenever code is pushed to the `main` branch, the `.github/workflows/godot-web-export.yml` workflow:
    - Builds the project for Web (`preset_name: "Web"`).
    - Downloads `coi-serviceworker.min.js` into the export output directory.
    - Injects `<script src="coi-serviceworker.min.js"></script>` into the HTML `<head>` tag of `index.html`.
