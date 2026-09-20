@@ -4,6 +4,7 @@ This file contains the original React/TypeScript logic that needs to be ported t
 
 ## Original Code
 
+{% raw %}
 ```typescript
 import React, { useEffect, useRef, useState } from "react";
 
@@ -205,3 +206,4 @@ export function Level4Trigeminal({
 }
 
 ```
+{% endraw %}
