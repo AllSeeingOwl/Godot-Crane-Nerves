@@ -14,9 +14,9 @@
 - Level 2: Optic (Vision) - Dual analog stick eyeball focus controls
 - Level 3: Eye Movement - QWOP/OP arm controls tracing 'H' pattern
 - Level 4: Trigeminal (Sensation) - Sharp/Soft facial sensation test with severe mouse lag
+- Level 5: Facial Nerve (Expression) - Face muscle group controls (1-0 keys) to match facial expressions
 
 ## In-Progress Features
-- Developing Level 5: Facial Nerve (Expression) - Face muscle group controls (1-0 keys) to match facial expressions
 - Developing Level 6 through Level 12 cranial nerve tests
 - "The Thick Girl" physics model and jiggle physics
 - ASMR audio soundscape, deadpan dialogue, and absurdist SFX

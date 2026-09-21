@@ -25,6 +25,10 @@ const LEVEL_DATA: Dictionary = {
 	4: {
 		"title": "Level 4: Trigeminal Nerve Exam",
 		"objective": "Test facial sensation and jaw muscle resistance."
+	},
+	5: {
+		"title": "Level 5: Facial Nerve Exam",
+		"objective": "Match requested facial expressions by toggling muscle groups."
 	}
 }
 

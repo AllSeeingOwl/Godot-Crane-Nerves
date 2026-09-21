@@ -5,6 +5,7 @@ const LEVEL_SCENES = {
 	2: "res://scenes/levels/Level2_Optic.tscn",
 	3: "res://scenes/levels/Level3_EyeMovement.tscn",
 	4: "res://scenes/levels/Level4_Trigeminal.tscn",
+	5: "res://scenes/levels/Level5_FacialNerve.tscn",
 }
 
 
