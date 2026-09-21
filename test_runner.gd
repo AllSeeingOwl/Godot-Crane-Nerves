@@ -55,4 +55,25 @@ func _init():
 	level1.queue_free()
 	print("All Level 1 Olfactory tests completed successfully!")
 
+	print("Testing Level 5 Facial Nerve...")
+	var lvl5_scene = load("res://scenes/levels/Level5_FacialNerve.tscn")
+	var level5 = lvl5_scene.instantiate()
+	root.add_child(level5)
+
+	assert(level5.level_id == 5)
+	assert(level5.current_expression_index == 0)
+
+	# Test muscle toggling
+	level5.toggle_muscle(6)
+	level5.toggle_muscle(7)
+	assert(level5.muscle_states[6] == true)
+	assert(level5.muscle_states[7] == true)
+
+	# Test smile expression submission
+	level5.submit_expression()
+	assert(level5.current_expression_index == 1)
+
+	level5.queue_free()
+	print("All Level 5 Facial Nerve tests completed successfully!")
+
 	quit(0)

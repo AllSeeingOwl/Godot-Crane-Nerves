@@ -19,7 +19,7 @@ const MIN_STRESS: float = 0.0
 const MAX_STRESS: float = 100.0
 
 const MIN_LEVEL_ID: int = 1
-const MAX_LEVEL_ID: int = 4
+const MAX_LEVEL_ID: int = 5
 
 const SAVE_FILE_PATH: String = "user://game_state.save"
 
