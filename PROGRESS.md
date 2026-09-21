@@ -15,6 +15,7 @@
 - Level 3: Eye Movement - QWOP/OP arm controls tracing 'H' pattern
 - Level 4: Trigeminal (Sensation) - Sharp/Soft facial sensation test with severe mouse lag
 - Level 5: Facial Nerve (Expression) - Face muscle group controls (1-0 keys) to match facial expressions
+- Level 6: Vestibulocochlear (Hearing) - Power meter timing & floaty tuning fork placement
 
 ## In-Progress Features
 - Developing Level 6 through Level 12 cranial nerve tests
