@@ -1,6 +1,7 @@
 extends Control
 
-func _ready():
+
+func _ready() -> void:
 	$MarginContainer/VBoxContainer/BackButton.pressed.connect(_on_back_pressed)
 
 	# Connect level buttons
@@ -9,10 +10,10 @@ func _ready():
 		if child is Button:
 			child.pressed.connect(_on_level_pressed.bind(child.name.to_int()))
 
-func _on_back_pressed():
+
+func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
 
-func _on_level_pressed(level_id: int):
-	# Just loading the Main scene for now, or you could do LevelManager.load_level(level_id)
-	GameState.current_level_id = level_id
-	get_tree().change_scene_to_file("res://scenes/Main.tscn")
+
+func _on_level_pressed(level_id: int) -> void:
+	LevelManager.load_level(level_id)
