@@ -1,125 +1,112 @@
 extends GutTest
 
-var _level_instance = null
-var _level_won_emitted: bool = false
-var _game_over_emitted: bool = false
+const DT: float = 1.0 / 60.0
+
+var level: Level2Optic
 
 
-func before_each():
+func before_each() -> void:
 	GameState.reset_state()
-	_level_won_emitted = false
-	_game_over_emitted = false
-
-	var lm = get_tree().root.get_node_or_null("LevelManager")
-	if lm:
-		if GameState.game_over.is_connected(lm._on_game_over):
-			GameState.game_over.disconnect(lm._on_game_over)
-		if GameState.level_won.is_connected(lm._on_level_won):
-			GameState.level_won.disconnect(lm._on_level_won)
-
-	if not GameState.level_won.is_connected(_on_test_level_won):
-		GameState.level_won.connect(_on_test_level_won)
-	if not GameState.game_over.is_connected(_on_test_game_over):
-		GameState.game_over.connect(_on_test_game_over)
-
-	var scene = load("res://scenes/levels/Level2_Optic.tscn")
-	_level_instance = scene.instantiate()
-	add_child(_level_instance)
+	level = load("res://scenes/levels/Level2_Optic.tscn").instantiate()
+	add_child(level)
+	level.set_process(false)
+	level.shake_enabled = false
 
 
-func after_each():
-	if _level_instance:
-		_level_instance.queue_free()
-		_level_instance = null
-
-	if GameState.level_won.is_connected(_on_test_level_won):
-		GameState.level_won.disconnect(_on_test_level_won)
-	if GameState.game_over.is_connected(_on_test_game_over):
-		GameState.game_over.disconnect(_on_test_game_over)
-
-	var lm = get_tree().root.get_node_or_null("LevelManager")
-	if lm:
-		if not GameState.game_over.is_connected(lm._on_game_over):
-			GameState.game_over.connect(lm._on_game_over)
-		if not GameState.level_won.is_connected(lm._on_level_won):
-			GameState.level_won.connect(lm._on_level_won)
-
+func after_each() -> void:
+	if level:
+		level.queue_free()
 	GameState.reset_state()
 
 
-func _on_test_level_won():
-	_level_won_emitted = true
+## Puts both eyes exactly on the current target, at rest.
+func _aim_both_at_target() -> void:
+	for eye in [Level2Optic.LEFT, Level2Optic.RIGHT]:
+		level.gaze[eye] = level.target_position()
+		level.gaze_vel[eye] = Vector2.ZERO
 
 
-func _on_test_game_over(_reason: String):
-	_game_over_emitted = true
+func _hold_on_target(seconds: float) -> void:
+	for i in range(int(seconds / DT)):
+		_aim_both_at_target()
+		level.step(DT, Vector2.ZERO, Vector2.ZERO)
 
 
-func test_level2_instantiation():
-	assert_not_null(_level_instance, "Level 2 instance should be created")
-	assert_eq(_level_instance.letters_to_type.size(), 10, "Should generate 10 target letters")
-	assert_eq(_level_instance.correct_count, 0, "Initial correct count should be 0")
-	assert_eq(_level_instance.current_index, 0, "Initial index should be 0")
-	assert_eq(_level_instance.focus_level, 5.0, "Initial focus level should be 5.0")
+func test_initialization() -> void:
+	assert_eq(level.level_id, 2, "Level ID should be 2")
+	assert_eq(level.targets.size(), Level2Optic.CHART_ROWS.size(), "One target per chart row")
+	for row in range(level.targets.size()):
+		assert_eq(level.targets[row].x, row, "Targets go down the chart in order")
+	assert_eq(level.current_target_index, 0, "Starts on the first letter")
 
 
-func test_focus_controls_and_drift():
-	_level_instance.focus_level = 5.0
-	var event_up = InputEventKey.new()
-	event_up.keycode = KEY_UP
-	event_up.pressed = true
-	_level_instance._unhandled_input(event_up)
-	assert_eq(_level_instance.focus_level, 4.5, "Pressing UP decreases focus level")
-
-	var event_down = InputEventKey.new()
-	event_down.keycode = KEY_DOWN
-	event_down.pressed = true
-	_level_instance._unhandled_input(event_down)
-	assert_eq(_level_instance.focus_level, 5.0, "Pressing DOWN increases focus level")
-
-	# Test drift in _process
-	_level_instance._process(1.0)
-	assert_true(_level_instance.focus_level > 5.0, "Focus level drifts upwards over time")
+func test_inputs_steer_each_eye_independently() -> void:
+	var start_left: Vector2 = level.gaze[Level2Optic.LEFT]
+	var start_right: Vector2 = level.gaze[Level2Optic.RIGHT]
+	for i in range(30):
+		level.step(DT, Vector2.UP, Vector2.ZERO)
+	assert_lt(level.gaze[Level2Optic.LEFT].y, start_left.y - 20.0, "Left eye moved up")
+	assert_almost_eq(level.gaze[Level2Optic.RIGHT].y, start_right.y, 0.5, "Right eye didn't")
 
 
-func test_high_blur_stress_increase():
-	_level_instance.focus_level = 8.0
-	var initial_stress = GameState.stress
-	_level_instance._process(1.0)
-	assert_true(GameState.stress > initial_stress, "High blur level increases stress")
+func test_eyes_drift_outward_when_idle() -> void:
+	var start_left: Vector2 = level.gaze[Level2Optic.LEFT]
+	var start_right: Vector2 = level.gaze[Level2Optic.RIGHT]
+	for i in range(60):
+		level.step(DT, Vector2.ZERO, Vector2.ZERO)
+	assert_lt(level.gaze[Level2Optic.LEFT].x, start_left.x, "Left eye drifts left")
+	assert_gt(level.gaze[Level2Optic.RIGHT].x, start_right.x, "Right eye drifts right")
 
 
-func test_typing_correct_and_wrong_letters():
-	var target = _level_instance.letters_to_type[0]
-	_level_instance._type_letter(target)
-	assert_eq(_level_instance.correct_count, 1, "Correct letter increments correct count")
-	assert_eq(_level_instance.current_index, 1, "Current index advances")
-
-	var wrong_letter = "Z" if target != "Z" else "A"
-	var initial_stress = GameState.stress
-	_level_instance._type_letter(wrong_letter)
-	assert_eq(_level_instance.correct_count, 1, "Wrong letter does not increment correct count")
-	assert_eq(_level_instance.current_index, 2, "Current index advances")
-	assert_true(GameState.stress > initial_stress, "Wrong letter increases stress")
+func test_holding_both_eyes_on_letter_reads_it() -> void:
+	_hold_on_target(Level2Optic.READ_TIME + 0.1)
+	assert_eq(level.current_target_index, 1, "Letter read after READ_TIME")
+	assert_eq(GameState.stress, 0.0, "Reading cleanly causes no stress")
 
 
-func test_win_condition_at_least_9_correct():
-	# letters_to_type is Array[String]: assign() keeps the type (= with a literal fails in 4.1)
-	_level_instance.letters_to_type.assign(["C", "C", "C", "C", "C", "C", "C", "C", "C", "C"])
-	for i in range(10):
-		_level_instance._type_letter("C")
+func test_one_eye_on_target_is_not_enough() -> void:
+	for i in range(int(2.0 / DT)):
+		level.gaze[Level2Optic.LEFT] = level.target_position()
+		level.gaze[Level2Optic.RIGHT] = level.target_position() + Vector2(80, 0)
+		level.gaze_vel[Level2Optic.LEFT] = Vector2.ZERO
+		level.gaze_vel[Level2Optic.RIGHT] = Vector2.ZERO
+		level.step(DT, Vector2.ZERO, Vector2.ZERO)
+	assert_eq(level.current_target_index, 0, "Double vision: one eye alone can't read")
 
-	assert_eq(_level_instance.correct_count, 10, "10 correct letters")
-	assert_true(_level_won_emitted, "level_won signal should be emitted on win")
+
+func test_smaller_letters_need_tighter_aim() -> void:
+	var first_radius: float = level.read_radius()
+	level.current_target_index = level.targets.size() - 1
+	assert_lt(level.read_radius(), first_radius, "The bottom row is harder to read")
 
 
-func test_lose_condition_less_than_9_correct():
-	# letters_to_type is Array[String]: assign() keeps the type (= with a literal fails in 4.1)
-	_level_instance.letters_to_type.assign(["C", "C", "C", "C", "C", "C", "C", "C", "C", "C"])
-	for i in range(5):
-		_level_instance._type_letter("C")
-	for i in range(5):
-		_level_instance._type_letter("X")
+func test_reading_every_letter_wins() -> void:
+	watch_signals(GameState)
+	for i in range(level.targets.size()):
+		_hold_on_target(Level2Optic.READ_TIME + 0.1)
+	assert_eq(level.current_target_index, level.targets.size(), "Whole chart read")
+	assert_signal_emitted(GameState, "level_won", "level_won should be emitted")
 
-	assert_eq(_level_instance.correct_count, 5, "5 correct letters")
-	assert_true(_game_over_emitted, "game_over signal should be emitted on failure")
+
+func test_cross_eyed_adds_stress() -> void:
+	var center := Level2Optic.CHART_RECT.get_center()
+	level.gaze[Level2Optic.LEFT] = center + Vector2(-150, 0)
+	level.gaze[Level2Optic.RIGHT] = center + Vector2(150, 0)
+	level.step(0.5, Vector2.ZERO, Vector2.ZERO)
+	assert_gt(GameState.stress, 0.0, "Eyes far apart adds stress")
+
+
+func test_rolling_eyes_off_chart_adds_stress_and_clamps() -> void:
+	level.gaze[Level2Optic.LEFT] = Level2Optic.VIEW_RECT.position - Vector2(50, 50)
+	level.step(DT, Vector2.ZERO, Vector2.ZERO)
+	assert_gt(GameState.stress, 0.0, "Looking off the chart adds stress")
+	assert_true(
+		Level2Optic.VIEW_RECT.grow(0.01).has_point(level.gaze[Level2Optic.LEFT]),
+		"Gaze is clamped back into view"
+	)
+
+
+func test_chart_shakes_when_enabled() -> void:
+	level.shake_enabled = true
+	level.step(0.7, Vector2.ZERO, Vector2.ZERO)
+	assert_ne(level.chart_offset(), Vector2.ZERO, "The chart wobbles")

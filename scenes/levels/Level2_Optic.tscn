@@ -12,24 +12,49 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -200.0
-offset_top = 20.0
+offset_top = 5.0
 offset_right = 200.0
-offset_bottom = 70.0
+offset_bottom = 45.0
 grow_horizontal = 2
 text = "Level 2: Optic Nerve
-Correct: 0 / 10 | Remaining: 10"
+Letters read: 0 / 7"
 horizontal_alignment = 1
 
 [node name="ControlsLabel" type="Label" parent="UI"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -350.0
-offset_top = 75.0
-offset_right = 350.0
-offset_bottom = 100.0
+offset_left = -390.0
+offset_top = 50.0
+offset_right = 390.0
+offset_bottom = 75.0
 grow_horizontal = 2
-text = "Controls: Type highlighted letter! | Scroll Wheel / Up & Down Arrows to adjust Focus"
+text = "Left eye: W/A/S/D | Right eye: Arrow keys (or gamepad sticks)"
+horizontal_alignment = 1
+
+[node name="TargetLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 80.0
+offset_right = 300.0
+offset_bottom = 105.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 0.4, 1)
+text = "Get both eyes on the highlighted letter (row 1)"
+horizontal_alignment = 1
+
+[node name="FeedbackLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 110.0
+offset_right = 300.0
+offset_bottom = 135.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
 horizontal_alignment = 1
 
 [node name="StressBar" type="ProgressBar" parent="UI"]
@@ -55,59 +80,25 @@ grow_horizontal = 0
 text = "STRESS"
 horizontal_alignment = 1
 
-[node name="FocusBox" type="VBoxContainer" parent="UI"]
+[node name="HoldBox" type="VBoxContainer" parent="UI"]
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 40.0
-offset_top = -120.0
-offset_right = 90.0
-offset_bottom = 120.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
 grow_vertical = 2
 alignment = 1
 
-[node name="FocusLabel" type="Label" parent="UI/FocusBox"]
+[node name="HoldLabel" type="Label" parent="UI/HoldBox"]
 layout_mode = 2
-text = "FOCUS"
+text = "READ"
 horizontal_alignment = 1
 
-[node name="FocusBar" type="ProgressBar" parent="UI/FocusBox"]
-custom_minimum_size = Vector2(20, 200)
+[node name="HoldBar" type="ProgressBar" parent="UI/HoldBox"]
+custom_minimum_size = Vector2(20, 160)
 layout_mode = 2
 size_flags_horizontal = 4
 fill_mode = 3
 show_percentage = true
-
-[node name="SnellenChart" type="VBoxContainer" parent="UI"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -120.0
-offset_right = 250.0
-offset_bottom = 180.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 20
-alignment = 1
-
-[node name="ChartTitle" type="Label" parent="UI/SnellenChart"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "SNELLEN CHART"
-horizontal_alignment = 1
-
-[node name="LettersContainer" type="HBoxContainer" parent="UI/SnellenChart"]
-custom_minimum_size = Vector2(400, 150)
-layout_mode = 2
-theme_override_constants/separation = 15
-alignment = 1
-
-[node name="Line2020" type="Label" parent="UI/SnellenChart"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.2, 0.2, 0.8)
-theme_override_font_sizes/font_size = 14
-text = "------------------ 20 / 20 ------------------"
-horizontal_alignment = 1
