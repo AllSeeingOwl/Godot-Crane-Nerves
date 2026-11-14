@@ -14,6 +14,9 @@ extends Node2D
 
 func _ready() -> void:
 	GameState.current_level_id = level_id
+	# Every level starts clean, including a retry after a game over.
+	GameState.is_game_over = false
+	GameState.reset_stress()
 	if not GameState.stress_changed.is_connected(_on_stress_changed):
 		GameState.stress_changed.connect(_on_stress_changed)
 	_update_ui()
