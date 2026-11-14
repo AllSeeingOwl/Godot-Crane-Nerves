@@ -5,10 +5,12 @@ var _level_manager
 func before_each():
 	GameState.current_level_id = 1
 	_level_manager = load("res://scripts/level_manager.gd").new()
+	_level_manager.scene_changes_enabled = false
 	add_child(_level_manager)
 
 func after_each():
-	_level_manager.queue_free()
+	# free() right away so this extra LevelManager stops listening to GameState signals.
+	_level_manager.free()
 
 func test_load_level():
 	# Use an id with no scene so the test doesn't swap out the running test scene.

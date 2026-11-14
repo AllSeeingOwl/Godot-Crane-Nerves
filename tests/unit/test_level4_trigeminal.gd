@@ -25,6 +25,7 @@ func before_each():
 	var scene = load("res://scenes/levels/Level4_Trigeminal.tscn")
 	_level_instance = scene.instantiate()
 	add_child(_level_instance)
+	_level_instance.viewport_size_override = Vector2(1000, 1000)
 
 
 func after_each():

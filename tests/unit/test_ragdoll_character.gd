@@ -28,10 +28,13 @@ func test_push_body_part():
 	var initial_vel = ragdoll.torso.linear_velocity
 	ragdoll.push_body_part("Torso", Vector3(0, 5, 0))
 	assert_signal_emitted(ragdoll, "ragdoll_manipulated")
-	assert_ne(
-		ragdoll.torso.linear_velocity,
-		initial_vel,
-		"Torso linear velocity should change after impulse"
+	# Impulses only show up in linear_velocity after the physics server steps.
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_gt(
+		ragdoll.torso.linear_velocity.y,
+		initial_vel.y,
+		"Torso should be moving upward after an upward impulse"
 	)
 
 func test_freeze_ragdoll():

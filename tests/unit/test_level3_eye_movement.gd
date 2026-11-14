@@ -72,6 +72,7 @@ func test_penlight_lag_movement():
 
 func test_tracing_nodes_in_sequence_and_win():
 	var viewport_size = Vector2(1000, 1000)
+	_level_instance.viewport_size_override = viewport_size
 
 	for i in range(_level_instance.NODES.size()):
 		var target_norm = _level_instance.NODES[i]
@@ -80,7 +81,7 @@ func test_tracing_nodes_in_sequence_and_win():
 			target_norm.y * viewport_size.y
 		)
 		_level_instance.penlight_pos = target_screen
-		_level_instance._process(0.1)
+		_level_instance.check_current_node()
 		assert_eq(
 			_level_instance.current_node_index,
 			i + 1,

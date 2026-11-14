@@ -25,6 +25,13 @@ func _ready() -> void:
 		GameState.game_over.connect(_on_game_over)
 
 
+func _exit_tree() -> void:
+	if GameState.level_won.is_connected(_on_level_won):
+		GameState.level_won.disconnect(_on_level_won)
+	if GameState.game_over.is_connected(_on_game_over):
+		GameState.game_over.disconnect(_on_game_over)
+
+
 func has_level(level_id: int) -> bool:
 	return LEVEL_SCENES.has(level_id)
 
@@ -56,5 +63,5 @@ func _on_game_over(reason: String) -> void:
 
 
 func _change_scene(path: String) -> void:
-	if scene_changes_enabled:
+	if scene_changes_enabled and is_inside_tree():
 		get_tree().call_deferred("change_scene_to_file", path)
