@@ -1,101 +1,111 @@
 extends GutTest
 
-var _level_instance = null
-var _level_won_emitted: bool = false
-var _game_over_emitted: bool = false
+const DT: float = 1.0 / 60.0
+
+var level: Level3EyeMovement
 
 
-func before_each():
+func before_each() -> void:
 	GameState.reset_state()
-	_level_won_emitted = false
-	_game_over_emitted = false
-
-	var lm = get_tree().root.get_node_or_null("LevelManager")
-	if lm:
-		if GameState.game_over.is_connected(lm._on_game_over):
-			GameState.game_over.disconnect(lm._on_game_over)
-		if GameState.level_won.is_connected(lm._on_level_won):
-			GameState.level_won.disconnect(lm._on_level_won)
-
-	if not GameState.level_won.is_connected(_on_test_level_won):
-		GameState.level_won.connect(_on_test_level_won)
-	if not GameState.game_over.is_connected(_on_test_game_over):
-		GameState.game_over.connect(_on_test_game_over)
-
-	var scene = load("res://scenes/levels/Level3_EyeMovement.tscn")
-	_level_instance = scene.instantiate()
-	add_child(_level_instance)
+	level = load("res://scenes/levels/Level3_EyeMovement.tscn").instantiate()
+	add_child(level)
+	level.set_process(false)
 
 
-func after_each():
-	if _level_instance:
-		_level_instance.queue_free()
-		_level_instance = null
-
-	if GameState.level_won.is_connected(_on_test_level_won):
-		GameState.level_won.disconnect(_on_test_level_won)
-	if GameState.game_over.is_connected(_on_test_game_over):
-		GameState.game_over.disconnect(_on_test_game_over)
-
-	var lm = get_tree().root.get_node_or_null("LevelManager")
-	if lm:
-		if not GameState.game_over.is_connected(lm._on_game_over):
-			GameState.game_over.connect(lm._on_game_over)
-		if not GameState.level_won.is_connected(lm._on_level_won):
-			GameState.level_won.connect(lm._on_level_won)
-
+func after_each() -> void:
+	if level:
+		level.queue_free()
 	GameState.reset_state()
 
 
-func _on_test_level_won():
-	_level_won_emitted = true
+func test_initialization() -> void:
+	assert_eq(level.level_id, 3, "Level ID should be 3")
+	assert_eq(level.current_node_index, 0, "Starts on the first point")
+	assert_eq(level.NODES.size(), 6, "H-pattern has 6 points")
+	var tip := level.tip_position()
+	assert_true(Rect2(0, 0, 1152, 648).has_point(tip), "Penlight starts on screen")
 
 
-func _on_test_game_over(_reason: String):
-	_game_over_emitted = true
+func test_every_h_point_is_reachable() -> void:
+	for i in range(level.NODES.size()):
+		assert_true(level.reach_toward(level.node_position(i)), "Point %d is in reach" % i)
+		assert_lt(level.tip_position().distance_to(level.node_position(i)), 1.0, "IK lands on it")
+		assert_between(level.shoulder_angle, level.SHOULDER_MIN, level.SHOULDER_MAX)
+		assert_between(level.elbow_angle, level.ELBOW_MIN, level.ELBOW_MAX)
 
 
-func test_level3_instantiation():
-	assert_not_null(_level_instance, "Level 3 instance should be created")
-	assert_eq(_level_instance.current_node_index, 0, "Initial node index should be 0")
-	assert_eq(_level_instance.progress, 0.0, "Initial progress should be 0.0")
-	assert_eq(_level_instance.NODES.size(), 6, "H-pattern should have 6 nodes")
+func test_h_points_are_clear_of_the_eyes() -> void:
+	for i in range(level.NODES.size()):
+		for eye in level.eye_positions():
+			assert_gt(
+				level.node_position(i).distance_to(eye),
+				level.NEAR_EYE_RADIUS + level.HIT_RADIUS,
+				"Point %d can be traced without going near an eye" % i
+			)
 
 
-func test_penlight_lag_movement():
-	_level_instance.penlight_pos = Vector2(0, 0)
-	var viewport_size = Vector2(1000, 1000)
-	_level_instance._process(0.1)
-	# Penlight pos moves towards mouse position
-	assert_not_null(_level_instance.penlight_pos, "Penlight position updated")
+func test_shoulder_and_elbow_inputs_move_the_joints() -> void:
+	var shoulder_before := level.shoulder_angle
+	var elbow_before := level.elbow_angle
+	for i in range(20):
+		level.step(DT, 1.0, -1.0)
+	assert_gt(level.shoulder_angle, shoulder_before, "W swings the shoulder")
+	assert_lt(level.elbow_angle, elbow_before, "O bends the elbow")
 
 
-func test_tracing_nodes_in_sequence_and_win():
-	var viewport_size = Vector2(1000, 1000)
-	_level_instance.viewport_size_override = viewport_size
-
-	for i in range(_level_instance.NODES.size()):
-		var target_norm = _level_instance.NODES[i]
-		var target_screen = Vector2(
-			target_norm.x * viewport_size.x,
-			target_norm.y * viewport_size.y
-		)
-		_level_instance.penlight_pos = target_screen
-		_level_instance.check_current_node()
-		assert_eq(
-			_level_instance.current_node_index,
-			i + 1,
-			"Node %d traced" % (i + 1)
-		)
-
-	assert_true(_level_won_emitted, "level_won signal should be emitted on completing all nodes")
+func test_arm_sags_under_gravity() -> void:
+	var before := level.shoulder_angle
+	for i in range(60):
+		level.step(DT, 0.0, 0.0)
+	assert_ne(level.shoulder_angle, before, "An idle arm doesn't hold still")
 
 
-func test_ambient_stress():
-	var initial_stress = GameState.stress
-	for i in range(100):
-		_level_instance._process(0.1)
-	assert_true(
-		GameState.stress >= initial_stress,
-		"Ambient stress can accumulate over time"
-	)
+func test_joints_are_clamped() -> void:
+	level.elbow_vel = 50.0
+	level.step(DT, 0.0, 0.0)
+	assert_true(level.elbow_angle <= level.ELBOW_MAX, "Elbow can't hyperextend")
+	level.elbow_vel = -50.0
+	level.step(DT, 0.0, 0.0)
+	assert_true(level.elbow_angle >= level.ELBOW_MIN, "Elbow can't over-bend")
+
+
+func test_points_must_be_traced_in_order() -> void:
+	level.reach_toward(level.node_position(2))
+	level.check_current_node()
+	assert_eq(level.current_node_index, 0, "Skipping ahead doesn't count")
+	level.reach_toward(level.node_position(0))
+	level.check_current_node()
+	assert_eq(level.current_node_index, 1, "The first point counts")
+
+
+func test_tracing_the_whole_h_wins() -> void:
+	watch_signals(GameState)
+	for i in range(level.NODES.size()):
+		level.reach_toward(level.node_position(i))
+		level.check_current_node()
+	assert_eq(level.phase, Level3EyeMovement.Phase.COMPLETED, "H traced")
+	assert_signal_emitted(GameState, "level_won", "level_won should be emitted")
+
+
+func test_near_the_eye_adds_stress() -> void:
+	var eye: Vector2 = level.eye_positions()[0]
+	level.reach_toward(eye + Vector2(0, 35))
+	level.step(DT, 0.0, 0.0)
+	assert_gt(GameState.stress, 0.0, "Shining the light too close adds stress")
+	assert_eq(level.phase, Level3EyeMovement.Phase.TRACING, "Close is not a fail yet")
+
+
+func test_poking_the_eye_fails() -> void:
+	watch_signals(GameState)
+	level.reach_toward(level.eye_positions()[1])
+	level.step(DT, 0.0, 0.0)
+	assert_eq(level.phase, Level3EyeMovement.Phase.FAILED, "Poking an eye fails the level")
+	assert_signal_emitted_with_parameters(GameState, "game_over", [level.POKE_REASON])
+
+
+func test_whipping_the_light_adds_stress() -> void:
+	level.reach_toward(level.node_position(5))
+	level.elbow_vel = -3.0
+	level.step(DT, 0.0, 0.0)
+	assert_gt(level.tip_speed, level.FAST_SPEED, "The tip is moving fast")
+	assert_gt(GameState.stress, 0.0, "Moving too fast for the patient adds stress")

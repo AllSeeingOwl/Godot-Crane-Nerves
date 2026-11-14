@@ -42,6 +42,9 @@ The game is heavily inspired by *QWOP* and *Surgeon Simulator*.
 *   **Level 3: Oculomotor, Trochlear, Abducens (Eye Movement)**
     *   **Objective:** Test eye tracking.
     *   **Mechanic:** Moving an object (like a pen) smoothly. Jerky movements or moving out of the field of view increases stress.
+    *   **Controls:** QWOP-style joints on the doctor's arm: Q/W swing the shoulder, O/P bend the elbow. Joints have momentum and the arm sags under gravity, so the penlight moves in awkward arcs.
+    *   **Steps:** Trace the six points of an 'H' (drawn around the face, crossbar at chin height) in order. The patient's eyes follow the light.
+    *   **Hazards:** Bringing the light near an eye adds stress, and whipping it faster than the patient can follow adds stress. Poking an eye is an instant Game Over.
 
 *   **Level 4: Trigeminal (Facial Sensation)**
     *   **Objective:** Test facial sensitivity.
