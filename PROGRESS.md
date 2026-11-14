@@ -18,10 +18,10 @@
 - Level 6: Vestibulocochlear (Hearing) - Power meter timing & floaty tuning fork placement
 - Level 7: Gag Reflex (IX & X) - WASD arm + mouse-angled tongue depressor in a randomly snapping mouth
 - Level 8: Accessory (XI) - Mouse-button doctor pressure vs arrow-key patient resistance (shrug + head turns)
+- Level 9: Hypoglossal (XII) - Mouse-guided spring-physics tongue that drifts to one side, five hold targets
 - GUT test suite runs in CI
 
 ## In-Progress Features
-- Level 9: Hypoglossal (XII)
 - Wiring the shared `UIManager` HUD, 3D doctor's office backdrop, and ragdoll characters into the levels
 - "The Thick Girl" physics model and jiggle physics
 - ASMR audio soundscape, deadpan dialogue, and absurdist SFX
