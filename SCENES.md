@@ -4,8 +4,8 @@ This document details the major scene files within the Cranial Nerve Crisis Godo
 
 ## Directory Structure
 - `scenes/player/`: Player character and player-related components.
-- `scenes/enemies/`: Enemy types and AI behaviors.
-- `scenes/environment/`: Level layouts, obstacles, interactive objects.
+- `scenes/levels/`: One scene per cranial nerve exam level (`LevelN_Name.tscn`).
+- `scenes/environments/`: The 3D doctor's office backdrop (`doctors_office.tscn`).
 - `scenes/ui/`: Menus, HUD, dialogue boxes.
 
 ## Major Scenes
@@ -20,19 +20,16 @@ This document details the major scene files within the Cranial Nerve Crisis Godo
 - **File Path**: `scenes/player/player.tscn`
 - **Purpose**: The main player character entity, handling input, physics, interactions, and camera.
 - **Key Nodes**: `CharacterBody3D` (root), `CollisionShape3D`, `Camera3D` (or similar for perspective).
-- **Connections**: Instantiated within `Main.tscn` or directly in level scenes (`scenes/environment/*`). Often accessed by global managers.
+- **Connections**: Instantiated within `Main.tscn`.
 
-### Base Enemy
-- **File Path**: `scenes/enemies/BaseEnemy.tscn`
-- **Purpose**: Reusable base scene template for enemies. Other specific enemy variants should inherit from this scene.
-- **Key Nodes**: `CharacterBody3D` (root), `CollisionShape3D`, meshes, AI controllers/navigation nodes.
-- **Connections**: Inherited by specific enemy scenes. Instantiated within level scenes or via enemy spawners.
+### Level Scenes
+- **File Path**: `scenes/levels/LevelN_Name.tscn` (e.g. `Level1_Olfactory.tscn`)
+- **Purpose**: One 2D minigame per cranial nerve test. Root node is a `Node2D` whose script extends `BaseLevel`.
+- **Connections**: Loaded by the `LevelManager` autoload via its `LEVEL_SCENES` table.
 
-### Base Projectile
-- **File Path**: `scenes/environment/BaseProjectile.tscn`
-- **Purpose**: Reusable base scene template for projectiles fired by players or enemies.
-- **Key Nodes**: `Area3D` or `RigidBody3D` (root), `CollisionShape3D`, `MeshInstance3D` or visual representation.
-- **Connections**: Instantiated dynamically by weapons or enemy attacks.
+### Doctor's Office
+- **File Path**: `scenes/environments/doctors_office.tscn`
+- **Purpose**: The 3D sterile office backdrop, with a mouse-parallax camera (`scripts/environments/doctors_office.gd`).
 
 ## Creating New Scenes
 When creating new scenes, ensure they are placed within the appropriate subdirectory according to their primary function.

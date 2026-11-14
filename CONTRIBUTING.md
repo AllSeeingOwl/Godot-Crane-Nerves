@@ -74,7 +74,7 @@ To maintain consistency across the codebase, we enforce standard formatting rule
 ## Working with Godot
 * **Version:** Godot 4.1.3 (expected by CI/CD pipelines).
 * Keep scenes modular and avoid hardcoding values.
-* Refer to the markdown files (e.g., `00_Game_Design_Document.md`) as the ultimate source of truth for mechanics and math logic.
+* Refer to the markdown files (e.g., `docs/migration/00_Game_Design_Document.md`) as the ultimate source of truth for mechanics and math logic.
 
 ## Reporting Issues
 

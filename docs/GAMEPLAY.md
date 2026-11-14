@@ -54,6 +54,9 @@ The game is heavily inspired by *QWOP* and *Surgeon Simulator*.
 *   **Level 7: Glossopharyngeal & Vagus (Gag Reflex)**
     *   **Objective:** Test the gag reflex.
     *   **Mechanic:** Highly volatile level. Inserting a tongue depressor. Precision is key; pushing too far causes massive stress and failure.
+    *   **Controls:** W/A/S/D moves the doctor's floaty arm; the mouse steers the depressor angle (with lag).
+    *   **Steps:** (1) Hold the tongue down gently for 1.5 seconds. (2) Gently touch the back of the throat to trigger the gag reflex.
+    *   **Hazards:** The mouth twitches red and snaps shut at random intervals (being inside = *CHOMP*). Jabbing the lips, tickling the palate, squashing the tongue, or touching the throat too early or too hard all add stress. Pushing past the throat makes the patient vomit: instant Game Over.
 
 *   **Level 8: Accessory (Neck/Shoulder Strength)**
     *   **Objective:** Test resistance.

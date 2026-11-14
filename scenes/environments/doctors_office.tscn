@@ -1,4 +1,6 @@
-[gd_scene load_steps=95 format=3]
+[gd_scene load_steps=96 format=3]
+
+[ext_resource type="Script" path="res://scripts/environments/doctors_office.gd" id="1_office_script"]
 
 [sub_resource type="Environment" id="Environment_3ad57"]
 background_mode = 1
@@ -434,6 +436,7 @@ emission = Color(0.8, 0.9, 1, 1)
 emission_energy_multiplier = 0.5
 
 [node name="DoctorsOffice" type="Node3D"]
+script = ExtResource("1_office_script")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3ad57")

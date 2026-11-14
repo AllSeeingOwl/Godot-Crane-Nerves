@@ -5,7 +5,7 @@ This document covers performance considerations, known bottlenecks, and optimiza
 ## React to Godot Advantages
 
 The primary reason for migrating from React (using React Three Fiber) to Godot 4 is performance and stability.
-In the original React prototype (see the "BOLT OPTIMIZATION" notes in `01_GameEngine_State.md`), updating the `stress` variable 60 times a second caused severe performance degradation due to React's rendering lifecycle and constant recreation of callbacks, which forced teardowns of `requestAnimationFrame` loops.
+In the original React prototype (see the "BOLT OPTIMIZATION" notes in `docs/migration/01_GameEngine_State.md`), updating the `stress` variable 60 times a second caused severe performance degradation due to React's rendering lifecycle and constant recreation of callbacks, which forced teardowns of `requestAnimationFrame` loops.
 
 Godot natively handles game loops (`_process` and `_physics_process`), eliminating this specific bottleneck. Updating a float value like `stress` every frame in Godot is practically free.
 
@@ -18,7 +18,7 @@ Because the game relies heavily on physics-based comedy (like *Surgeon Simulator
 
 ### 2. Math Overhead
 Certain levels require calculating vectors, distances, and torques rapidly.
-- **Optimization:** Use the pre-calculated tables or optimized formulas provided in `07_Math_Utils.md` instead of performing expensive trig functions (`sin`, `cos`, `atan2`) excessively every frame if an approximation is sufficient.
+- **Optimization:** Use the pre-calculated tables or optimized formulas provided in `docs/migration/07_Math_Utils.md` instead of performing expensive trig functions (`sin`, `cos`, `atan2`) excessively every frame if an approximation is sufficient.
 
 ## General Optimization Tips
 
@@ -36,7 +36,7 @@ Certain levels require calculating vectors, distances, and torques rapidly.
    - **Bottleneck:** Updating 14 rigid body velocities in `_calculate_and_apply_stress()` using dynamic `Dictionary` lookups (`_previous_velocities[body]`) was incurring dictionary hashing overhead on every physics frame. Additionally, `push_body_part()` performed string matching across node children when retrieving limbs.
    - **Optimization:** Replaced the dictionary with a contiguous parallel `Array[Vector3]` indexed by body part ID. Added a cached `_body_parts_by_name` lookup table to allow O(1) limb retrieval by name without iterating children or using regex matching.
 
-2. **3D Environment Rendering (`doctors_office.tscn` & `DoctorsOffice.tscn`)**
+2. **3D Environment Rendering (`scenes/environments/doctors_office.tscn`)**
    - **Bottleneck:** `doctors_office.tscn` contained multiple individual `OmniLight3D` nodes for each ceiling panel (`CeilingLightPanel0`, `CeilingLightPanel1`, `CeilingLightPanel2`), with overlapping light ranges (9.0 units). Overlapping omni lights increase pixel shader cost significantly in 3D Forward rendering due to multiple light passes per fragment.
    - **Optimization:** Consolidated the ceiling light sources into a single central ceiling `OmniLight3D` with appropriate coverage. Reduced light omni ranges on ambient lights across environment scenes (e.g., from 7.0/10.0 to 6.0) to minimize light overlap and draw calls.
 

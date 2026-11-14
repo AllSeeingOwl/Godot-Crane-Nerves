@@ -16,12 +16,14 @@
 - Level 4: Trigeminal (Sensation) - Sharp/Soft facial sensation test with severe mouse lag
 - Level 5: Facial Nerve (Expression) - Face muscle group controls (1-0 keys) to match facial expressions
 - Level 6: Vestibulocochlear (Hearing) - Power meter timing & floaty tuning fork placement
+- Level 7: Gag Reflex (IX & X) - WASD arm + mouse-angled tongue depressor in a randomly snapping mouth
 
 ## In-Progress Features
-- Developing Level 6 through Level 12 cranial nerve tests
+- Level 8: Accessory (XI), Level 9: Hypoglossal (XII)
+- Wiring the shared `UIManager` HUD, 3D doctor's office backdrop, and ragdoll characters into the levels
 - "The Thick Girl" physics model and jiggle physics
 - ASMR audio soundscape, deadpan dialogue, and absurdist SFX
 - "Window of Distraction" environmental vignettes
 
 ## Blockers
-- None at this time.
+- The GUT test addon is not committed (`addons/gut` is gitignored) and CI does not install it, so the test suite does not run in CI.

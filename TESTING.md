@@ -40,6 +40,6 @@ func test_basic_math():
 4. **Assert Messages**: Include a clear failure message in asserts.
 
 ## Systems That Require Test Coverage
-- **Core Game Logic**: The `GameLogic` script and scoring mechanisms. Goal is 80% coverage.
+- **Core Game Logic**: `GameState` stress tracking and `LevelManager` routing. Goal is 80% coverage.
 - **Player Movement**: Ensuring physics math and state transitions work as expected.
-- **Enemy Behaviors**: Verifying health logic, damage taken, and state transitions.
+- **Level Mechanics**: Each `LevelN_*.gd` script's win/lose conditions and stress triggers.

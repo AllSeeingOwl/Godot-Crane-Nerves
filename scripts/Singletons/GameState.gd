@@ -19,7 +19,7 @@ const MIN_STRESS: float = 0.0
 const MAX_STRESS: float = 100.0
 
 const MIN_LEVEL_ID: int = 1
-const MAX_LEVEL_ID: int = 5
+const MAX_LEVEL_ID: int = 9
 
 const SAVE_FILE_PATH: String = "user://game_state.save"
 
@@ -76,7 +76,7 @@ func reset_stress() -> void:
 	stress_changed.emit(stress, delta)
 
 
-## Sets the active level ID (1 to 4).
+## Sets the active level ID (MIN_LEVEL_ID to MAX_LEVEL_ID).
 func set_current_level(level_id: int) -> void:
 	current_level_id = clamp(level_id, MIN_LEVEL_ID, MAX_LEVEL_ID)
 	if current_level_id > highest_unlocked_level:
@@ -110,7 +110,7 @@ func lose_level(reason: String = "") -> void:
 	game_over.emit(fail_reason)
 
 
-## Advances to the next level if within bounds (1 to 4). Returns true if advanced.
+## Advances to the next level if within bounds. Returns true if advanced.
 func next_level() -> bool:
 	if current_level_id < MAX_LEVEL_ID:
 		set_current_level(current_level_id + 1)
