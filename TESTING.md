@@ -4,11 +4,15 @@
 This project uses **Gut (Godot Unit Test)** as the primary testing framework. Tests are separated into `tests/unit` and `tests/integration`.
 
 ## How to Run Tests Locally
-You can run tests from the command line using the `run_tests.sh` script or Godot headless execution:
+The GUT addon is not committed (`addons/gut` is gitignored). `run_tests.sh` downloads it on first run via `tools/install_gut.sh`, imports the project, then runs the whole suite headlessly using `.gutconfig.json`:
 
 ```bash
-godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit
+GODOT=/path/to/Godot_v4.1.3 ./run_tests.sh
 ```
+
+To use the GUT panel in the editor, run `tools/install_gut.sh` once, then reopen the project.
+
+The suite also runs in CI (the `Run GUT Tests` job in `.github/workflows/ci.yml`) on every push and pull request. `tests/pre_run_hook.gd` turns off `LevelManager` scene changes for the run, so a test that wins or loses a level doesn't replace the test scene.
 
 Alternatively, if you open the project in the Godot Editor, you can use the Gut panel to run specific tests.
 

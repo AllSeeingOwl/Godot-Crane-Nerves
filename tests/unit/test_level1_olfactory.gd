@@ -105,8 +105,15 @@ func test_mouse_following_and_lag():
 
 
 func test_hand_speed_and_stress():
-	_level_instance.current_hand_speed = 1000.0
+	# Mouse far from the hand: the hand lurches toward it well above SPEED_THRESHOLD.
+	_level_instance.hand_position = Vector2.ZERO
+	_level_instance._target_mouse_pos = Vector2(1000, 0)
 	_level_instance._process(0.1)
+	assert_gt(
+		_level_instance.current_hand_speed,
+		_level_instance.SPEED_THRESHOLD,
+		"Hand should be moving faster than the threshold"
+	)
 	assert_true(GameState.stress > 0.0, "Moving hand too fast increases patient stress")
 
 
@@ -125,16 +132,17 @@ func test_bad_smell_evasion_and_stress():
 func test_smell_identification_and_win_condition():
 	_level_instance._on_vial_pressed("coffee")
 	_level_instance.nose.position = Vector2(200, 200)
-	var nose_center = _level_instance.nose.position + (_level_instance.nose.size / 2.0)
-	_level_instance.hand_position = nose_center
 
+	# The nose wanders, so keep the hand (and the mouse it follows) on it every frame.
 	for i in range(30):
+		_hold_vial_at_nose()
 		_level_instance._process(0.1)
 
 	assert_true(_level_instance.identified_vials.has("coffee"), "Coffee should be identified")
 
 	_level_instance._on_vial_pressed("mint")
 	for i in range(30):
+		_hold_vial_at_nose()
 		_level_instance._process(0.1)
 
 	assert_true(_level_instance.identified_vials.has("mint"), "Mint should be identified")
@@ -145,3 +153,9 @@ func test_max_stress_lose_condition():
 	GameState.add_stress(100.0)
 	assert_true(GameState.is_game_over, "Game over flag set when stress reaches max")
 	assert_true(_game_over_emitted, "game_over signal should be emitted")
+
+
+func _hold_vial_at_nose() -> void:
+	var nose_center = _level_instance.nose.position + (_level_instance.nose.size / 2.0)
+	_level_instance.hand_position = nose_center
+	_level_instance._target_mouse_pos = nose_center

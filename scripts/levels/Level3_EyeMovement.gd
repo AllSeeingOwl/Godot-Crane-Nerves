@@ -66,10 +66,6 @@ func _process(delta: float) -> void:
 	if GameState.is_game_over or current_node_index >= NODES.size():
 		return
 
-	var viewport_size = get_viewport_rect().size
-	if viewport_size == Vector2.ZERO:
-		viewport_size = Vector2(1152, 648)
-
 	# 1. Penlight physics lag movement
 	var target_mouse_pos = get_global_mouse_position()
 	var lerp_factor = clamp(1.0 - exp(-LAG_SPEED * delta), 0.0, 1.0)
@@ -79,27 +75,33 @@ func _process(delta: float) -> void:
 		penlight_cursor.position = penlight_pos
 
 	# 2. Check distance to current node
-	if current_node_index < NODES.size():
-		var target_norm_pos = NODES[current_node_index]
-		var target_screen_pos = Vector2(
-			target_norm_pos.x * viewport_size.x,
-			target_norm_pos.y * viewport_size.y
-		)
-
-		var dist_sq = penlight_pos.distance_squared_to(target_screen_pos)
-		if dist_sq < HIT_RADIUS_SQ:
-			current_node_index += 1
-			progress = (float(current_node_index) / float(NODES.size())) * 100.0
-			_update_ui()
-
-			if current_node_index >= NODES.size():
-				win_level()
+	check_current_node()
 
 	# 3. Ambient stress over time
 	if randf() < AMBIENT_STRESS_CHANCE:
 		GameState.add_stress(AMBIENT_STRESS_AMOUNT)
 
-	_update_node_positions_and_visuals(viewport_size)
+	_update_node_positions_and_visuals(get_play_area_size())
+
+
+## Advances to the next node if the penlight is within range of the current one.
+func check_current_node() -> void:
+	if current_node_index >= NODES.size():
+		return
+
+	var viewport_size := get_play_area_size()
+	var target_norm_pos: Vector2 = NODES[current_node_index]
+	var target_screen_pos := Vector2(
+		target_norm_pos.x * viewport_size.x, target_norm_pos.y * viewport_size.y
+	)
+
+	if penlight_pos.distance_squared_to(target_screen_pos) < HIT_RADIUS_SQ:
+		current_node_index += 1
+		progress = (float(current_node_index) / float(NODES.size())) * 100.0
+		_update_ui()
+
+		if current_node_index >= NODES.size():
+			win_level()
 
 
 func _update_node_positions_and_visuals(viewport_size: Vector2) -> void:

@@ -57,9 +57,8 @@ func test_placement_miss_adds_stress() -> void:
 
 
 func test_successful_placements_win_level() -> void:
-	var win_signaled = false
-	var signal_callback = func(): win_signaled = true
-	GameState.level_won.connect(signal_callback)
+	# GDScript lambdas capture locals by value, so watch the signal instead of flipping a flag.
+	watch_signals(GameState)
 
 	for i in range(Level6Vestibulocochlear.TARGET_LOCATIONS.size()):
 		level.state = Level6Vestibulocochlear.State.PLACE
@@ -68,7 +67,8 @@ func test_successful_placements_win_level() -> void:
 		level.fork_pos = target_pos
 		level.place_fork()
 
-	assert_true(win_signaled, "level_won signal should be emitted after all placements complete")
+	assert_signal_emitted(
+		GameState, "level_won", "level_won signal should be emitted after all placements complete"
+	)
 	assert_eq(level.state, Level6Vestibulocochlear.State.COMPLETED, "State should be COMPLETED")
 
-	GameState.level_won.disconnect(signal_callback)

@@ -3,9 +3,12 @@ extends GutTest
 
 func before_each():
 	GameState.reset_state()
+	# Keep the real LevelManager from reacting (e.g. win_level() advancing to the next level).
 	var lm = get_tree().root.get_node_or_null("LevelManager")
 	if lm and GameState.game_over.is_connected(lm._on_game_over):
 		GameState.game_over.disconnect(lm._on_game_over)
+	if lm and GameState.level_won.is_connected(lm._on_level_won):
+		GameState.level_won.disconnect(lm._on_level_won)
 
 
 func after_each():
@@ -13,6 +16,8 @@ func after_each():
 	var lm = get_tree().root.get_node_or_null("LevelManager")
 	if lm and not GameState.game_over.is_connected(lm._on_game_over):
 		GameState.game_over.connect(lm._on_game_over)
+	if lm and not GameState.level_won.is_connected(lm._on_level_won):
+		GameState.level_won.connect(lm._on_level_won)
 
 
 func test_initialization():

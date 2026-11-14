@@ -88,9 +88,7 @@ func _interact(is_sharp: bool) -> void:
 	if current_region_index >= REGIONS.size():
 		return
 
-	var viewport_size = get_viewport_rect().size
-	if viewport_size == Vector2.ZERO:
-		viewport_size = Vector2(1152, 648)
+	var viewport_size := get_play_area_size()
 
 	var target_region = REGIONS[current_region_index]
 	var target_screen_pos = Vector2(
@@ -127,9 +125,7 @@ func _process(delta: float) -> void:
 	if GameState.is_game_over or current_region_index >= REGIONS.size():
 		return
 
-	var viewport_size = get_viewport_rect().size
-	if viewport_size == Vector2.ZERO:
-		viewport_size = Vector2(1152, 648)
+	var viewport_size := get_play_area_size()
 
 	# Heavy tool lag
 	var target_mouse_pos = get_global_mouse_position()

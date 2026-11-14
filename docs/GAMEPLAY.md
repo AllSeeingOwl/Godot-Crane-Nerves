@@ -61,6 +61,9 @@ The game is heavily inspired by *QWOP* and *Surgeon Simulator*.
 *   **Level 8: Accessory (Neck/Shoulder Strength)**
     *   **Objective:** Test resistance.
     *   **Mechanic:** Applying opposing force to the patient's movements. Applying unbalanced force fails the test.
+    *   **Controls:** You play both sides. Left/Right mouse button = the doctor presses on the patient's left/right side; Left/Right arrow = the patient pushes back on that side. Forces ramp up while held and fade when released.
+    *   **Parts:** (1) Shoulder shrug, both sides at once. (2) Head turn left. (3) Head turn right. Each passes after holding steady (forces within 10 of each other, with the doctor pressing at least 40) for 2.5 seconds.
+    *   **Hazards:** The patient's muscles twitch at random. Overpowering either way adds stress, as does pressing the shoulders unevenly. Overpowering the patient badly is an instant Game Over (*POP*, dislocated shoulder).
 
 *   **Level 9: Hypoglossal (Tongue Movement)**
     *   **Objective:** Examine the tongue.
