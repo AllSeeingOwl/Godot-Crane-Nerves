@@ -44,6 +44,10 @@ const TWITCH_STRENGTH_MIN: float = 15.0
 const TWITCH_STRENGTH_MAX: float = 30.0
 const TWITCH_DECAY_RATE: float = 25.0
 
+const BODY_CENTER: Vector2 = Vector2(576, 290)
+const BODY_SCALE: float = 80.0
+const BAR_BASES: Array[Vector2] = [Vector2(150, 560), Vector2(912, 560)]
+
 const PHASE_TITLES: Dictionary = {
 	Phase.SHRUG: "PART 1: Shrug both shoulders against your hands",
 	Phase.TURN_LEFT: "PART 2: Turn head LEFT against your hand",
@@ -262,30 +266,68 @@ func _update_ui() -> void:
 
 
 func _draw() -> void:
-	var center := Vector2(576, 400)
-	var skin := Color(0.95, 0.75, 0.6)
+	draw_backdrop()
 	var sides: Array = active_sides()
 
-	# Shoulders rise with displacement during the shrug.
-	var shrug_l: float = -displacement[LEFT] if phase == Phase.SHRUG else 0.0
-	var shrug_r: float = -displacement[RIGHT] if phase == Phase.SHRUG else 0.0
-	draw_rect(Rect2(center + Vector2(-220, 60 + shrug_l), Vector2(180, 50)), skin)
-	draw_rect(Rect2(center + Vector2(40, 60 + shrug_r), Vector2(180, 50)), skin)
-	draw_rect(Rect2(center + Vector2(-40, 20), Vector2(80, 60)), skin)
-
-	# Head shifts sideways with displacement during the head turns.
-	var head_x: float = 0.0
-	if phase == Phase.TURN_LEFT:
-		head_x = -displacement[LEFT]
+	var face := {"stress": GameState.stress}
+	var strain := 0.0
+	for side in sides:
+		strain = maxf(strain, effective_patient_force(side) / 100.0)
+	if strain > 0.4:
+		face["brow_raise"] = -strain
+		face["smile_l"] = -0.6 * strain
+		face["smile_r"] = -0.6 * strain
+	if phase == Phase.SHRUG:
+		face["shoulder_raise_l"] = clampf(displacement[LEFT] / 40.0, -1.0, 1.0)
+		face["shoulder_raise_r"] = clampf(displacement[RIGHT] / 40.0, -1.0, 1.0)
+	elif phase == Phase.TURN_LEFT:
+		face["head_turn"] = -clampf(displacement[LEFT] / 40.0, -1.0, 1.0)
 	elif phase == Phase.TURN_RIGHT:
-		head_x = displacement[RIGHT]
-	draw_circle(center + Vector2(head_x, -40), 70.0, skin)
+		face["head_turn"] = clampf(displacement[RIGHT] / 40.0, -1.0, 1.0)
+	PatientKit.draw_patient(self, BODY_CENTER, BODY_SCALE, patient_face(face))
 
-	# Force bars: doctor (blue) and patient (orange) per side; red when out of balance.
+	_draw_doctor_hands(face)
+	_draw_force_bars(sides)
+	draw_hud_bands(145.0, 0.0)
+	draw_rect(Rect2(Vector2(30, 214), Vector2(70, 220)), Color(0.06, 0.08, 0.07, 0.72))
+
+
+## The doctor's gloved hands: on both shoulders for the shrug, on one cheek for a head turn.
+func _draw_doctor_hands(face: Dictionary) -> void:
+	if phase == Phase.SHRUG:
+		for side in [LEFT, RIGHT]:
+			var feature := "shoulder_l" if side == LEFT else "shoulder_r"
+			var raise: float = face.get(
+				"shoulder_raise_l" if side == LEFT else "shoulder_raise_r", 0.0
+			)
+			var pos := PatientKit.feature_point(BODY_CENTER, BODY_SCALE, feature)
+			pos.y -= raise * 0.3 * BODY_SCALE + 14.0
+			var outward := -1.0 if side == LEFT else 1.0
+			_draw_hand(pos, pos + Vector2(outward * 120.0, -230.0), doctor_force[side])
+	elif phase == Phase.TURN_LEFT or phase == Phase.TURN_RIGHT:
+		var side := LEFT if phase == Phase.TURN_LEFT else RIGHT
+		var outward := -1.0 if side == LEFT else 1.0
+		var turn: float = face.get("head_turn", 0.0)
+		var pos := BODY_CENTER + Vector2(outward * 1.05 + turn * 0.3, 0.25) * BODY_SCALE
+		_draw_hand(pos, pos + Vector2(outward * 260.0, -160.0), doctor_force[side])
+
+
+func _draw_hand(pos: Vector2, sleeve_from: Vector2, force: float) -> void:
+	draw_line(sleeve_from, pos, Color(0.78, 0.8, 0.85), 40.0)
+	draw_line(sleeve_from, pos, Color(0.96, 0.96, 0.98), 34.0)
+	var radius := 20.0 + force * 0.08
+	draw_circle(pos, radius, Color(0.75, 0.85, 0.95))
+	draw_arc(pos, radius, 0.0, TAU, 24, PatientKit.OUTLINE, 2.0)
+
+
+## Doctor (blue) and patient (orange) force per side; frame turns green when balanced.
+func _draw_force_bars(sides: Array) -> void:
+	var font := ThemeDB.fallback_font
 	for side in [LEFT, RIGHT]:
-		var x: float = -420.0 if side == LEFT else 330.0
-		var base := center + Vector2(x, 120)
-		var bar_color := Color(0.3, 0.3, 0.3)
+		var base: Vector2 = BAR_BASES[side]
+		var frame := Rect2(base + Vector2(-6, -232), Vector2(102, 260))
+		draw_rect(frame, Color(0.06, 0.08, 0.07, 0.72))
+		var bar_color := Color(0.4, 0.4, 0.4)
 		if side in sides:
 			var ok: bool = absf(displacement[side]) <= BALANCE_TOLERANCE
 			bar_color = Color(0.3, 0.9, 0.3) if ok else Color(0.9, 0.3, 0.3)
@@ -294,3 +336,8 @@ func _draw() -> void:
 		var pat_h: float = effective_patient_force(side) * 2.0
 		draw_rect(Rect2(base + Vector2(5, -doc_h), Vector2(35, doc_h)), Color(0.4, 0.6, 1.0))
 		draw_rect(Rect2(base + Vector2(50, -pat_h), Vector2(35, pat_h)), Color(1.0, 0.6, 0.2))
+		var title := "LEFT" if side == LEFT else "RIGHT"
+		draw_string(
+			font, base + Vector2(0, -210), title, HORIZONTAL_ALIGNMENT_CENTER, 90, 16, Color.WHITE
+		)
+		draw_string(font, base + Vector2(0, 20), "DOC  PT", HORIZONTAL_ALIGNMENT_CENTER, 90, 14)

@@ -33,6 +33,7 @@ const SWEAT := Color(0.70, 0.88, 1.0, 0.85)
 const HEAD_HALF := Vector2(1.0, 1.25)
 
 ## Anatomical landmarks in head units (x right, y down).
+## shoulder_l / shoulder_r mark the tops of the gown's shoulders (before any shoulder_raise).
 const FEATURES: Dictionary = {
 	"top_of_head": Vector2(0, -1.25),
 	"forehead_l": Vector2(-0.42, -0.55),
@@ -50,6 +51,8 @@ const FEATURES: Dictionary = {
 	"chin": Vector2(0, 1.12),
 	"ear_l": Vector2(-1.04, 0.0),
 	"ear_r": Vector2(1.04, 0.0),
+	"shoulder_l": Vector2(-1.3, 1.62),
+	"shoulder_r": Vector2(1.3, 1.62),
 }
 
 
@@ -133,6 +136,8 @@ static func draw_hud_bands(ci: CanvasItem, size: Vector2, top_h: float, bottom_h
 ##   pucker: 0..1        jaw_open: 0..1
 ##   stress: 0..100 (flushes the skin and adds sweat)
 ##   body: bool (draw neck, shoulders and gown; default true)
+##   shoulder_raise_l, shoulder_raise_r: -1 (pushed down) .. 1 (shrugged up)
+##   head_turn: -1 (turned to screen left) .. 1 (screen right); slides the face sideways
 static func draw_patient(
 	ci: CanvasItem, center: Vector2, scale: float, face: Dictionary = {}
 ) -> void:
@@ -140,7 +145,14 @@ static func draw_patient(
 	var skin := SKIN.lerp(FLUSH, clampf(stress / 100.0, 0.0, 1.0) * 0.35)
 
 	if face.get("body", true):
-		_draw_body(ci, center, scale, skin)
+		_draw_body(
+			ci,
+			center,
+			scale,
+			skin,
+			face.get("shoulder_raise_l", 0.0),
+			face.get("shoulder_raise_r", 0.0)
+		)
 
 	# Ears behind the head
 	for side in [-1.0, 1.0]:
@@ -163,19 +175,21 @@ static func draw_patient(
 		hair.append(center + Vector2(x, dip) * scale)
 	ci.draw_colored_polygon(hair, HAIR)
 
-	_draw_brows(ci, center, scale, face.get("brow_raise", 0.0))
+	# Facial features slide sideways when the head turns (the head outline stays put).
+	var fc: Vector2 = center + Vector2(face.get("head_turn", 0.0) * 0.3, 0.0) * scale
+	_draw_brows(ci, fc, scale, face.get("brow_raise", 0.0))
 	for side in ["l", "r"]:
 		_draw_eye(
 			ci,
-			feature_point(center, scale, "eye_" + side),
+			feature_point(fc, scale, "eye_" + side),
 			scale,
 			face.get("look_" + side, Vector2.ZERO),
 			face.get("eye_closed_" + side, 0.0),
 			skin
 		)
-	_draw_cheeks(ci, center, scale, face, stress)
-	_draw_nose(ci, center, scale, face.get("nose_wrinkle", 0.0))
-	_draw_mouth(ci, center, scale, face)
+	_draw_cheeks(ci, fc, scale, face, stress)
+	_draw_nose(ci, fc, scale, face.get("nose_wrinkle", 0.0))
+	_draw_mouth(ci, fc, scale, face)
 
 	if stress > 40.0:
 		var drops := int((stress - 40.0) / 20.0) + 1
@@ -184,16 +198,20 @@ static func draw_patient(
 			draw_ellipse(ci, p, Vector2(0.05, 0.08) * scale, SWEAT)
 
 
-static func _draw_body(ci: CanvasItem, center: Vector2, scale: float, skin: Color) -> void:
+static func _draw_body(
+	ci: CanvasItem, center: Vector2, scale: float, skin: Color, raise_l: float, raise_r: float
+) -> void:
 	ci.draw_rect(Rect2(center + Vector2(-0.35, 0.9) * scale, Vector2(0.7, 0.8) * scale), skin)
+	var lift_l := -0.35 * clampf(raise_l, -1.0, 1.0)
+	var lift_r := -0.35 * clampf(raise_r, -1.0, 1.0)
 	var gown := PackedVector2Array(
 		[
 			center + Vector2(-2.1, 3.2) * scale,
-			center + Vector2(-1.9, 1.75) * scale,
-			center + Vector2(-0.4, 1.45) * scale,
+			center + Vector2(-1.9, 1.75 + lift_l) * scale,
+			center + Vector2(-0.4, 1.45 + lift_l * 0.5) * scale,
 			center + Vector2(0.0, 1.7) * scale,
-			center + Vector2(0.4, 1.45) * scale,
-			center + Vector2(1.9, 1.75) * scale,
+			center + Vector2(0.4, 1.45 + lift_r * 0.5) * scale,
+			center + Vector2(1.9, 1.75 + lift_r) * scale,
 			center + Vector2(2.1, 3.2) * scale,
 		]
 	)
@@ -215,6 +233,13 @@ static func _draw_brows(ci: CanvasItem, center: Vector2, scale: float, raise: fl
 			ci.draw_line(
 				center + Vector2(-0.3, y) * scale, center + Vector2(0.3, y) * scale, SKIN_SHADE, 2.0
 			)
+
+
+## One eye at `pos` (head-unit `scale`), for levels that draw a custom close-up face.
+static func draw_eye(
+	ci: CanvasItem, pos: Vector2, scale: float, look: Vector2, closed: float, skin: Color = SKIN
+) -> void:
+	_draw_eye(ci, pos, scale, look, closed, skin)
 
 
 static func _draw_eye(

@@ -12,6 +12,7 @@ offset_right = 96.0
 offset_bottom = 96.0
 
 [node name="ColorRect" type="ColorRect" parent="Nose"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,6 +22,7 @@ grow_vertical = 2
 color = Color(1, 1, 1, 0.1)
 
 [node name="Label" type="Label" parent="Nose"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,8 +39,8 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 4.0
-offset_bottom = 16.0
+offset_top = 30.0
+offset_bottom = 42.0
 grow_horizontal = 2
 grow_vertical = 0
 show_percentage = false
@@ -55,6 +57,7 @@ offset_bottom = 24.0
 mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="VialCursor"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
