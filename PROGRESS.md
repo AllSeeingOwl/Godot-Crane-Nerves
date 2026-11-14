@@ -17,13 +17,15 @@
 - Level 5: Facial Nerve (Expression) - Face muscle group controls (1-0 keys) to match facial expressions
 - Level 6: Vestibulocochlear (Hearing) - Power meter timing & floaty tuning fork placement
 - Level 7: Gag Reflex (IX & X) - WASD arm + mouse-angled tongue depressor in a randomly snapping mouth
+- Level 8: Accessory (XI) - Mouse-button doctor pressure vs arrow-key patient resistance (shrug + head turns)
+- GUT test suite runs in CI
 
 ## In-Progress Features
-- Level 8: Accessory (XI), Level 9: Hypoglossal (XII)
+- Level 9: Hypoglossal (XII)
 - Wiring the shared `UIManager` HUD, 3D doctor's office backdrop, and ragdoll characters into the levels
 - "The Thick Girl" physics model and jiggle physics
 - ASMR audio soundscape, deadpan dialogue, and absurdist SFX
 - "Window of Distraction" environmental vignettes
 
 ## Blockers
-- The GUT test addon is not committed (`addons/gut` is gitignored) and CI does not install it, so the test suite does not run in CI.
+- None at this time.
