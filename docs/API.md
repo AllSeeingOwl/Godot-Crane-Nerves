@@ -46,13 +46,6 @@ A base script that all level controllers should inherit from. Provides common fu
 - `win_level() -> void`: Tells `GameState` that the level is won.
 - `lose_level(reason: String) -> void`: Tells `GameState` the level is lost with a specific reason.
 
-### `BaseEnemy.gd` / `BaseProjectile.gd`
-Base classes for hazards or specific physics objects to reduce code duplication (as outlined in memory).
-
-**Methods:**
-- `apply_damage(amount: int) -> void` (If applicable)
-- `on_hit_player() -> void`: Typically adds stress to the `GameState`.
-
 ## HUD / UI
 
 ### `GameUI.gd`

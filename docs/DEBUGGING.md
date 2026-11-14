@@ -52,5 +52,5 @@ If the game is dropping frames or stuttering:
 2. Go to the **Profiler** tab and click **Start**.
 3. Play the game for a few seconds, then click **Stop**.
 4. Analyze the graph. Look for spikes in `Physics Time` or `Script Time`.
-   - High Script Time: Optimize complex calculations (e.g., using tables from `07_Math_Utils.md`).
+   - High Script Time: Optimize complex calculations (e.g., using tables from `docs/migration/07_Math_Utils.md`).
    - High Physics Time: Reduce the number of active physics bodies or simplify collision shapes (use primitives like Box/Sphere instead of Convex Polygons where possible).

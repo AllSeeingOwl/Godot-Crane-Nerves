@@ -18,10 +18,11 @@
 - Level 6: Vestibulocochlear (Hearing) - Power meter timing & floaty tuning fork placement
 
 ## In-Progress Features
-- Developing Level 6 through Level 12 cranial nerve tests
+- Level 7: Gag Reflex (IX & X), Level 8: Accessory (XI), Level 9: Hypoglossal (XII)
+- Wiring the shared `UIManager` HUD, 3D doctor's office backdrop, and ragdoll characters into the levels
 - "The Thick Girl" physics model and jiggle physics
 - ASMR audio soundscape, deadpan dialogue, and absurdist SFX
 - "Window of Distraction" environmental vignettes
 
 ## Blockers
-- None at this time.
+- The GUT test addon is not committed (`addons/gut` is gitignored) and CI does not install it, so the test suite does not run in CI.

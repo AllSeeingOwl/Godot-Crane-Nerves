@@ -40,7 +40,7 @@ To run, test, and contribute to this project, you will need:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/Godot-Crane-Nerves.git
+   git clone https://github.com/AllSeeingOwl/Godot-Crane-Nerves.git
    cd Godot-Crane-Nerves
    ```
 
@@ -48,7 +48,7 @@ To run, test, and contribute to this project, you will need:
    - Launch the Godot Engine.
    - Click on the **Import** button in the Project Manager.
    - Navigate to the cloned `Godot-Crane-Nerves` folder.
-   - Select the `project.godot` file (if available, or simply select the folder to create a new Godot project here).
+   - Select the `project.godot` file in the cloned folder.
    - Click **Import & Edit**.
 
 ## How to Run and Test Locally
@@ -86,31 +86,32 @@ The project is organized to maintain a clear separation between migration docume
 
 ```
 Godot-Crane-Nerves/
-├── 00_Game_Design_Document.md    # Master plan and feel of the game
-├── 01_GameEngine_State.md        # Global stress and level transitions
-├── 02_Level1_Olfactory.md        # Logic for Level 1
-├── 03_Level2_Optic.md            # Logic for Level 2
-├── 04_Level3_EyeMovement.md      # Logic for Level 3
-├── 05_Level4_Trigeminal.md       # Logic for Level 4
-├── 06_DoctorsOffice3D_Layout.md  # 3D coordinates for the background room
-├── 07_Math_Utils.md              # Math optimization tables
-├── 08_AI_PROMPTS.md              # Prompts to assist AI agents in migrating code
+├── docs/
+│   ├── migration/                # Extracted React prototype logic (source of truth)
+│   │   ├── 00_Game_Design_Document.md
+│   │   ├── 01_GameEngine_State.md
+│   │   ├── 02-05_Level*.md       # Logic for Levels 1-4
+│   │   ├── 06_DoctorsOffice3D_Layout.md
+│   │   ├── 07_Math_Utils.md
+│   │   └── 08_AI_PROMPTS.md
+│   └── ...                       # Architecture, API, gameplay, deployment docs
 ├── assets/                       # 2D/3D sprites, models, audio, and raw assets
 ├── resources/                    # Custom Godot resources (.tres), materials, and themes
 ├── scenes/                       # Godot scene files (.tscn) for levels and prefabs
 ├── scripts/                      # GDScript source code files (.gd)
+├── tests/                        # GUT unit and integration tests
 └── README.md                     # This file
 ```
 
-*Note: The Markdown (`.md`) files in the root folder contain the extracted logic from the original React prototype. When implementing new features, refer to these documents as the primary source of truth for math and game logic.*
+*Note: The Markdown (`.md`) files in `docs/migration/` contain the extracted logic from the original React prototype. When implementing new features, refer to these documents as the primary source of truth for math and game logic.*
 
 ## Contribution Guidelines
 
 We welcome contributions to help migrate the React prototype into a fully functional Godot game!
 
 1. **Fork the repository** and create a new branch for your feature or bug fix (`git checkout -b feature/my-new-feature`).
-2. **Read the Design Documents**: Before starting, review `00_Game_Design_Document.md` and the relevant level documentation to ensure your work aligns with the original vision.
-3. **Use the AI Prompts**: If using an AI assistant to write code, leverage the instructions in `08_AI_PROMPTS.md` and the level-specific markdown files.
+2. **Read the Design Documents**: Before starting, review `docs/migration/00_Game_Design_Document.md` and the relevant level documentation to ensure your work aligns with the original vision.
+3. **Use the AI Prompts**: If using an AI assistant to write code, leverage the instructions in `docs/migration/08_AI_PROMPTS.md` and the level-specific markdown files.
 4. **Follow Godot Best Practices**: Use GDScript conventions, keep scenes modular, and avoid hardcoding values where possible.
 5. **Commit your changes**: Write clear, descriptive commit messages.
 6. **Push to the branch**: `git push origin feature/my-new-feature`.
