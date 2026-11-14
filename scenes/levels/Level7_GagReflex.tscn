@@ -1,0 +1,103 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7_gag_reflex_level7_scene"]
+
+[ext_resource type="Script" path="res://scripts/levels/Level7_GagReflex.gd" id="1_gag_script"]
+
+[node name="Level7GagReflex" type="Node2D"]
+script = ExtResource("1_gag_script")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="InfoLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 20.0
+offset_right = 200.0
+offset_bottom = 45.0
+grow_horizontal = 2
+text = "Level 7: Gag Reflex (IX & X)"
+horizontal_alignment = 1
+
+[node name="ControlsLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -350.0
+offset_top = 50.0
+offset_right = 350.0
+offset_bottom = 75.0
+grow_horizontal = 2
+text = "Controls: W/A/S/D = Move Arm | Mouse = Tongue Depressor Angle"
+horizontal_alignment = 1
+
+[node name="PhaseLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 80.0
+offset_right = 300.0
+offset_bottom = 105.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 0.4, 1)
+text = "STEP 1: Hold the tongue down gently"
+horizontal_alignment = 1
+
+[node name="FeedbackLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 110.0
+offset_right = 300.0
+offset_bottom = 135.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+horizontal_alignment = 1
+
+[node name="StressBar" type="ProgressBar" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 47.0
+grow_horizontal = 0
+step = 0.1
+
+[node name="StressLabel" type="Label" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 50.0
+offset_right = -60.0
+offset_bottom = 76.0
+grow_horizontal = 0
+text = "STRESS"
+horizontal_alignment = 1
+
+[node name="TongueBox" type="VBoxContainer" parent="UI"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 40.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_vertical = 2
+alignment = 1
+
+[node name="TongueLabel" type="Label" parent="UI/TongueBox"]
+layout_mode = 2
+text = "AHHH"
+horizontal_alignment = 1
+
+[node name="TongueBar" type="ProgressBar" parent="UI/TongueBox"]
+custom_minimum_size = Vector2(20, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+fill_mode = 3
+show_percentage = true

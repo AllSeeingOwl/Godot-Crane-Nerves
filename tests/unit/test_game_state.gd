@@ -56,22 +56,26 @@ func test_level_progression():
 	assert_eq(GameState.current_level_id, 2, "Current level should be 2")
 	assert_eq(GameState.highest_unlocked_level, 2, "Highest unlocked level should be 2")
 
-	# Test clamping level range (1 to 4)
+	# Test clamping level range (MIN_LEVEL_ID to MAX_LEVEL_ID)
 	GameState.set_current_level(0)
 	assert_eq(GameState.current_level_id, 1, "Level ID clamped to MIN_LEVEL_ID (1)")
 
 	GameState.set_current_level(10)
-	assert_eq(GameState.current_level_id, 4, "Level ID clamped to MAX_LEVEL_ID (4)")
+	assert_eq(GameState.current_level_id, GameState.MAX_LEVEL_ID, "Level ID clamped to MAX_LEVEL_ID")
 
 	GameState.set_current_level(2)
 	var advanced = GameState.next_level()
 	assert_true(advanced, "next_level() should return true when advancing")
 	assert_eq(GameState.current_level_id, 3, "Current level should advance to 3")
 
-	GameState.set_current_level(4)
+	GameState.set_current_level(GameState.MAX_LEVEL_ID)
 	var advanced_beyond_max = GameState.next_level()
 	assert_false(advanced_beyond_max, "next_level() should return false when at MAX_LEVEL_ID")
-	assert_eq(GameState.current_level_id, 4, "Current level should remain at 4")
+	assert_eq(
+		GameState.current_level_id,
+		GameState.MAX_LEVEL_ID,
+		"Current level should remain at MAX_LEVEL_ID"
+	)
 
 
 func test_level_win_condition():

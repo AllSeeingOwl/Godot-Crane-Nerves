@@ -7,6 +7,7 @@ const LEVEL_SCENES = {
 	4: "res://scenes/levels/Level4_Trigeminal.tscn",
 	5: "res://scenes/levels/Level5_FacialNerve.tscn",
 	6: "res://scenes/levels/Level6_Vestibulocochlear.tscn",
+	7: "res://scenes/levels/Level7_GagReflex.tscn",
 }
 
 const MAIN_MENU_SCENE = "res://scenes/ui/main_menu.tscn"
@@ -25,6 +26,9 @@ func has_level(level_id: int) -> bool:
 
 func load_level(level_id: int) -> void:
 	GameState.current_level_id = level_id
+	# Every level load starts clean, including a retry after a game over.
+	GameState.is_game_over = false
+	GameState.reset_stress()
 
 	if LEVEL_SCENES.has(level_id):
 		get_tree().call_deferred("change_scene_to_file", LEVEL_SCENES[level_id])
