@@ -331,32 +331,99 @@ func _update_ui() -> void:
 
 
 func _draw() -> void:
+	draw_backdrop()
 	var o := HEAD_ORIGIN
-	var skin := Color(0.95, 0.75, 0.6)
-	var flesh := Color(0.55, 0.15, 0.2)
-	var lip_color := Color(0.85, 0.35, 0.4)
-	if mouth_state == MouthState.WARNING:
-		lip_color = Color(1.0, 0.2, 0.2)
+	var stress_t := clampf(GameState.stress / 100.0, 0.0, 1.0)
+	var skin := PatientKit.SKIN.lerp(PatientKit.FLUSH, stress_t * 0.35)
+	var jaw_drop := mouth_gap - MOUTH_OPEN_GAP
 
-	# Head silhouette and oral cavity
-	draw_circle(o + Vector2(160, -40), 230.0, skin)
-	draw_rect(Rect2(o + Vector2(0, PALATE_Y), Vector2(PHARYNX_X, TONGUE_Y - PALATE_Y)), flesh)
+	# Neck, skull and hair (the patient faces left; lips at x = 0)
+	draw_rect(Rect2(o + Vector2(110, 110), Vector2(150, 260)), skin)
+	var skull := o + Vector2(230, -90)
+	PatientKit.draw_ellipse(self, skull, Vector2(210, 190), skin, 3.0)
+	var hair := PackedVector2Array()
+	for i in range(13):
+		var a := lerpf(PI * 1.32, PI * 2.15, float(i) / 12.0)
+		hair.append(skull + Vector2(cos(a) * 216.0, sin(a) * 196.0))
+	hair.append(o + Vector2(330, -60))
+	hair.append(o + Vector2(180, -170))
+	hair.append(o + Vector2(110, -215))
+	draw_colored_polygon(hair, PatientKit.HAIR)
 
-	# Palate, tongue and back of throat
-	draw_line(o + Vector2(0, PALATE_Y), o + Vector2(PHARYNX_X, PALATE_Y), Color(1, 0.8, 0.8), 4.0)
+	# Profile: forehead, nose and upper lip down to the top of the mouth
+	var upper := PackedVector2Array(
+		[
+			o + Vector2(110, -245),
+			o + Vector2(35, -218),
+			o + Vector2(8, -190),
+			o + Vector2(0, -150),
+			o + Vector2(-48, -100),
+			o + Vector2(-8, -78),
+			o + Vector2(-20, -mouth_gap - 6),
+			o + Vector2(60, -mouth_gap),
+			o + Vector2(160, -60),
+		]
+	)
+	draw_colored_polygon(upper, skin)
+	draw_polyline(upper.slice(0, 7), PatientKit.OUTLINE, 3.0)
+
+	# Lower jaw and chin, which drop as the mouth opens and snap up as it closes
+	var lower := PackedVector2Array(
+		[
+			o + Vector2(-20, mouth_gap + 6),
+			o + Vector2(-18, 110 + jaw_drop),
+			o + Vector2(15, 150 + jaw_drop),
+			o + Vector2(150, 150 + jaw_drop * 0.5),
+			o + Vector2(240, 60),
+			o + Vector2(60, mouth_gap),
+		]
+	)
+	draw_colored_polygon(lower, skin)
+	draw_polyline(lower.slice(0, 4), PatientKit.OUTLINE, 3.0)
+
+	# Ear and an eye that watches the depressor (and squeezes shut when the mouth snaps)
+	PatientKit.draw_ellipse(self, o + Vector2(270, -100), Vector2(28, 44), skin, 2.0)
+	var eye := o + Vector2(35, -175)
+	PatientKit.draw_ellipse(self, eye, Vector2(17, 11), PatientKit.EYE_WHITE, 2.0)
+	var look := ((o + hand_pos) - eye).normalized() * 5.0
+	draw_circle(eye + look, 7.0, PatientKit.IRIS)
+	draw_circle(eye + look, 3.5, PatientKit.PUPIL)
+	if mouth_state == MouthState.CLOSING or mouth_state == MouthState.CLOSED:
+		draw_rect(Rect2(eye - Vector2(19, 13), Vector2(38, 26)), skin)
+		draw_line(eye - Vector2(17, 0), eye + Vector2(17, 0), PatientKit.OUTLINE, 2.0)
+
+	# Oral cavity, palate, tongue and the back of the throat
+	draw_rect(
+		Rect2(o + Vector2(0, PALATE_Y), Vector2(PHARYNX_X, TONGUE_Y - PALATE_Y + 30)),
+		PatientKit.MOUTH_DARK
+	)
+	draw_line(o + Vector2(0, PALATE_Y), o + Vector2(PHARYNX_X, PALATE_Y), Color(1, 0.75, 0.78), 5.0)
 	var tongue_width := TONGUE_ZONE_MAX_X - TONGUE_ZONE_MIN_X
 	draw_rect(
 		Rect2(o + Vector2(TONGUE_ZONE_MIN_X, TONGUE_Y), Vector2(tongue_width, 30)),
-		Color(0.9, 0.4, 0.5)
+		Color(0.9, 0.45, 0.52)
 	)
+	draw_circle(o + Vector2(TONGUE_ZONE_MIN_X, TONGUE_Y + 15), 15.0, Color(0.9, 0.45, 0.52))
 	var throat_color := Color(0.4, 1, 0.4) if phase == Phase.ELICIT_GAG else Color(0.7, 0.2, 0.3)
 	draw_line(o + Vector2(PHARYNX_X, PALATE_Y), o + Vector2(PHARYNX_X, TONGUE_Y), throat_color, 6.0)
 
-	# Lips (upper and lower) leave a gap of mouth_gap around y = 0
-	draw_rect(Rect2(o + Vector2(-15, -130), Vector2(30, 130 - mouth_gap)), lip_color)
-	draw_rect(Rect2(o + Vector2(-15, mouth_gap), Vector2(30, 130 - mouth_gap)), lip_color)
+	# Teeth and lips at the opening (lips flash red as a warning before the mouth snaps)
+	var lip_color := PatientKit.LIP
+	if mouth_state == MouthState.WARNING:
+		lip_color = Color(1.0, 0.15, 0.15)
+	draw_rect(Rect2(o + Vector2(2, -mouth_gap - 14), Vector2(16, 14)), PatientKit.TEETH)
+	draw_rect(Rect2(o + Vector2(2, mouth_gap), Vector2(16, 14)), PatientKit.TEETH)
+	draw_rect(Rect2(o + Vector2(-22, -mouth_gap - 20), Vector2(24, 20)), lip_color)
+	draw_rect(Rect2(o + Vector2(-22, mouth_gap), Vector2(24, 20)), lip_color)
 
-	# Doctor's hand and tongue depressor
-	var tip := get_tip_position()
-	draw_line(o + hand_pos, o + tip, Color(0.9, 0.85, 0.6), SHAFT_HALF_THICKNESS * 2.0)
-	draw_circle(o + hand_pos, 18.0, Color(0.85, 0.9, 1.0))
+	# Doctor's gloved hand (coat sleeve from the left) and the tongue depressor
+	var hand := o + hand_pos
+	var tip := o + get_tip_position()
+	draw_line(hand + Vector2(-260, 90), hand, Color(0.78, 0.8, 0.85), 36.0)
+	draw_line(hand + Vector2(-260, 90), hand, Color(0.96, 0.96, 0.98), 30.0)
+	draw_line(hand, tip, Color(0.9, 0.85, 0.6), SHAFT_HALF_THICKNESS * 2.0)
+	draw_circle(hand, 18.0, Color(0.75, 0.85, 0.95))
+	draw_arc(hand, 18.0, 0.0, TAU, 24, PatientKit.OUTLINE, 2.0)
+
+	draw_hud_bands(145.0, 0.0)
+	draw_rect(Rect2(Vector2(30, 214), Vector2(80, 220)), Color(0.06, 0.08, 0.07, 0.72))

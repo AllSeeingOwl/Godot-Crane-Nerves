@@ -26,6 +26,12 @@ const SMELL_RANGE: float = 100.0
 const LAG_SPEED: float = 8.0
 const KEYBOARD_MOVE_SPEED: float = 300.0
 
+## Size of the patient's head; the head is drawn so its nose sits on the wandering nose.
+const HEAD_SCALE: float = 85.0
+const GLASS := Color(0.85, 0.92, 0.95, 0.55)
+const STINK := Color(0.45, 0.6, 0.15, 0.7)
+const AROMA := Color(1.0, 1.0, 1.0, 0.55)
+
 var selected_vial: String = ""
 var identified_vials: Array[String] = []
 var hand_position: Vector2 = Vector2.ZERO
@@ -241,6 +247,77 @@ func _process(delta: float) -> void:
 				nose_progress.value = progress
 			else:
 				nose_progress.visible = false
+
+	queue_redraw()
+
+
+func nose_center() -> Vector2:
+	return nose.position + nose.size / 2.0 if nose else Vector2.ZERO
+
+
+func _draw() -> void:
+	draw_backdrop()
+	if not nose:
+		return
+
+	var nose_pos := nose_center()
+	var head_center: Vector2 = nose_pos - PatientKit.FEATURES["nose"] * HEAD_SCALE
+	PatientKit.draw_patient(self, head_center, HEAD_SCALE, patient_face(_smell_face(nose_pos)))
+
+	_draw_hand_and_vial(hand_position)
+	draw_hud_bands(110.0, 92.0)
+
+
+## The patient's reaction to whatever is being waved under their nose.
+func _smell_face(nose_pos: Vector2) -> Dictionary:
+	var to_hand := (hand_position - nose_pos) / (HEAD_SCALE * 3.0)
+	var face := {"look_l": to_hand.limit_length(1.0), "look_r": to_hand.limit_length(1.0)}
+	if selected_vial == "" or not VIALS.has(selected_vial):
+		return face
+
+	var dist := hand_position.distance_to(nose_pos)
+	if VIALS[selected_vial]["type"] == "bad" and dist < BAD_SMELL_STRESS_RANGE:
+		face.merge(
+			{
+				"nose_wrinkle": 1.0,
+				"brow_raise": -1.0,
+				"eye_closed_l": 0.6,
+				"eye_closed_r": 0.6,
+				"smile_l": -1.0,
+				"smile_r": -1.0
+			},
+			true
+		)
+	elif dist < SMELL_RANGE:
+		face.merge({"eye_closed_l": 0.7, "eye_closed_r": 0.7, "smile_l": 0.6, "smile_r": 0.6}, true)
+	return face
+
+
+## The doctor's gloved hand holding a test tube of the selected smell.
+func _draw_hand_and_vial(pos: Vector2) -> void:
+	var cuff := pos + Vector2(26, 34)
+	draw_line(cuff + Vector2(30, 40), cuff, Color(0.96, 0.96, 0.98), 30.0)
+	draw_circle(pos + Vector2(14, 16), 18.0, Color(0.75, 0.85, 0.95))
+
+	if selected_vial == "" or not VIALS.has(selected_vial):
+		return
+
+	var liquid: Color = VIALS[selected_vial]["color"]
+	var tube := Rect2(pos + Vector2(-9, -34), Vector2(18, 46))
+	draw_rect(tube, GLASS)
+	draw_rect(Rect2(tube.position + Vector2(2, 18), Vector2(14, 26)), liquid)
+	draw_circle(tube.position + Vector2(9, 44), 9.0, liquid)
+	draw_rect(Rect2(tube.position + Vector2(-1, -8), Vector2(20, 9)), Color(0.6, 0.45, 0.3))
+
+	var t := Time.get_ticks_msec() / 300.0
+	var is_bad: bool = VIALS[selected_vial]["type"] == "bad"
+	for i in range(3):
+		var base := tube.position + Vector2(9 + (i - 1) * 10, -12)
+		var points := PackedVector2Array()
+		for k in range(6):
+			var y := -k * 8.0
+			points.append(base + Vector2(sin(t + i * 2.0 + k * 0.9) * 5.0, y))
+		draw_polyline(points, STINK if is_bad else AROMA, 3.0 if is_bad else 2.0)
 
 
 func _check_win_condition() -> void:

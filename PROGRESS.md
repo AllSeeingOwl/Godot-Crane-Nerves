@@ -20,9 +20,10 @@
 - Level 8: Accessory (XI) - Mouse-button doctor pressure vs arrow-key patient resistance (shrug + head turns)
 - Level 9: Hypoglossal (XII) - Mouse-guided spring-physics tongue that drifts to one side, five hold targets
 - GUT test suite runs in CI
+- Shared code-drawn art (PatientKit): exam-room backdrop and an expressive patient used by all 9 levels
 
 ## In-Progress Features
-- Wiring the shared `UIManager` HUD, 3D doctor's office backdrop, and ragdoll characters into the levels
+- Wiring the shared `UIManager` HUD, 3D doctor's office backdrop, and ragdoll characters into the levels (levels currently use the 2D PatientKit exam room)
 - "The Thick Girl" physics model and jiggle physics
 - ASMR audio soundscape, deadpan dialogue, and absurdist SFX
 - "Window of Distraction" environmental vignettes

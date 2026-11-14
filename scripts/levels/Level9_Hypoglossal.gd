@@ -68,9 +68,7 @@ var _whip_cooldown: float = 0.0
 
 @onready var target_label: Label = $UI/TargetLabel if has_node("UI/TargetLabel") else null
 @onready var feedback_label: Label = $UI/FeedbackLabel if has_node("UI/FeedbackLabel") else null
-@onready var hold_bar: ProgressBar = (
-	$UI/HoldBox/HoldBar if has_node("UI/HoldBox/HoldBar") else null
-)
+@onready var hold_bar: ProgressBar = $UI/HoldBox/HoldBar if has_node("UI/HoldBox/HoldBar") else null
 
 
 func _ready() -> void:
@@ -195,9 +193,10 @@ func _reset_segments() -> void:
 
 func _update_ui() -> void:
 	if info_label:
-		info_label.text = "Level 9: Hypoglossal Nerve (XII)\nTargets: %d / %d" % [
-			current_target_index, TARGETS.size()
-		]
+		info_label.text = (
+			"Level 9: Hypoglossal Nerve (XII)\nTargets: %d / %d"
+			% [current_target_index, TARGETS.size()]
+		)
 
 	if target_label:
 		if current_target_index < TARGETS.size():
@@ -213,26 +212,85 @@ func _update_ui() -> void:
 
 
 func _draw() -> void:
+	draw_backdrop()
 	var o := HEAD_ORIGIN
+	var stress_t := clampf(GameState.stress / 100.0, 0.0, 1.0)
+	var skin := PatientKit.SKIN.lerp(PatientKit.FLUSH, stress_t * 0.35)
 
-	# Face, open mouth and teeth
-	draw_circle(o + Vector2(0, -40), 220.0, Color(0.95, 0.75, 0.6))
-	draw_rect(Rect2(o + Vector2(-130, -50), Vector2(260, 110)), Color(0.35, 0.05, 0.1))
-	draw_rect(Rect2(o + Vector2(-110, -50), Vector2(220, 14)), Color(0.95, 0.95, 0.9))
+	# Close-up of the face: gown, ears, face, hair
+	var gown := PackedVector2Array(
+		[
+			o + Vector2(-420, 330),
+			o + Vector2(-330, 230),
+			o + Vector2(330, 230),
+			o + Vector2(420, 330)
+		]
+	)
+	draw_colored_polygon(gown, PatientKit.GOWN)
+	for side in [-1.0, 1.0]:
+		PatientKit.draw_ellipse(self, o + Vector2(side * 238.0, -20), Vector2(32, 60), skin, 2.0)
+	PatientKit.draw_ellipse(self, o + Vector2(0, -30), Vector2(240, 265), skin, 3.0)
+	var hair := PackedVector2Array()
+	for i in range(17):
+		var a := PI + PI * float(i) / 16.0
+		hair.append(o + Vector2(0, -30) + Vector2(cos(a) * 245.0, sin(a) * 270.0))
+	hair.append(o + Vector2(150, -215))
+	hair.append(o + Vector2(-150, -215))
+	draw_colored_polygon(hair, PatientKit.HAIR)
+
+	# Eyes watch the tongue tip (and squeeze when the patient gurgles)
+	var squint := 0.5 if tip_pos.y < GURGLE_Y else 0.0
+	for side in [-1.0, 1.0]:
+		var eye_pos := o + Vector2(side * 85.0, -128)
+		var look := ((o + tip_pos) - eye_pos) / 250.0
+		draw_line(
+			eye_pos + Vector2(-side * 30.0, -38),
+			eye_pos + Vector2(side * 30.0, -42),
+			PatientKit.HAIR,
+			10.0
+		)
+		PatientKit.draw_eye(self, eye_pos, 170.0, look.limit_length(1.0), squint, skin)
+	var nose := PackedVector2Array(
+		[
+			o + Vector2(-8, -128),
+			o + Vector2(-34, -78),
+			o + Vector2(0, -68),
+			o + Vector2(34, -78),
+			o + Vector2(8, -128)
+		]
+	)
+	draw_colored_polygon(nose, PatientKit.SKIN_SHADE)
+	for side in [-1.0, 1.0]:
+		PatientKit.draw_ellipse(
+			self, o + Vector2(side * 165.0, -40), Vector2(40, 26), Color(PatientKit.FLUSH, 0.25)
+		)
+
+	# Wide-open mouth: lips, teeth, dark cavity and the gurgle line at the back
+	var mouth := Rect2(o + Vector2(-130, -50), Vector2(260, 110))
+	draw_rect(mouth.grow(12), PatientKit.LIP)
+	draw_rect(mouth, PatientKit.MOUTH_DARK)
+	draw_rect(Rect2(o + Vector2(-110, -50), Vector2(220, 14)), PatientKit.TEETH)
+	draw_rect(Rect2(o + Vector2(-100, 46), Vector2(200, 14)), PatientKit.TEETH)
 	draw_line(o + Vector2(-130, GURGLE_Y), o + Vector2(130, GURGLE_Y), Color(1, 0.3, 0.3, 0.4), 2.0)
 
 	# Current target
 	if current_target_index < TARGETS.size():
 		var target_pos: Vector2 = TARGETS[current_target_index]["position"]
-		draw_arc(o + target_pos, TARGET_RADIUS, 0.0, TAU, 32, Color(0.4, 1, 0.4), 3.0)
+		var pulse := 1.0 + 0.12 * sin(Time.get_ticks_msec() / 150.0)
+		draw_arc(o + target_pos, TARGET_RADIUS * pulse, 0.0, TAU, 32, Color(0.4, 1, 0.4), 3.0)
 
-	# Tongue: thick at the root, thinner toward the tip
+	# Tongue: thick at the root, thinner toward the tip, with a centre groove
 	var points: Array[Vector2] = [ROOT]
 	points.append_array(segment_pos)
 	points.append(tip_pos)
-	var tongue_color := Color(0.9, 0.4, 0.5)
+	var tongue_color := Color(0.9, 0.45, 0.52)
 	for i in range(points.size() - 1):
 		var width := lerpf(34.0, 16.0, float(i) / float(points.size() - 1))
 		draw_line(o + points[i], o + points[i + 1], tongue_color, width)
 		draw_circle(o + points[i + 1], width * 0.5, tongue_color)
 	draw_circle(o + ROOT, 17.0, tongue_color)
+	for i in range(points.size() - 2):
+		draw_line(o + points[i], o + points[i + 1], Color(0.75, 0.3, 0.38), 2.0)
+
+	draw_hud_bands(145.0, 0.0)
+	draw_rect(Rect2(Vector2(30, 214), Vector2(80, 220)), Color(0.06, 0.08, 0.07, 0.72))
