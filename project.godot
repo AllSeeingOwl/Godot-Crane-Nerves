@@ -19,6 +19,17 @@ config/features=PackedStringArray("4.1")
 GameState="*res://scripts/Singletons/GameState.gd"
 LevelManager="*res://scripts/level_manager.gd"
 
+[display]
+
+window/size/viewport_width=1152
+window/size/viewport_height=648
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.08, 0.09, 0.08, 1)

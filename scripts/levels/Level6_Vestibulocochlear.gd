@@ -24,20 +24,28 @@ const FLOAT_ACCEL: float = 400.0
 const FLOAT_FRICTION: float = 3.0
 const TARGET_TOLERANCE: float = 40.0
 
+## Patient's head centre on screen and its PatientKit scale. Fork and target positions are
+## relative to HEAD_ORIGIN, and the targets sit on the drawn head (top and both ears).
+const HEAD_ORIGIN: Vector2 = Vector2(576, 380)
+const HEAD_SCALE: float = 112.0
+const FORK_START: Vector2 = Vector2(-240, 110)
+const FORK_COLOR := Color(0.78, 0.8, 0.84)
+const WAVE_COLOR := Color(1.0, 0.95, 0.5, 0.6)
+
 const TARGET_LOCATIONS: Array[Dictionary] = [
 	{
 		"name": "Top of Head (Weber Test)",
-		"position": Vector2(0, -100),
+		"position": Vector2(0, -140),
 		"description": "Place tuning fork on top of the head"
 	},
 	{
 		"name": "Left Mastoid / Ear (Rinne Test Left)",
-		"position": Vector2(-120, 0),
+		"position": Vector2(-116, 0),
 		"description": "Place tuning fork near left ear"
 	},
 	{
 		"name": "Right Mastoid / Ear (Rinne Test Right)",
-		"position": Vector2(120, 0),
+		"position": Vector2(116, 0),
 		"description": "Place tuning fork near right ear"
 	}
 ]
@@ -50,7 +58,7 @@ var power_direction: float = 1.0
 
 var vibration_power: float = 0.0
 
-var fork_pos: Vector2 = Vector2.ZERO
+var fork_pos: Vector2 = FORK_START
 var fork_vel: Vector2 = Vector2.ZERO
 
 var feedback_text: String = ""
@@ -58,15 +66,10 @@ var feedback_text: String = ""
 @onready var feedback_label: Label = $UI/FeedbackLabel if has_node("UI/FeedbackLabel") else null
 @onready var target_label: Label = $UI/TargetLabel if has_node("UI/TargetLabel") else null
 @onready var state_label: Label = $UI/StateLabel if has_node("UI/StateLabel") else null
-@onready var power_bar: ProgressBar = (
-	$UI/PowerBox/PowerBar if has_node("UI/PowerBox/PowerBar") else null
-)
+@onready
+var power_bar: ProgressBar = $UI/PowerBox/PowerBar if has_node("UI/PowerBox/PowerBar") else null
 @onready var vibration_bar: ProgressBar = (
 	$UI/VibrationBox/VibrationBar if has_node("UI/VibrationBox/VibrationBar") else null
-)
-@onready var fork_node: Node2D = $ForkNode if has_node("ForkNode") else null
-@onready var target_indicator: Node2D = (
-	$TargetIndicator if has_node("TargetIndicator") else null
 )
 
 
@@ -139,9 +142,6 @@ func _process_place_phase(delta: float) -> void:
 	fork_vel = fork_vel.lerp(Vector2.ZERO, FLOAT_FRICTION * delta)
 	fork_pos += fork_vel * delta
 
-	if fork_node:
-		fork_node.position = fork_pos
-
 
 func strike_fork() -> void:
 	if power_meter < TARGET_POWER_MIN:
@@ -149,6 +149,7 @@ func strike_fork() -> void:
 		GameState.add_stress(TOO_SOFT_STRESS)
 	elif power_meter > TARGET_POWER_MAX:
 		feedback_text = "Struck too hard! EAR DAMAGE! *BOINK*"
+		react({"eye_closed_l": 1.0, "eye_closed_r": 1.0, "jaw_open": 0.5}, 0.8)
 		GameState.add_stress(TOO_HARD_STRESS)
 	else:
 		vibration_power = 100.0
@@ -170,8 +171,9 @@ func place_fork() -> void:
 	if dist <= TARGET_TOLERANCE:
 		feedback_text = "Success! %s complete." % target_info["name"]
 		current_target_index += 1
-		fork_pos = Vector2.ZERO
+		fork_pos = FORK_START
 		fork_vel = Vector2.ZERO
+		react({"smile_l": 0.7, "smile_r": 0.7}, 0.6)
 		vibration_power = 0.0
 
 		if current_target_index >= TARGET_LOCATIONS.size():
@@ -181,15 +183,16 @@ func place_fork() -> void:
 			state = State.STRIKE
 	else:
 		feedback_text = "Missed the target spot! Patient looks irritated."
+		react({"brow_raise": -1.0, "smile_l": -0.5, "smile_r": -0.5}, 0.7)
 		GameState.add_stress(MISSED_PLACEMENT_STRESS)
 
 
 func _update_ui() -> void:
 	if info_label:
-		info_label.text = "Level 6: Vestibulocochlear\nPlacements: %d / %d" % [
-			current_target_index,
-			TARGET_LOCATIONS.size()
-		]
+		info_label.text = (
+			"Level 6: Vestibulocochlear\nPlacements: %d / %d"
+			% [current_target_index, TARGET_LOCATIONS.size()]
+		)
 
 	if state_label:
 		if state == State.STRIKE:
@@ -215,5 +218,57 @@ func _update_ui() -> void:
 	if vibration_bar:
 		vibration_bar.value = vibration_power
 
-	if target_indicator and current_target_index < TARGET_LOCATIONS.size():
-		target_indicator.position = TARGET_LOCATIONS[current_target_index]["position"]
+	queue_redraw()
+
+
+func _draw() -> void:
+	draw_backdrop()
+
+	var to_fork := fork_pos.limit_length(HEAD_SCALE * 2.0) / (HEAD_SCALE * 2.0)
+	var face := {"look_l": to_fork, "look_r": to_fork}
+	if state == State.PLACE and _fork_near_target():
+		face["eye_closed_l"] = 0.5
+		face["eye_closed_r"] = 0.5
+		face["smile_l"] = 0.3
+		face["smile_r"] = 0.3
+	PatientKit.draw_patient(self, HEAD_ORIGIN, HEAD_SCALE, patient_face(face))
+
+	if current_target_index < TARGET_LOCATIONS.size():
+		var target: Vector2 = HEAD_ORIGIN + TARGET_LOCATIONS[current_target_index]["position"]
+		var pulse := 1.0 + 0.15 * sin(Time.get_ticks_msec() / 160.0)
+		draw_arc(target, TARGET_TOLERANCE * pulse, 0.0, TAU, 40, Color(0.4, 1.0, 0.4, 0.9), 3.0)
+
+	_draw_tuning_fork(HEAD_ORIGIN + fork_pos)
+
+	draw_hud_bands(196.0, 0.0)
+	# Backing panels for the side meters
+	for x in [30.0, 1052.0]:
+		draw_rect(Rect2(Vector2(x, 214), Vector2(70, 220)), Color(0.06, 0.08, 0.07, 0.72))
+
+
+func _fork_near_target() -> bool:
+	if current_target_index >= TARGET_LOCATIONS.size():
+		return false
+	var target: Vector2 = TARGET_LOCATIONS[current_target_index]["position"]
+	return fork_pos.distance_to(target) <= TARGET_TOLERANCE
+
+
+## A tuning fork standing on its foot at `foot`; the prongs shake while it vibrates.
+func _draw_tuning_fork(foot: Vector2) -> void:
+	var shake := sin(Time.get_ticks_msec() / 12.0) * vibration_power * 0.04
+	var yoke := foot + Vector2(0, -38)
+	draw_line(foot, yoke, FORK_COLOR, 6.0)
+	draw_circle(foot, 5.0, FORK_COLOR)
+	draw_line(yoke + Vector2(-11, 0), yoke + Vector2(11, 0), FORK_COLOR, 6.0)
+	for side in [-1.0, 1.0]:
+		var base: Vector2 = yoke + Vector2(side * 11.0, 0)
+		draw_line(base, base + Vector2(side * shake, -70), FORK_COLOR, 6.0)
+
+	if vibration_power > 0.0:
+		var alpha := vibration_power / 100.0
+		var center := yoke + Vector2(0, -40)
+		for i in range(3):
+			var radius := 26.0 + i * 12.0 + fmod(Time.get_ticks_msec() / 40.0, 12.0)
+			var color := Color(WAVE_COLOR, WAVE_COLOR.a * alpha * (1.0 - i * 0.3))
+			draw_arc(center, radius, -0.6, 0.6, 12, color, 2.0)
+			draw_arc(center, radius, PI - 0.6, PI + 0.6, 12, color, 2.0)

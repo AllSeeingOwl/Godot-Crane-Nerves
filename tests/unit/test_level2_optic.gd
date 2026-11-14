@@ -104,7 +104,8 @@ func test_typing_correct_and_wrong_letters():
 
 
 func test_win_condition_at_least_9_correct():
-	_level_instance.letters_to_type = ["C", "C", "C", "C", "C", "C", "C", "C", "C", "C"]
+	# letters_to_type is Array[String]: assign() keeps the type (= with a literal fails in 4.1)
+	_level_instance.letters_to_type.assign(["C", "C", "C", "C", "C", "C", "C", "C", "C", "C"])
 	for i in range(10):
 		_level_instance._type_letter("C")
 
@@ -113,7 +114,8 @@ func test_win_condition_at_least_9_correct():
 
 
 func test_lose_condition_less_than_9_correct():
-	_level_instance.letters_to_type = ["C", "C", "C", "C", "C", "C", "C", "C", "C", "C"]
+	# letters_to_type is Array[String]: assign() keeps the type (= with a literal fails in 4.1)
+	_level_instance.letters_to_type.assign(["C", "C", "C", "C", "C", "C", "C", "C", "C", "C"])
 	for i in range(5):
 		_level_instance._type_letter("C")
 	for i in range(5):

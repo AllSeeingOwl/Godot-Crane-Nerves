@@ -98,7 +98,9 @@ func test_mouth_closing_on_depressor_chomps() -> void:
 	level.mouth_state = Level7GagReflex.MouthState.CLOSING
 	level.mouth_gap = 1.0
 	level.step(0.1)
-	assert_gte(GameState.stress, Level7GagReflex.CHOMP_STRESS, "Getting chomped adds big stress")
+	assert_true(
+		GameState.stress >= Level7GagReflex.CHOMP_STRESS, "Getting chomped adds big stress"
+	)
 	assert_eq(level.hand_pos, Level7GagReflex.HAND_START, "Depressor is knocked back out")
 
 
@@ -156,7 +158,7 @@ func test_overshooting_throat_makes_patient_vomit() -> void:
 func test_arm_stays_in_bounds() -> void:
 	for i in range(200):
 		level._apply_arm_input(Vector2.RIGHT, 0.05)
-	assert_lte(level.hand_pos.x, Level7GagReflex.HAND_MAX.x, "Hand is clamped to its bounds")
+	assert_true(level.hand_pos.x <= Level7GagReflex.HAND_MAX.x, "Hand is clamped to its bounds")
 
 
 func test_angle_is_clamped() -> void:

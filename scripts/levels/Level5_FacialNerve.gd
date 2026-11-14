@@ -55,12 +55,28 @@ const TARGET_EXPRESSIONS: Array[Dictionary] = [
 ]
 
 const WRONG_EXPRESSION_STRESS: float = 15.0
+
+# Muscle indices
+const FOREHEAD: int = 0
+const LEFT_EYE: int = 1
+const RIGHT_EYE: int = 2
+const NOSE: int = 3
+const LEFT_CHEEK: int = 4
+const RIGHT_CHEEK: int = 5
+const LEFT_MOUTH: int = 6
+const RIGHT_MOUTH: int = 7
+const LIPS: int = 8
+const JAW: int = 9
+
+const FACE_CENTER: Vector2 = Vector2(590, 345)
+const FACE_SCALE: float = 130.0
+const CARD_RECT: Rect2 = Rect2(805, 182, 220, 270)
+const CARD_FACE_SCALE: float = 62.0
 const AMBIENT_STRESS_CHANCE: float = 0.02
 const AMBIENT_STRESS_AMOUNT: float = 0.5
 
 var muscle_states: Array[bool] = [
-	false, false, false, false, false,
-	false, false, false, false, false
+	false, false, false, false, false, false, false, false, false, false
 ]
 var current_expression_index: int = 0
 var feedback_text: String = ""
@@ -71,9 +87,7 @@ var progress: float = 0.0
 @onready var progress_bar: ProgressBar = (
 	$UI/ProgressBox/ProgressBar if has_node("UI/ProgressBox/ProgressBar") else null
 )
-@onready var muscle_container: Control = (
-	$MuscleContainer if has_node("MuscleContainer") else null
-)
+@onready var muscle_container: Control = $MuscleContainer if has_node("MuscleContainer") else null
 @onready var submit_button: Button = $UI/SubmitButton if has_node("UI/SubmitButton") else null
 
 
@@ -109,6 +123,40 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if randf() < AMBIENT_STRESS_CHANCE:
 		GameState.add_stress(AMBIENT_STRESS_AMOUNT)
+	queue_redraw()
+
+
+## PatientKit face for a set of active muscles (Array of 10 bools).
+static func face_for_muscles(states: Array) -> Dictionary:
+	var frown: bool = states[FOREHEAD] and states[JAW]
+	var face := {
+		"eye_closed_l": 1.0 if states[LEFT_EYE] else 0.0,
+		"eye_closed_r": 1.0 if states[RIGHT_EYE] else 0.0,
+		"nose_wrinkle": 1.0 if states[NOSE] else 0.0,
+		"cheek_puff_l": 1.0 if states[LEFT_CHEEK] else 0.0,
+		"cheek_puff_r": 1.0 if states[RIGHT_CHEEK] else 0.0,
+		"pucker": 1.0 if states[LIPS] else 0.0,
+	}
+	var corner_pull := -0.7 if frown else 0.0
+	face["smile_l"] = (1.0 if states[LEFT_MOUTH] else 0.0) + corner_pull
+	face["smile_r"] = (1.0 if states[RIGHT_MOUTH] else 0.0) + corner_pull
+	if frown:
+		face["brow_raise"] = -1.0
+	elif states[FOREHEAD]:
+		face["brow_raise"] = 1.0
+	if states[JAW] and not frown:
+		face["jaw_open"] = 0.7
+	return face
+
+
+## The face the current target expression asks for.
+static func face_for_expression(expression: Dictionary) -> Dictionary:
+	var states := []
+	states.resize(MUSCLE_NAMES.size())
+	states.fill(false)
+	for index in expression.get("required", []):
+		states[index] = true
+	return face_for_muscles(states)
 
 
 func toggle_muscle(index: int) -> void:
@@ -128,10 +176,9 @@ func submit_expression() -> void:
 
 	if is_correct:
 		feedback_text = "Correct! %s matched!" % target["name"]
+		react(face_for_muscles(muscle_states), 0.6)
 		current_expression_index += 1
-		progress = (
-			float(current_expression_index) / float(TARGET_EXPRESSIONS.size()) * 100.0
-		)
+		progress = (float(current_expression_index) / float(TARGET_EXPRESSIONS.size()) * 100.0)
 		_reset_muscle_states()
 		_update_muscle_visuals()
 
@@ -139,6 +186,7 @@ func submit_expression() -> void:
 			win_level()
 	else:
 		feedback_text = "Incorrect expression! Try again."
+		react({"brow_raise": -1.0, "eye_closed_l": 0.4, "eye_closed_r": 0.4}, 0.7)
 		GameState.add_stress(WRONG_EXPRESSION_STRESS)
 
 	_update_ui()
@@ -200,10 +248,10 @@ func _update_muscle_visuals() -> void:
 
 func _update_ui() -> void:
 	if info_label:
-		info_label.text = "Level 5: Facial Nerve\nExpressions Matched: %d / %d" % [
-			current_expression_index,
-			TARGET_EXPRESSIONS.size()
-		]
+		info_label.text = (
+			"Level 5: Facial Nerve\nExpressions Matched: %d / %d"
+			% [current_expression_index, TARGET_EXPRESSIONS.size()]
+		)
 
 	if target_label:
 		if current_expression_index < TARGET_EXPRESSIONS.size():
@@ -217,3 +265,39 @@ func _update_ui() -> void:
 
 	if progress_bar:
 		progress_bar.value = progress
+
+
+func _draw() -> void:
+	draw_backdrop()
+	PatientKit.draw_patient(
+		self, FACE_CENTER, FACE_SCALE, patient_face(face_for_muscles(muscle_states))
+	)
+	_draw_reference_card()
+	draw_hud_bands(168.0, 128.0)
+
+
+## A polaroid of the requested expression, pinned up beside the patient.
+func _draw_reference_card() -> void:
+	if current_expression_index >= TARGET_EXPRESSIONS.size():
+		return
+	var expression: Dictionary = TARGET_EXPRESSIONS[current_expression_index]
+	draw_rect(CARD_RECT.grow(4), Color(0, 0, 0, 0.25))
+	draw_rect(CARD_RECT, Color(0.97, 0.96, 0.92))
+	var photo := Rect2(CARD_RECT.position + Vector2(14, 14), Vector2(CARD_RECT.size.x - 28, 190))
+	draw_rect(photo, PatientKit.WALL_LOW)
+	var face := face_for_expression(expression)
+	face["body"] = false
+	PatientKit.draw_patient(self, photo.get_center() + Vector2(0, 6), CARD_FACE_SCALE, face)
+	draw_circle(CARD_RECT.position + Vector2(CARD_RECT.size.x / 2.0, 0), 7.0, Color(0.85, 0.2, 0.2))
+
+	var font := ThemeDB.fallback_font
+	var caption_pos := Vector2(CARD_RECT.position.x, photo.end.y + 40)
+	draw_string(
+		font,
+		caption_pos,
+		"Do this: %s" % expression["name"],
+		HORIZONTAL_ALIGNMENT_CENTER,
+		CARD_RECT.size.x,
+		20,
+		PatientKit.OUTLINE
+	)

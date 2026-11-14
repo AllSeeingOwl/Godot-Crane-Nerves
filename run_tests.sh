@@ -24,4 +24,22 @@ for attempt in 1 2 3; do
 	fi
 done
 
-"$GODOT" --headless -s addons/gut/gut_cmdln.gd -gconfig=.gutconfig.json -gexit
+LOG="$(mktemp)"
+trap 'rm -f "$LOG"' EXIT
+
+set +e
+"$GODOT" --headless -s addons/gut/gut_cmdln.gd -gconfig=.gutconfig.json -gexit 2>&1 | tee "$LOG"
+status=${PIPESTATUS[0]}
+set -e
+
+# GUT does not fail the run for a test file that doesn't parse (it just skips it with
+# "Ignoring script ... does not extend GutTest") or for runtime script errors inside a test
+# (they're only marked risky). Treat both as failures so broken tests can't hide.
+if grep -qE "SCRIPT ERROR|Ignoring script" "$LOG"; then
+	echo "" >&2
+	echo "ERROR: the test run logged script errors or skipped test files:" >&2
+	grep -nE -A1 "SCRIPT ERROR|Ignoring script" "$LOG" >&2
+	exit 1
+fi
+
+exit "$status"

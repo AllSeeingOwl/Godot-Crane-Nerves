@@ -88,9 +88,8 @@ func test_deviation_blocks_target_unless_corrected() -> void:
 func test_overstretching_adds_stress() -> void:
 	_aim(Vector2(0, 600), 1.0)
 	assert_gt(GameState.stress, 0.0, "Pulling the tongue too far adds stress")
-	assert_lte(
-		level.tip_pos.distance_to(Level9Hypoglossal.ROOT),
-		Level9Hypoglossal.MAX_REACH + 0.01,
+	assert_true(
+		level.tip_pos.distance_to(Level9Hypoglossal.ROOT) <= Level9Hypoglossal.MAX_REACH + 0.01,
 		"The tongue can't stretch past MAX_REACH"
 	)
 
@@ -99,7 +98,7 @@ func test_whipping_adds_stress() -> void:
 	level.tip_pos = Vector2(0, 60)
 	level.tip_vel = Vector2(2000, 0)
 	level.step(DT, Vector2(0, 60))
-	assert_gte(GameState.stress, Level9Hypoglossal.WHIP_STRESS, "Whipping flings spit")
+	assert_true(GameState.stress >= Level9Hypoglossal.WHIP_STRESS, "Whipping flings spit")
 
 
 func test_curling_back_gurgles() -> void:

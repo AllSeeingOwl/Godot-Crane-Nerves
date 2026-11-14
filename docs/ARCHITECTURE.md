@@ -41,6 +41,18 @@ Stress is the core fail state. It's updated 60 times per second (via `_process` 
 ### 5. Camera System
 The camera requires special handling to replicate the prototype's mouse-tracking "sway" or specific fixed perspectives. A central `Camera3D` is typically updated by player inputs.
 
+## Level Art: PatientKit
+
+All exam levels share code-drawn art from `scripts/art/patient_kit.gd` (no external image assets):
+
+- `PatientKit.draw_room()` draws the exam-room backdrop; `draw_hud_bands()` adds translucent bands behind HUD text.
+- `PatientKit.draw_patient(canvas, center, scale, face)` draws a front-view patient. `face` sets the expression: eye look/closure, brows, nose wrinkle, cheek puff, smile per side, pucker, jaw open, and `stress` (flushes the skin, adds sweat).
+- `PatientKit.feature_point(center, scale, "cheek_l")` returns where a landmark is drawn, so gameplay targets sit on the actual face.
+
+`BaseLevel` wraps these: call `draw_backdrop()` first in a level's `_draw()`, `draw_hud_bands()` last, and use `react(face, seconds)` plus `patient_face(base)` for short reactions (wince, grin) that also pick up the current stress.
+
+The project renders at a 1152x648 base resolution and scales to the window (`canvas_items` stretch, `keep` aspect), so levels can lay out in fixed design pixels.
+
 ## Data Flow Diagram
 
 ```mermaid
