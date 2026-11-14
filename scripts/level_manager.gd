@@ -9,6 +9,7 @@ const LEVEL_SCENES = {
 	6: "res://scenes/levels/Level6_Vestibulocochlear.tscn",
 	7: "res://scenes/levels/Level7_GagReflex.tscn",
 	8: "res://scenes/levels/Level8_Accessory.tscn",
+	9: "res://scenes/levels/Level9_Hypoglossal.tscn",
 }
 
 const MAIN_MENU_SCENE = "res://scenes/ui/main_menu.tscn"

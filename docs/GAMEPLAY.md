@@ -68,6 +68,10 @@ The game is heavily inspired by *QWOP* and *Surgeon Simulator*.
 *   **Level 9: Hypoglossal (Tongue Movement)**
     *   **Objective:** Examine the tongue.
     *   **Mechanic:** Similar precision mechanics to Level 7, requiring steady hands.
+    *   **Controls:** The mouse guides the tip of the patient's slimy, wobbly tongue, which follows on a soft spring and overshoots.
+    *   **Steps:** Hold the tip still on five targets in order: stick it out, then left, right, left, right (0.6 seconds each).
+    *   **Twist:** Like real XII nerve palsy, each patient's tongue drifts to one random side, so you have to aim against the drift.
+    *   **Hazards:** Stretching past the tongue's reach or whipping it around (spit everywhere) adds stress. Curling it back into the throat makes the patient gurgle; too far and they swallow it: instant Game Over.
 
 *   **Levels 10-12: The Crisis and Debrief**
     *   These levels represent narrative escalations, total systemic failures ("The Crisis"), and the aftermath ("Night Shift", "The Debrief"). Mechanics here become more chaotic or narrative-focused.
