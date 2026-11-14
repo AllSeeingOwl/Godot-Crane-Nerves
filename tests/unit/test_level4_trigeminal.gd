@@ -64,10 +64,8 @@ func test_level4_instantiation():
 
 
 func test_correct_tool_interaction():
-	var viewport_size = Vector2(1000, 1000)
-
-	# Region 0 is sharp at (0.35, 0.3)
-	_level_instance.tool_pos = Vector2(0.35 * viewport_size.x, 0.3 * viewport_size.y)
+	# Region 0 (left forehead) is sharp
+	_level_instance.tool_pos = _level_instance.region_screen_pos(0)
 	_level_instance._interact(true)  # Sharp tool
 
 	assert_eq(_level_instance.current_region_index, 1, "Correct tool advances region")
@@ -78,10 +76,8 @@ func test_correct_tool_interaction():
 
 
 func test_wrong_tool_interaction():
-	var viewport_size = Vector2(1000, 1000)
-
-	# Region 0 is sharp at (0.35, 0.3)
-	_level_instance.tool_pos = Vector2(0.35 * viewport_size.x, 0.3 * viewport_size.y)
+	# Region 0 (left forehead) is sharp
+	_level_instance.tool_pos = _level_instance.region_screen_pos(0)
 	var initial_stress = GameState.stress
 	_level_instance._interact(false)  # Soft tool (wrong)
 
@@ -109,16 +105,25 @@ func test_miss_target_area():
 
 
 func test_win_condition_all_regions_tested():
-	var viewport_size = Vector2(1000, 1000)
-
 	for i in range(_level_instance.REGIONS.size()):
 		var reg = _level_instance.REGIONS[i]
-		_level_instance.tool_pos = Vector2(
-			reg["x"] * viewport_size.x,
-			reg["y"] * viewport_size.y
-		)
+		_level_instance.tool_pos = _level_instance.region_screen_pos(i)
 		var is_sharp = (reg["type"] == "sharp")
 		_level_instance._interact(is_sharp)
 
 	assert_eq(_level_instance.current_region_index, 6, "All 6 regions tested")
 	assert_true(_level_won_emitted, "level_won signal should be emitted")
+
+
+func test_regions_are_far_enough_apart_to_tell_apart() -> void:
+	# Every region's hit circle must not contain any other region's centre.
+	_level_instance.viewport_size_override = Vector2(1152, 648)  # the real layout
+	var count = _level_instance.REGIONS.size()
+	for i in range(count):
+		for j in range(count):
+			if i == j:
+				continue
+			var dist_sq = _level_instance.region_screen_pos(i).distance_squared_to(
+				_level_instance.region_screen_pos(j)
+			)
+			assert_gt(dist_sq, _level_instance.HIT_RADIUS_SQ, "Regions %d and %d overlap" % [i, j])

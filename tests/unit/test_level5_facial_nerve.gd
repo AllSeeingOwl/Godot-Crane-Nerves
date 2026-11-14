@@ -88,3 +88,22 @@ func test_level_completion():
 		"All expressions should be completed"
 	)
 	assert_eq(_level_instance.progress, 100.0, "Progress should be 100%")
+
+
+func test_face_for_muscles_smile_raises_mouth_corners() -> void:
+	var face = Level5FacialNerve.face_for_expression(Level5FacialNerve.TARGET_EXPRESSIONS[0])
+	assert_gt(face["smile_l"], 0.0, "Smile raises the left corner")
+	assert_gt(face["smile_r"], 0.0, "Smile raises the right corner")
+
+
+func test_face_for_muscles_frown_furrows_brow_and_turns_mouth_down() -> void:
+	var face = Level5FacialNerve.face_for_expression(Level5FacialNerve.TARGET_EXPRESSIONS[1])
+	assert_eq(face["brow_raise"], -1.0, "Frown furrows the brow")
+	assert_lt(face["smile_l"], 0.0, "Frown turns the mouth down")
+	assert_false(face.has("jaw_open"), "A clenched jaw stays shut")
+
+
+func test_face_for_muscles_wink_closes_one_eye() -> void:
+	var face = Level5FacialNerve.face_for_expression(Level5FacialNerve.TARGET_EXPRESSIONS[3])
+	assert_eq(face["eye_closed_l"], 1.0, "Left eye closed")
+	assert_eq(face["eye_closed_r"], 0.0, "Right eye open")
