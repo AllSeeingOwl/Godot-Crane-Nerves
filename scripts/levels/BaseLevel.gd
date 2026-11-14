@@ -26,6 +26,8 @@ func _ready() -> void:
 	GameState.reset_stress()
 	if not GameState.stress_changed.is_connected(_on_stress_changed):
 		GameState.stress_changed.connect(_on_stress_changed)
+	# Restart / Menu buttons, Esc pause menu, and the win/lose screens.
+	add_child(LevelOverlay.new())
 	_update_ui()
 
 

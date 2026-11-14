@@ -5,7 +5,7 @@
 - Initialized project repositories, unit tests (GUT framework), and CI/CD workflows
 - Defined game mechanics, math utilities, and level outlines
 - Global Game State management (`GameState` singleton with stress tracking and signals)
-- UI Manager (`UIManager`) and Game HUD (Stress bar, level indicator, win/lose overlays)
+- Game HUD per level (stress bar, level info) and a shared `LevelOverlay`: Restart / Menu buttons, Esc pause menu, and exam passed / failed / complete screens
 - Level Manager (`LevelManager`) for level routing and transitions
 - Base Level template (`BaseLevel`)
 - Base Enemy and Projectile templates
@@ -23,7 +23,7 @@
 - Shared code-drawn art (PatientKit): exam-room backdrop and an expressive patient used by all 9 levels
 
 ## In-Progress Features
-- Wiring the shared `UIManager` HUD, 3D doctor's office backdrop, and ragdoll characters into the levels (levels currently use the 2D PatientKit exam room)
+- Wiring the 3D doctor's office backdrop and ragdoll characters into the levels (levels currently use the 2D PatientKit exam room)
 - "The Thick Girl" physics model and jiggle physics
 - ASMR audio soundscape, deadpan dialogue, and absurdist SFX
 - "Window of Distraction" environmental vignettes
