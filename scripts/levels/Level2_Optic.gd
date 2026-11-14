@@ -106,13 +106,18 @@ func letter_position(row: int, column: int) -> Vector2:
 
 ## Current target letter's position, including the chart wobble.
 func target_position() -> Vector2:
-	var target := targets[current_target_index]
+	var target := targets[_target_slot()]
 	return letter_position(target.x, target.y) + chart_offset()
 
 
 ## How close each eye must be to read the current letter (smaller letters, tighter).
 func read_radius() -> float:
-	return maxf(12.0, ROW_FONT_SIZES[targets[current_target_index].x] * 0.5)
+	return maxf(12.0, ROW_FONT_SIZES[targets[_target_slot()].x] * 0.5)
+
+
+## Index of the current target, or of the last one once the chart is finished.
+func _target_slot() -> int:
+	return mini(current_target_index, targets.size() - 1)
 
 
 ## Advances one tick: moves both gaze points with the given stick inputs and applies the rules.

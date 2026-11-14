@@ -28,6 +28,8 @@ func _aim_both_at_target() -> void:
 
 func _hold_on_target(seconds: float) -> void:
 	for i in range(int(seconds / DT)):
+		if not level.is_active():
+			return
 		_aim_both_at_target()
 		level.step(DT, Vector2.ZERO, Vector2.ZERO)
 
@@ -110,3 +112,13 @@ func test_chart_shakes_when_enabled() -> void:
 	level.shake_enabled = true
 	level.step(0.7, Vector2.ZERO, Vector2.ZERO)
 	assert_ne(level.chart_offset(), Vector2.ZERO, "The chart wobbles")
+
+
+func test_target_queries_are_safe_after_the_chart_is_finished() -> void:
+	level.current_target_index = level.targets.size()
+	var last := level.targets[level.targets.size() - 1]
+	assert_eq(
+		level.target_position(), level.letter_position(last.x, last.y), "Falls back to last letter"
+	)
+	assert_gt(level.read_radius(), 0.0, "Radius is still defined")
+
