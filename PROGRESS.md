@@ -11,7 +11,7 @@
 - Base Enemy and Projectile templates
 - "Skinny Guy" ragdoll physics model
 - Level 1: Olfactory (Smell) - QWER/AD finger & arm controls with speed/proximity stress tracking
-- Level 2: Optic (Vision) - Dual analog stick eyeball focus controls
+- Level 2: Optic (Vision) - Independently steered eyeballs (WASD / Arrows / gamepad sticks) read a shaky Snellen chart with double vision
 - Level 3: Eye Movement - QWOP/OP arm controls tracing 'H' pattern
 - Level 4: Trigeminal (Sensation) - Sharp/Soft facial sensation test with severe mouse lag
 - Level 5: Facial Nerve (Expression) - Face muscle group controls (1-0 keys) to match facial expressions

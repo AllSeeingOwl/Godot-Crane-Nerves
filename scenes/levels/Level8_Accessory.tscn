@@ -23,9 +23,9 @@ horizontal_alignment = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -450.0
+offset_left = -390.0
 offset_top = 50.0
-offset_right = 450.0
+offset_right = 390.0
 offset_bottom = 75.0
 grow_horizontal = 2
 text = "Doctor: Left/Right Mouse = Press Left/Right | Patient: Left/Right Arrow = Push Back"

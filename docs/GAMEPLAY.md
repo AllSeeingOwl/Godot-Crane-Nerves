@@ -33,7 +33,11 @@ The game is heavily inspired by *QWOP* and *Surgeon Simulator*.
 
 *   **Level 2: Optic (Vision)**
     *   **Objective:** Test visual acuity.
-    *   **Mechanic:** Likely involves showing an eye chart and managing the patient's focus or lighting.
+    *   **Mechanic:** You steer the patient's two eyeballs independently to read a shaky Snellen chart.
+    *   **Controls:** Left eye W/A/S/D, right eye Arrow keys (or the two gamepad sticks). Each eye floats with momentum and slowly drifts outward.
+    *   **Steps:** Hold both eyes on the highlighted letter for 0.8 seconds to read it, one letter per row from the top; letters get smaller and harder as you go down.
+    *   **Double vision:** The "Patient's view" panel shows one copy of the chart per eye, shifted by that eye's aim error, so it only snaps sharp when both eyes converge.
+    *   **Hazards:** The chart sways and jitters. Crossing the eyes too far or rolling them off the chart adds stress.
 
 *   **Level 3: Oculomotor, Trochlear, Abducens (Eye Movement)**
     *   **Objective:** Test eye tracking.
