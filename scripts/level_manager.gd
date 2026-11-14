@@ -14,8 +14,8 @@ const LEVEL_SCENES = {
 
 const MAIN_MENU_SCENE = "res://scenes/ui/main_menu.tscn"
 
-## When false, scene changes are skipped. The test suite turns this off so that
-## winning or losing a level in a unit test doesn't replace the running test scene.
+## When false, scene changes and the win/lose screens are skipped. The test suite turns this
+## off so that winning or losing a level in a unit test doesn't pause or replace the test scene.
 var scene_changes_enabled: bool = true
 
 
@@ -39,6 +39,7 @@ func has_level(level_id: int) -> bool:
 
 func load_level(level_id: int) -> void:
 	GameState.current_level_id = level_id
+	_unpause()
 
 	if LEVEL_SCENES.has(level_id):
 		_change_scene(LEVEL_SCENES[level_id])
@@ -46,21 +47,49 @@ func load_level(level_id: int) -> void:
 		print("No scene configured for level ", level_id)
 
 
-func _on_level_won() -> void:
-	print("Level won!")
-	var next_level_id = GameState.current_level_id + 1
-	if LEVEL_SCENES.has(next_level_id):
-		load_level(next_level_id)
-	else:
-		print("You won the game!")
-		GameState.reset_stress()
-		_change_scene(MAIN_MENU_SCENE)
-
-
-func _on_game_over(reason: String) -> void:
-	print("Game Over: ", reason)
-	GameState.reset_stress()
+func restart_level() -> void:
 	load_level(GameState.current_level_id)
+
+
+func go_to_main_menu() -> void:
+	_unpause()
+	GameState.reset_stress()
+	_change_scene(MAIN_MENU_SCENE)
+
+
+## Shows the "exam passed" (or, after the last level, "full exam complete") screen.
+func _on_level_won() -> void:
+	if not scene_changes_enabled:
+		return
+	var has_next := has_level(GameState.current_level_id + 1)
+	var overlay := LevelOverlay.find_in(get_tree())
+	if overlay:
+		overlay.show_passed(_current_level_title(), has_next)
+	elif has_next:
+		load_level(GameState.current_level_id + 1)
+	else:
+		go_to_main_menu()
+
+
+## Shows the "exam failed" screen with the reason, so the player can read it before retrying.
+func _on_game_over(reason: String) -> void:
+	if not scene_changes_enabled:
+		return
+	var overlay := LevelOverlay.find_in(get_tree())
+	if overlay:
+		overlay.show_failed(reason)
+	else:
+		restart_level()
+
+
+func _current_level_title() -> String:
+	var level := get_tree().current_scene as BaseLevel
+	return level.level_title if level else "Level %d" % GameState.current_level_id
+
+
+func _unpause() -> void:
+	if is_inside_tree():
+		get_tree().paused = false
 
 
 func _change_scene(path: String) -> void:

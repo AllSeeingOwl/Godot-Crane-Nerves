@@ -7,7 +7,8 @@ This document outlines the core game mechanics, rules, and player interactions f
 2. The player must manipulate various medical tools using deliberately difficult, physics-based controls.
 3. Every mistake, rough movement, or failure to perform tasks in time increases the patient's **Stress**.
 4. **Win Condition:** Complete the specific objective for the current nerve exam before stress reaches 100.
-5. **Lose Condition:** The patient's stress reaches 100, resulting in failure ("Patient got too stressed!").
+5. **Lose Condition:** The patient's stress reaches 100, resulting in failure ("Patient got too stressed!"), or a level-specific catastrophe (poking an eye, inducing vomiting...).
+6. **Between levels:** Passing shows an "Exam passed" screen (Next Level / Restart / Main Menu); failing shows the reason (Retry / Main Menu). Every level also has Restart and Menu buttons in the top left, and **Esc** pauses.
 
 ## Global Mechanics
 

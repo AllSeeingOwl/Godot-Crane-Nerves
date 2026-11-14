@@ -48,10 +48,14 @@ A base script that all level controllers should inherit from. Provides common fu
 
 ## HUD / UI
 
-### `GameUI.gd`
-Controls the main heads-up display.
+Each level draws its own HUD labels and stress bar (`UI` CanvasLayer in its scene).
 
-**Methods:**
-- `update_stress_bar(stress_value: float) -> void`: Updates the visual representation of stress.
-- `show_game_over(reason: String) -> void`: Displays the failure screen.
-- `show_level_complete() -> void`: Displays the success screen before the next level.
+### `LevelOverlay` (`scripts/ui/level_overlay.gd`)
+Added to every level by `BaseLevel._ready()`.
+
+- Always-visible **Restart** and **Menu** buttons (top left); **Esc** opens a pause menu (Resume / Restart / Main Menu).
+- `show_passed(level_title, has_next)`: "Exam passed" screen (Next Level / Restart / Main Menu); after the last level it shows `show_complete()` instead (Play Again / Main Menu).
+- `show_failed(reason)`: "Exam failed" screen with the reason (Retry / Main Menu).
+- The scene tree is paused while a panel is open (`pause_tree`, turned off in tests); **Enter** presses the highlighted button.
+
+`LevelManager` shows these screens from its `level_won` / `game_over` handlers, and provides `restart_level()` and `go_to_main_menu()`.
